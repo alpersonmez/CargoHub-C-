@@ -17,6 +17,75 @@ namespace Cargohub.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
+            modelBuilder.Entity("Cargohub.Models.Item", b =>
+                {
+                    b.Property<string>("Uid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CommodityCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ItemGroup")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ItemLine")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ModelNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PackOrderQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SupplierCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SupplierPartNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UnitOrderQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UnitPurchaseQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpcCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Uid");
+
+                    b.ToTable("Items");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -91,6 +160,91 @@ namespace Cargohub.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactPhone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("country")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("province")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("zip")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Warehouses");
+                });
+
+            modelBuilder.Entity("Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WareHouse_Id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
                 });
 #pragma warning restore 612, 618
         }

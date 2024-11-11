@@ -14,8 +14,8 @@ namespace Cargohub.Models
         public required string shipping_notes { get; set; }
         public required string picking_notes { get; set; }
         public int warehouse_id { get; set; }
-        public string ship_to { get; set; }
-        public string bill_to { get; set; }
+        public required string ship_to { get; set; }
+        public required string bill_to { get; set; }
         public int shipment_id { get; set; }
         public double total_amount { get; set; }
         public double total_discount { get; set; }

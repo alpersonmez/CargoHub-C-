@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241111133742_InitialCreate")]
+    [Migration("20241111165140_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -22,76 +22,76 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BillTo")
+                    b.Property<string>("bill_to")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime>("order_date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OrderStatus")
+                    b.Property<string>("order_status")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PickingNotes")
+                    b.Property<string>("picking_notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Reference")
+                    b.Property<string>("reference")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ReferenceExtra")
+                    b.Property<string>("reference_extra")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RequestDate")
+                    b.Property<DateTime>("request_date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ShipTo")
+                    b.Property<string>("ship_to")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ShipmentId")
+                    b.Property<int>("shipment_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ShippingNotes")
+                    b.Property<string>("shipping_notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SourceId")
+                    b.Property<int>("source_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("TotalAmount")
+                    b.Property<double>("total_amount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TotalDiscount")
+                    b.Property<double>("total_discount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TotalSurcharge")
+                    b.Property<double>("total_surcharge")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("TotalTax")
+                    b.Property<double>("total_tax")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("WarehouseId")
+                    b.Property<int>("warehouse_id")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("Orders");
                 });

@@ -2,13 +2,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Models
 {
-    public class AppDbContext : DbContext
-    {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public class AppDbContext : DbContext
+        {
+                public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Order> Orders { get; set; }
-
-        // Add DbSet properties for other entities as needed
-    }
+                public DbSet<Order> Orders { get; set; }
+                public DbSet<Item> Items { get; set; }
+                public DbSet<Location> Locations { get; set; }
+                public DbSet<Warehouse> Warehouses { get; set; }
+        }
 }
 

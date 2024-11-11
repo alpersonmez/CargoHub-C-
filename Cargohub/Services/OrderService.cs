@@ -5,11 +5,12 @@ namespace Cargohub.Services;
 public class OrderService : IOrderService
 {
 
-    // private MyContext data;
+    private AppDbContext data;
 
-    // public OrderService(MyContext _data){
-    //     data = _data;
-    // }
+    public OrderService(AppDbContext _data)
+    {
+        data = _data;
+    }
 
     public Order GetOrder(int id)
     {

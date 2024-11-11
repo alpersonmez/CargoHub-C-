@@ -41,6 +41,30 @@ namespace Cargohub.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Warehouses",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    code = table.Column<string>(type: "TEXT", nullable: false),
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    address = table.Column<string>(type: "TEXT", nullable: false),
+                    zip = table.Column<string>(type: "TEXT", nullable: false),
+                    city = table.Column<string>(type: "TEXT", nullable: false),
+                    province = table.Column<string>(type: "TEXT", nullable: false),
+                    country = table.Column<string>(type: "TEXT", nullable: false),
+                    contactName = table.Column<string>(type: "TEXT", nullable: false),
+                    contactPhone = table.Column<string>(type: "TEXT", nullable: false),
+                    contactEmail = table.Column<string>(type: "TEXT", nullable: false),
+                    created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Warehouses", x => x.id);
+                });
         }
 
         /// <inheritdoc />
@@ -48,6 +72,9 @@ namespace Cargohub.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Warehouses");
         }
     }
 }

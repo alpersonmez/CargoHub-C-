@@ -92,6 +92,63 @@ namespace Cargohub.Migrations
 
                     b.ToTable("Orders");
                 });
+
+            modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("city")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("contactPhone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("country")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("province")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("zip")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Warehouses");
+                });
 #pragma warning restore 612, 618
         }
     }

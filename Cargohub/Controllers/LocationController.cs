@@ -4,19 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class LocationController : ControllerBase
 {
-    private readonly ILocation _locationService;
+    private readonly ILocationService _locationService;
 
-    public LocationController(ILocation locationService)
+    public LocationController(ILocationService locationService)
     {
         _locationService = locationService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() // moet nog gefixed worden
+    public async Task<IActionResult> GetAll()
     {
-        Location locations = await _locationService.GetAllLocations();
+        var locations = await _locationService.GetAllLocations(); // Change 'Location' to 'var' or List<Location>
         return Ok(locations);
     }
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
@@ -41,21 +42,26 @@ public class LocationController : ControllerBase
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Location location)
+    public async Task<IActionResult> Update(int id, [FromBody] Location location)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
         if (id != location.Id)
         {
-            return BadRequest($"Location Id {id} does not exist");
+            return BadRequest($"Location Id {id} does not match");
         }
         
-        bool updated = await _locationService.UpdateLocation(location);
-        
-        if (!updated) 
-        {        
+        var updated = await _locationService.UpdateLocation(location);
+
+        if (!updated)
+        {
             return NotFound();
-        }        
+        }
+
         return NoContent();
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)

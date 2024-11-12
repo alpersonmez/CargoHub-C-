@@ -11,7 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<IItemService, ItemService>();
-
+builder.Services.AddScoped<ILocationService, LocationService>();
+   
 // Add controllers
 builder.Services.AddControllers();
 

@@ -1,5 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+/* werkt niet bij mij
+
+using Newtonsoft.Json; 
+
+*/
 
 namespace Cargohub.Models
 {

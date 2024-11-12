@@ -1,6 +1,7 @@
 using Cargohub.Data;
 using Cargohub.Services;
 using Cargohub.Models;
+using Cargohub.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,7 @@ builder.Services.AddScoped<IItemService, ItemService>();
 
 // Add controllers
 builder.Services.AddControllers();
-
+builder.Services.AddScoped<IOrderService, OrderService>();
 var app = builder.Build();
 
 app.Urls.Add("http://localhost:5000");

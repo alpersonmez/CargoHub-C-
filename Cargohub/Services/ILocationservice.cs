@@ -1,7 +1,6 @@
-using Cargohub.Models;
-
-namespace Cargohub.Services{
-    public interface ILocation
+namespace Cargohub.Services
+{
+    public interface ILocationService
     {
         Task<List<Location>> GetAllLocations();
         Task<Location> GetLocationById(int id);

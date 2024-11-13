@@ -1,0 +1,36 @@
+### Get all locations
+GET http://localhost:5000/api/Location
+
+###
+
+### Get a specific location by ID
+GET http://localhost:5000/api/Location/1
+
+###
+
+### Create a new location
+POST http://localhost:5000/api/Location
+Content-Type: application/json
+
+{
+    "Id": 0,                  
+    "WareHouse_Id": 2,
+    "Code": "A123",
+    "Name": "Location A"
+}
+
+###
+
+### Update an existing location
+PUT http://localhost:5000/api/Location/1
+Content-Type: application/json
+
+{
+    "Id": 1,
+    "WareHouse_Id": 3,
+    "Code": "B456",
+    "Name": "Updated Location"
+}
+
+###
+

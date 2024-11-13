@@ -1,4 +1,7 @@
+using Cargohub.Models;
+using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,7 +17,7 @@ public class LocationController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var locations = await _locationService.GetAllLocations(); // Change 'Location' to 'var' or List<Location>
+        var locations = await _locationService.GetAllLocations();
         return Ok(locations);
     }
 
@@ -34,7 +37,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> Create([FromBody] Location New)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return BadRequest("There are some fields missing");
 
         Location createdLocation = await _locationService.AddLocation(New);
         return CreatedAtAction(nameof(Get), new { id = createdLocation.Id }, createdLocation);
@@ -45,7 +48,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] Location location)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return BadRequest("There are some fields missing"); //modelstate is om te kijken of de fields kloppen
         
         if (id != location.Id)
         {

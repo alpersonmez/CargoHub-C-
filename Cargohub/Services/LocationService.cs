@@ -4,7 +4,7 @@ using  Cargohub.Models;
 namespace Cargohub.Services
 {
     public class LocationService : ILocationService
-    {   //database moet nog gemaakt worden
+    {   
         private readonly AppDbContext _context;
 
         public LocationService(AppDbContext context)
@@ -14,7 +14,7 @@ namespace Cargohub.Services
 
         public async Task<List<Location>> GetAllLocations()
         {
-            return await _context.Locations.ToListAsync();
+            return await _context.Locations.Take(100).ToListAsync(); // Take(100) is that the limit is 100 locations
         }
 
         public async Task<Location> GetLocationById(int id)

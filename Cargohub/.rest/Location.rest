@@ -4,7 +4,7 @@ GET http://localhost:5000/api/Location
 ###
 
 ### Get a specific location by ID
-GET http://localhost:5000/api/Location/1
+GET http://localhost:5000/api/Location/5
 
 ###
 
@@ -12,9 +12,8 @@ GET http://localhost:5000/api/Location/1
 POST http://localhost:5000/api/Location
 Content-Type: application/json
 
-{
-    "Id": 0,                  
-    "WareHouse_Id": 2,
+{             
+    "WareHouse_Id": 3,
     "Code": "A123",
     "Name": "Location A"
 }
@@ -22,15 +21,17 @@ Content-Type: application/json
 ###
 
 ### Update an existing location
-PUT http://localhost:5000/api/Location/1
+PUT http://localhost:5000/api/Location/5 
 Content-Type: application/json
-
+// je moet in de body de id ook meegeven 
 {
-    "Id": 1,
+    "Id": 5,
     "WareHouse_Id": 3,
     "Code": "B456",
     "Name": "Updated Location"
 }
 
-###
+
+### DELETE an existing Location
+DELETE  http://localhost:5000/api/Location/5 
 

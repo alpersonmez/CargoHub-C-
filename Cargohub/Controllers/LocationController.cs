@@ -37,7 +37,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> Create([FromBody] Location New)
     {
         if (!ModelState.IsValid)
-            return BadRequest("There are some fields missing");
+            return BadRequest(ModelState);
 
         Location createdLocation = await _locationService.AddLocation(New);
         return CreatedAtAction(nameof(Get), new { id = createdLocation.Id }, createdLocation);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cargohub.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,31 +60,31 @@ namespace Cargohub.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    SourceId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    RequestDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Reference = table.Column<string>(type: "TEXT", nullable: false),
-                    ReferenceExtra = table.Column<string>(type: "TEXT", nullable: false),
-                    OrderStatus = table.Column<string>(type: "TEXT", nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", nullable: false),
-                    ShippingNotes = table.Column<string>(type: "TEXT", nullable: false),
-                    PickingNotes = table.Column<string>(type: "TEXT", nullable: false),
-                    WarehouseId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ShipTo = table.Column<string>(type: "TEXT", nullable: false),
-                    BillTo = table.Column<string>(type: "TEXT", nullable: false),
-                    ShipmentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalAmount = table.Column<double>(type: "REAL", nullable: false),
-                    TotalDiscount = table.Column<double>(type: "REAL", nullable: false),
-                    TotalTax = table.Column<double>(type: "REAL", nullable: false),
-                    TotalSurcharge = table.Column<double>(type: "REAL", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    source_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    order_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    request_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    reference = table.Column<string>(type: "TEXT", nullable: false),
+                    reference_extra = table.Column<string>(type: "TEXT", nullable: false),
+                    order_status = table.Column<string>(type: "TEXT", nullable: false),
+                    notes = table.Column<string>(type: "TEXT", nullable: false),
+                    shipping_notes = table.Column<string>(type: "TEXT", nullable: false),
+                    picking_notes = table.Column<string>(type: "TEXT", nullable: false),
+                    warehouse_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    ship_to = table.Column<string>(type: "TEXT", nullable: false),
+                    bill_to = table.Column<string>(type: "TEXT", nullable: false),
+                    shipment_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    total_amount = table.Column<double>(type: "REAL", nullable: false),
+                    total_discount = table.Column<double>(type: "REAL", nullable: false),
+                    total_tax = table.Column<double>(type: "REAL", nullable: false),
+                    total_surcharge = table.Column<double>(type: "REAL", nullable: false),
+                    created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.id);
                 });
 
             migrationBuilder.CreateTable(

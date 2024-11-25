@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Cargohub.Services;
 using Cargohub.Models;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
@@ -34,11 +35,11 @@ namespace Cargohub.Controllers
         // [HttpGet("/{Id}/items")]
         // public IActionResult GetOrderItems(int id)
         // {
-        //     List<Items> orders = orderService.GetOrderItems(id);
+        //     List<Item> orders = orderService.GetItems(id);
         //     if (orders is null) return BadRequest("Order with the given id does not exist.");
         //     return Ok(orders);
         // }
-
+        [AdminFilter]
         [HttpPost]
         public IActionResult AddOrder([FromBody] Order order)
         {
@@ -46,14 +47,14 @@ namespace Cargohub.Controllers
             if (order is null) return BadRequest("Order is empty.");
             return BadRequest("Order Already exists.");
         }
-
+        [AdminFilter]
         [HttpPut("{id}")]
         public IActionResult UpdateOrder(int id, [FromBody] Order order)
         {
             if (orderService.UpdateOrder(id, order) == false) return BadRequest("Failed to update order. Check if you have the correct id and a valid order.");
             return Ok($"Succesfully updated order with id: {id}");
         }
-
+        [AdminFilter]
         [HttpDelete("{id}")]
         public IActionResult DeleteOrder(int id)
         {

@@ -10,6 +10,7 @@ namespace Cargohub.Models
                 public DbSet<Item> Items { get; set; }
                 public DbSet<Location> Locations { get; set; }
                 public DbSet<Warehouse> Warehouses { get; set; }
+                public DbSet<ItemType> ItemTypes { get; set; }
         }
 }
 

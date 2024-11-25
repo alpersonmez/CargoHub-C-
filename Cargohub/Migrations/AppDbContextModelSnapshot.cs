@@ -86,6 +86,31 @@ namespace Cargohub.Migrations
                     b.ToTable("Items");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.ItemType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemTypes");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
                     b.Property<int>("id")

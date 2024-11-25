@@ -12,10 +12,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Add controllers
 builder.Services.AddControllers();
-builder.Services.AddScoped<IOrderService, OrderService>();
 var app = builder.Build();
 
 app.Urls.Add("http://localhost:5000");

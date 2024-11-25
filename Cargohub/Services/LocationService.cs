@@ -60,8 +60,11 @@ namespace Cargohub.Services
         public async Task<bool> DeleteLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);
-            if (location == null) return false;
-
+            if (location == null)
+            {
+                return false;
+            }
+            
             _context.Locations.Remove(location);
             await _context.SaveChangesAsync();
             return true;

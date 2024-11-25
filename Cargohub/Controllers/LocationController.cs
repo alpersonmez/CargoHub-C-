@@ -48,7 +48,7 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] Location location)
     {
         if (!ModelState.IsValid)
-            return BadRequest("There are some fields missing"); //modelstate is om te kijken of de fields kloppen
+            return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
         
         if (id != location.Id)
         {
@@ -70,7 +70,11 @@ public class LocationController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         bool deleted = await _locationService.DeleteLocation(id);
-        if (!deleted) return NotFound();
+        if (!deleted)
+        {
+            return NotFound();
+
+        } 
         return NoContent();
     }
 }

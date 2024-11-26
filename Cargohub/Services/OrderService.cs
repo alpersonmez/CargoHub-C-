@@ -14,18 +14,20 @@ namespace Cargohub.Services
 
         public List<Order> GetOrders()
         {
-            if (data.Orders.Count() == 0) return null;
+            if (data.Orders.Count() == 0) return new List<Order>();
             return data.Orders.ToList();
         }
 
-        public Order GetOrder(int id)
+        public Order? GetOrder(int id)
         {
-            return data.Orders.SingleOrDefault(x => x.id == id); //Replace with database logic
+            //if(data.Orders.SingleOrDefault(x => x.id == id) == null) return new Order()
+            return data.Orders.SingleOrDefault(x => x.id == id);
         }
 
-        // public List<Item> GetItems(int id){
-        //     if (data.Orders.SingleOrDefault(x => x.Id == id) is null) return null;
-        //     return data.Orders.Where(x => x.Id == id).Single().Items.ToList();
+        // public List<Item>? GetItems(int id)
+        // {
+        //     if (data.Orders.SingleOrDefault(x => x.id == id) is null) return null;
+        //     return data.Orders.Where(x => x.id == id).Single().Items.ToList();
         // }
         public bool AddOrder(Order order)
         {

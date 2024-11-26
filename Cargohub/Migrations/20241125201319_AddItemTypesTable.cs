@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cargohub.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddItemTypesTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,22 @@ namespace Cargohub.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Items", x => x.Uid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -117,6 +133,9 @@ namespace Cargohub.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Items");
+
+            migrationBuilder.DropTable(
+                name: "ItemTypes");
 
             migrationBuilder.DropTable(
                 name: "Locations");

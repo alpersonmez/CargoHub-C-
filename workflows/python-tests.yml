@@ -1,0 +1,31 @@
+name: Run Python Tests on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main  # This triggers the action only on pull requests to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # The job will run on the latest Ubuntu
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the code from the repository
+
+    # Set up Python environment (version 3.12.6)
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.12
+
+    # Install Python dependencies using requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r Tests/requirements.txt  # Install dependencies listed in requirements.txt
+
+    # Run Python tests
+    - name: Run Python tests with pytest
+      run: |
+        pytest --maxfail=1 --disable-warnings -q Tests/ItemTests/test_items.py  # Run the tests

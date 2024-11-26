@@ -6,10 +6,11 @@ on:
       - main  # This triggers the action only on pull requests to the main branch
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest  # The job will run on the latest Ubuntu
 
     steps:
+    # Checkout code
     - name: Checkout code
       uses: actions/checkout@v2  # Checkout the code from the repository
 

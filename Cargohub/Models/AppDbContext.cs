@@ -1,3 +1,4 @@
+using Cargohub.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Models
@@ -11,6 +12,7 @@ namespace Cargohub.Models
                 public DbSet<Location> Locations { get; set; }
                 public DbSet<Warehouse> Warehouses { get; set; }
                 public DbSet<ItemType> ItemTypes { get; set; }
+                public DbSet<Item_lines> Item_lines {get; set;}
         }
 }
 

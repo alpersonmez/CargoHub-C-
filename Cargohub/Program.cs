@@ -1,7 +1,6 @@
 using Cargohub.Data;
 using Cargohub.Services;
 using Cargohub.Models;
-using Cargohub.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +11,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IItemTypeService, ItemTypeService>();
 
 // Add controllers
 builder.Services.AddControllers();
-builder.Services.AddScoped<IOrderService, OrderService>();
 var app = builder.Build();
 
 app.Urls.Add("http://localhost:5000");
@@ -28,7 +29,7 @@ app.Use(async (context, next) =>
     {
         if (!context.Request.Headers.ContainsKey("API_key"))
         {
-            Console.WriteLine($"{context.Request.Path} was requested but there is no HelloApiToken header");
+            Console.WriteLine($"{context.Request.Path} was requested but there is no API_key header");
             context.Response.StatusCode = 401;
             return;
         }
@@ -37,4 +38,13 @@ app.Use(async (context, next) =>
     Console.WriteLine($"{context.Request.Path} was handled");
 });
 
+// Seed the database with initial data (Optional)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    ItemSeeder.SeedDatabase(context);
+}
+
+// Run the application
 app.Run();

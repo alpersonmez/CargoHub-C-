@@ -12,7 +12,37 @@ namespace Cargohub.Data
             // Ensure the database is created
             context.Database.EnsureCreated();
 
-            // Check if the database is already seeded
+            // Seed ItemTypes if not already present
+            if (!context.ItemTypes.Any())
+            {
+                context.ItemTypes.AddRange(
+                    new ItemType
+                    {
+                        Name = "Electronics",
+                        Description = "Items related to electronic devices",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    },
+                    new ItemType
+                    {
+                        Name = "Furniture",
+                        Description = "Various furniture items",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    },
+                    new ItemType
+                    {
+                        Name = "Groceries",
+                        Description = "Daily grocery items",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    }
+                );
+
+                context.SaveChanges();
+            }
+
+            // Seed Items if not already present
             if (!context.Items.Any())
             {
                 context.Items.AddRange(
@@ -27,7 +57,7 @@ namespace Cargohub.Data
                         CommodityCode = "C-001",
                         ItemLine = 1,
                         ItemGroup = 1,
-                        ItemType = 1,
+                        ItemType = 1, // Links to Electronics
                         UnitPurchaseQuantity = 10,
                         UnitOrderQuantity = 5,
                         PackOrderQuantity = 2,
@@ -48,7 +78,7 @@ namespace Cargohub.Data
                         CommodityCode = "C-002",
                         ItemLine = 2,
                         ItemGroup = 2,
-                        ItemType = 2,
+                        ItemType = 2, // Links to Furniture
                         UnitPurchaseQuantity = 20,
                         UnitOrderQuantity = 10,
                         PackOrderQuantity = 5,
@@ -69,7 +99,7 @@ namespace Cargohub.Data
                         CommodityCode = "C-003",
                         ItemLine = 3,
                         ItemGroup = 3,
-                        ItemType = 3,
+                        ItemType = 3, // Links to Groceries
                         UnitPurchaseQuantity = 30,
                         UnitOrderQuantity = 15,
                         PackOrderQuantity = 7,

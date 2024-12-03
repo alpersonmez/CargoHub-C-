@@ -37,13 +37,13 @@ jobs:
     # Install .NET dependencies and build the API
     - name: Install dependencies and build API
       run: |
-        dotnet restore CargoHub  # Restore project dependencies
-        dotnet build CargoHub --no-restore  # Build the API
+        dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
+        dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
 
     # Run the API
     - name: Start API
       run: |
-        cd CargoHub  # Navigate to the project folder (if not in root)
+        cd Cargohub  # Navigate to the project folder (if not in root)
         dotnet run &  # Start the API in the background
         sleep 15  # Wait for the API to start
 

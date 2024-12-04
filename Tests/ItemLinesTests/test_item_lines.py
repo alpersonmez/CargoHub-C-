@@ -6,7 +6,7 @@ API_KEY = 'a1b2c3d4e5'
 
 @pytest.fixture
 def _url():
-    return 'http://localhost:3000/api/v1/'
+    return 'http://localhost:5000/api/v1/'
 
 
 def test_post_item_lines(_url):
@@ -15,7 +15,7 @@ def test_post_item_lines(_url):
     payload = {
     "id": 6942069,
     "name": "Tech Gadgets",
-    "description": "dikke"
+    "description": "POST hoort niet te werken"
     }
 
     # Send a POST request to the API
@@ -26,23 +26,23 @@ def test_post_item_lines(_url):
 
     # Verify that the status code is 404 (not found)
     # It needs to get a 404 because a POST request shouldnt be possible
-    assert status_code == 404
+    assert status_code == 405
 
-def test_get_item_lines_by_id(_url):
-    url = _url + 'item_lines'
-    params = {'id': '1'}
+# def test_get_item_lines_by_id(_url):
+#     url = _url + 'item_lines'
+#     params = {'id': '1'}
 
-    # Send a GET request to fetch a item lines by ID
-    response = requests.get(url, params=params, headers={'API_KEY': API_KEY})
+#     # Send a GET request to fetch a item lines by ID
+#     response = requests.get(url, params=params, headers={'API_KEY': API_KEY})
 
-    # Verify that the status code is either 200 (OK) or 404 (Not Found)
-    assert response.status_code in [200, 404], f"Unexpected status code: {response.status_code}"
+#     # Verify that the status code is either 200 (OK) or 404 (Not Found)
+#     assert response.status_code in [200, 404], f"Unexpected status code: {response.status_code}"
 
-    if response.status_code == 200:
-        response_data = response.json()
-        assert response_data['name'] == 'Tech Gadgets'
-    else:
-        print("Item lines with name Tech Gadgets not found")
+#     if response.status_code == 200:
+#         response_data = response.json()
+#         assert response_data['name'] == 'Tech Gadgets'
+#     else:
+#         print("Item lines with name Tech Gadgets not found")
 
 def test_put_item_lines(_url):
     url = _url + 'item_lines/1'

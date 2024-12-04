@@ -6,7 +6,7 @@ API_KEY = 'a1b2c3d4e5'
 
 @pytest.fixture
 def _url():
-    return 'http://localhost:3000/api/v1/'
+    return 'http://localhost:5000/api/v1/'
 
 
 def test_post_item_groups(_url):
@@ -24,9 +24,8 @@ def test_post_item_groups(_url):
     # Get the status code
     status_code = response.status_code
 
-    # Verify that the status code is 404 (not found)
-    # It needs to get a 404 because a POST request shouldnt be possible
-    assert status_code == 404
+    # Verify that the status code is 405
+    assert status_code == 405
 
 def test_get_item_groups_by_id(_url):
     url = _url + 'item_groups'

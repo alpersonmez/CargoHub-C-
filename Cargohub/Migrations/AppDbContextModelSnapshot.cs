@@ -86,31 +86,6 @@ namespace Cargohub.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Cargohub.Models.ItemGroup", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("id");
-
-                    b.ToTable("ItemGroups");
-                });
-
             modelBuilder.Entity("Cargohub.Models.ItemType", b =>
                 {
                     b.Property<int>("Id")
@@ -134,31 +109,6 @@ namespace Cargohub.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ItemTypes");
-                });
-
-            modelBuilder.Entity("Cargohub.Models.Item_lines", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Item_lines");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>

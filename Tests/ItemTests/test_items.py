@@ -12,22 +12,22 @@ def _url():
 def test_post_item(_url):
     url = _url + 'items'
     payload = {
-        "uid": "P6942069",
-        "code": "sjQ23408K",
-        "description": "POST",
-        "short_description": "must",
-        "upc_code": "6523540947122",
-        "model_number": "63-OFFTq0T",
-        "commodity_code": "oTo304",
-        "item_line": 11,
-        "item_group": 73,
-        "item_type": 14,
-        "unit_purchase_quantity": 47,
-        "unit_order_quantity": 13,
-        "pack_order_quantity": 11,
-        "supplier_id": 34,
-        "supplier_code": "SUP423",
-        "supplier_part_number": "E-86805-uTM"
+        "Uid": "P6942069",
+        "Code": "sjQ23408K",
+        "Description": "POST",
+        "ShortDescription": "must",
+        "UpcCode": "6523540947122",
+        "ModelNumber": "63-OFFTq0T",
+        "CommodityCode": "oTo304",
+        "ItemLine": 11,
+        "ItemGroup": 73,
+        "ItemType": 14,
+        "UnitPurchaseQuantity": 47,
+        "UnitOrderQuantity": 13,
+        "PackOrderQuantity": 11,
+        "SupplierId": 34,
+        "SupplierCode": "SUP423",
+        "SupplierPartNumber": "E-86805-uTM"
     }
 
     # Send a POST request to the API
@@ -43,22 +43,22 @@ def test_post_item(_url):
 def test_post_item_with_invalid_dates(_url):
     url = _url + 'items'
     payload = {
-        "uid": "P6942069",
-        "code": "sjQ23408K",
-        "description": "POST",
-        "short_description": "must",
-        "upc_code": "6523540947122",
-        "model_number": "63-OFFTq0T",
-        "commodity_code": "oTo304",
-        "item_line": 11,
-        "item_group": 73,
-        "item_type": 14,
-        "unit_purchase_quantity": 47,
-        "unit_order_quantity": 13,
-        "pack_order_quantity": 11,
-        "supplier_id": 34,
-        "supplier_code": "SUP423",
-        "supplier_part_number": "E-86805-uTM",
+        "Uid": "P6942069",
+        "Code": "sjQ23408K",
+        "Description": "POST",
+        "ShortDescription": "must",
+        "UpcCode": "6523540947122",
+        "ModelNumber": "63-OFFTq0T",
+        "CommodityCode": "oTo304",
+        "ItemLine": 11,
+        "ItemGroup": 73,
+        "ItemType": 14,
+        "UnitPurchaseQuantity": 47,
+        "UnitOrderQuantity": 13,
+        "PackOrderQuantity": 11,
+        "SupplierId": 34,
+        "SupplierCode": "SUP423",
+        "SupplierPartNumber": "E-86805-uTM",
         "created_at": "2024-01-01T00:00:00",  # Invalid field
         "updated_at": "2024-01-01T00:00:00"   # Invalid field
     }
@@ -81,7 +81,7 @@ def test_get_item_by_uid(_url):
 
     if response.status_code == 200:
         response_data = response.json()
-        assert response_data['description'] == 'POST'
+        assert response_data['Description'] == 'POST'
     else:
         print("Item with description POST not found")
 
@@ -90,22 +90,22 @@ def test_put_item(_url):
     url = _url + 'items/P6942069'
     
     updated_payload = {
-        "uid": "P6942069",
-        "code": "sjQ23408K",
-        "description": "UPDATED",
-        "short_description": "must",
-        "upc_code": "6523540947122",
-        "model_number": "63-OFFTq0T",
-        "commodity_code": "oTo304",
-        "item_line": 11,
-        "item_group": 73,
-        "item_type": 14,
-        "unit_purchase_quantity": 47,
-        "unit_order_quantity": 13,
-        "pack_order_quantity": 11,
-        "supplier_id": 34,
-        "supplier_code": "SUP423",
-        "supplier_part_number": "E-86805-uTM"
+        "Uid": "P6942069",
+        "Code": "sjQ23408K",
+        "Description": "UPDATED",
+        "ShortDescription": "must",
+        "UpcCode": "6523540947122",
+        "ModelNumber": "63-OFFTq0T",
+        "CommodityCode": "oTo304",
+        "ItemLine": 11,
+        "ItemGroup": 73,
+        "ItemType": 14,
+        "UnitPurchaseQuantity": 47,
+        "UnitOrderQuantity": 13,
+        "PackOrderQuantity": 11,
+        "SupplierId": 34,
+        "SupplierCode": "SUP423",
+        "SupplierPartNumber": "E-86805-uTM"
     }
 
     # Send a PUT request to update the specific item
@@ -121,8 +121,9 @@ def test_delete_item(_url):
     # Send a DELETE request to delete a specific item by UID
     response = requests.delete(url, headers={'API_KEY': API_KEY})
 
-    # Verify that the status code is 200 (OK) or 404 (Not Found)
-    assert response.status_code in [200, 404], f"Unexpected status code: {response.status_code}"
+    # Verify that the status code is 204
+    assert response.status_code in [204], f"Unexpected status code: {response.status_code}"
+
 
 
 if __name__ == "__main__":

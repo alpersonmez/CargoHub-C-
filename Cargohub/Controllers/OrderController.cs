@@ -6,7 +6,7 @@ using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
-    [Route("api/Orders")]
+    [Route("api/v1/order")]
     public class OrderController : Controller
     {
         private readonly IOrderService orderService;

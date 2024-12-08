@@ -1,69 +1,58 @@
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Cargohub.Services;
 using Cargohub.Models;
-using Cargohub.Filters;
 
-namespace Cargohub.Controllers
+namespace Cargohub.Services
 {
-    [Route("api/[controller]")]
-    public class TransferController : Controller
+    public class TransferService : ITransferService
     {
-        private readonly ITransferService transferService;
 
-        public TransferController(ITransferService _transferService)
+        private AppDbContext data;
+
+        public TransferService(AppDbContext _data)
         {
-            transferService = _transferService;
+            data = _data;
         }
 
-        [HttpGet]
-        public IActionResult GetTransfers()
+        public List<Transfer> GetTransfers()
         {
-            List<Transfer> transfers = transferService.GetTransfers();
-            if (transfers is null || !transfers.Any()) return NotFound("empty");
-            return Ok(transfers);
+            if (data.Transfers.Count() == 0) return new List<Transfer>();
+            return data.Transfers.ToList();
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetTransfer(int id)
+        public Transfer? GetTransfer(int id)
         {
-            Transfer transfer = transferService.GetTransfer(id);
-            if (transfer is null) return BadRequest("transfer with the given id does not exist.");
-            return Ok(transfer);
+            //if(data.Transfer.SingleOrDefault(x => x.id == id) == null) return new Transfer()
+            return data.Transfers.SingleOrDefault(x => x.id == id);
         }
 
-        [HttpGet("/{Id}/items")]
-        public IActionResult GetTransferItems(int id)
-        {
-            List<Item> transfers = transferService.GetItems(id);
-            if (transfers is null) return BadRequest("Transfer with the given id does not exist.");
-            return Ok(transfers);
-        }
+        // public List<Item>? GetItems(int id)
+        // {
+        //     if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return null;
+        //     return data.Transfers.Where(x => x.id == id).Single().items.ToList();
+        // }
 
-        [AdminFilter]
-        [HttpPost]
-        public IActionResult AddTransfer([FromBody] Transfer transfer)
+        public bool AddTransfer(Transfer transfer)
         {
-            if (transferService.AddTransfer(transfer)) return Ok($"Succesfully added {transfer}");
-            if (transfer is null) return BadRequest("Transfer is empty.");
-            return BadRequest("Transfer Already exists.");
+            if (transfer is null || data.Transfers.Contains(transfer)) return false;
+            data.Transfers.Add(transfer);
+            data.SaveChanges();
+            return true;
         }
-        [AdminFilter]
-        [HttpPut("{id}")]
-        public IActionResult UpdateTransfer(int id, [FromBody] Transfer transfer)
+        public bool UpdateTransfer(int id, Transfer transfer)
         {
-            if (transferService.UpdateTransfer(id, transfer) == false) return BadRequest("Failed to update transfer. Check if you have the correct id and a valid transfer.");
-            return Ok($"Succesfully updated transfer with id: {id}");
+            if (transfer is null || id != transfer.id) return false;
+            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
+            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
+            data.Transfers.Add(transfer);
+            data.SaveChanges();
+            return true;
         }
-        [AdminFilter]
-        [HttpDelete("{id}")]
-        public IActionResult DeleteTransfer(int id)
+        public bool DeleteTransfer(int id)
         {
-            if (transferService.DeleteTransfer(id) == false) return BadRequest("Transfer with given id doesnt exist.");
-            return Ok($"Succesfully deleted transfer with id: {id}");
+            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
+            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
+            data.SaveChanges();
+            return true;
         }
-
-
-
     }
 }
+

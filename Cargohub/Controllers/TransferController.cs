@@ -32,13 +32,13 @@ namespace Cargohub.Controllers
             return Ok(transfer);
         }
 
-        [HttpGet("/{Id}/items")]
-        public IActionResult GetTransferItems(int id)
-        {
-            List<Item> transfers = transferService.GetItems(id);
-            if (transfers is null) return BadRequest("Transfer with the given id does not exist.");
-            return Ok(transfers);
-        }
+        // [HttpGet("/{Id}/items")]
+        // public IActionResult GetTransferItems(int id)
+        // {
+        //     List<Item> transfers = transferService.GetItems(id);
+        //     if (transfers is null) return BadRequest("Transfer with the given id does not exist.");
+        //     return Ok(transfers);
+        // }
 
         [AdminFilter]
         [HttpPost]

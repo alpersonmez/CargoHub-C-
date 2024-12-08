@@ -6,7 +6,7 @@ namespace Cargohub.Services
     {
         public List<Transfer> GetTransfers();
         public Transfer GetTransfer(int id);
-        public List<Item> GetItems(int id);
+        //public List<Item> GetItems(int id);
         public bool AddTransfer(Transfer transfer);
         public bool UpdateTransfer(int id, Transfer transfer);
         public bool DeleteTransfer(int id);

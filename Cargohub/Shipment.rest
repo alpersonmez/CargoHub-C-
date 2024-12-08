@@ -1,0 +1,74 @@
+GET http://localhost:5000
+########
+
+GET http://localhost:5000/api/shipment
+########
+
+
+GET http://localhost:5000/api/shipment/1
+########
+
+
+POST http://localhost:5000/api/shipment
+API_key: a1b2c3d4
+Content-Type: application/json
+
+{
+    "id": 1,
+    "order_id": 1,
+    "source_id": 33,
+    "order_date": "2000-03-09",
+    "request_date": "2000-03-11",
+    "shipment_date": "2000-03-13",
+    "shipment_type": "I",
+    "shipment_status": "Pending",
+    "notes": "Zee vertrouwen klas rots heet lachen oneven begrijpen.",
+    "carrier_code": "DPD",
+    "carrier_description": "Dynamic Parcel Distribution",
+    "service_code": "Fastest",
+    "payment_type": "Manual",
+    "transfer_mode": "Ground",
+    "total_package_count": 31,
+    "total_package_weight": 594.42,
+    "created_at": "2000-03-10T11:11:14Z",
+    "updated_at": "2000-03-11T13:11:14Z"
+}
+########
+
+
+PUT http://localhost:5000/api/shipment/1
+API_key: a1b2c3d4
+Content-Type: application/json
+
+{
+    "id": 1,
+    "order_id": 1,
+    "source_id": 33,
+    "order_date": "2000-03-09",
+    "request_date": "2000-03-11",
+    "shipment_date": "2000-03-13",
+    "shipment_type": "I",
+    "shipment_status": "Done",
+    "notes": "Zee vertrouwen klas rots heet lachen oneven begrijpen.",
+    "carrier_code": "DPD",
+    "carrier_description": "Dynamic Parcel Distribution",
+    "service_code": "Fastest",
+    "payment_type": "Manual",
+    "transfer_mode": "Ground",
+    "total_package_count": 31,
+    "total_package_weight": 594.42,
+    "created_at": "2000-03-10T11:11:14Z",
+    "updated_at": "2024-03-11T13:11:14Z"
+}
+########
+
+
+DELETE  http://localhost:5000/api/shipment/1
+########
+
+DELETE  http://localhost:5000/api/shipment/1
+API_key: a1b2c3d4
+########
+
+
+

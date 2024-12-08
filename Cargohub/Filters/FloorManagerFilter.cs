@@ -15,7 +15,7 @@ public class FloorManagerFilter : Attribute, IAsyncActionFilter
             return;
         }
 
-        if (context.Request.Headers["API_key"] != "i9j10k11")
+        if (context.Request.Headers["API_key"] != "i9j10k11" && context.Request.Headers["API_key"] != "a1b2c3d4")
         {
             context.Response.StatusCode = 401;
             return;

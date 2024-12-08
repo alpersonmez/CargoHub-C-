@@ -69,3 +69,13 @@ def test_put_inventories(_url):
         print("PUT request returned 200 but no response body.")
 
     requests.delete(_url + "/99999999", headers=headers)
+
+
+def test_url_inventories(_url):
+    get_response = requests.get(_url + "/url_part2" + "/url_part3", headers=headers)
+    assert get_response.status_code == 404
+
+
+def test_input_inventories(_url):
+    get_response = requests.get(_url + "/seven", headers=headers)
+    assert get_response.status_code == 404

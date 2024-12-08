@@ -16,6 +16,7 @@ namespace Cargohub.Models
                 public DbSet<ItemGroup> ItemGroups { get; set; }
                 public DbSet<Supplier> Supplier { get; set; }
                 public DbSet<Shipment> Shipments { get; set; }
+                public DbSet<Transfer> Transfers { get; set; }
 
         }
 }

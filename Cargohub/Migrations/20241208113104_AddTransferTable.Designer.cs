@@ -3,6 +3,7 @@ using System;
 using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208113104_AddTransferTable")]
+    partial class AddTransferTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -68,6 +71,9 @@ namespace Cargohub.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("Transferid")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UnitOrderQuantity")
                         .HasColumnType("INTEGER");
 
@@ -82,6 +88,8 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Uid");
+
+                    b.HasIndex("Transferid");
 
                     b.ToTable("Items");
                 });
@@ -468,6 +476,18 @@ namespace Cargohub.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Item", b =>
+                {
+                    b.HasOne("Cargohub.Models.Transfer", null)
+                        .WithMany("items")
+                        .HasForeignKey("Transferid");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Transfer", b =>
+                {
+                    b.Navigation("items");
                 });
 #pragma warning restore 612, 618
         }

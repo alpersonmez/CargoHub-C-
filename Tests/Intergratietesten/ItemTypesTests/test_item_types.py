@@ -4,26 +4,45 @@ import requests
 
 @pytest.fixture
 def _url():
-    return "http://localhost:3000/api/v1/item_types"
+    return "http://localhost:5000/api/itemtypes"
 
 
 headers = {
     "Accept": "/",
     "User-Agent": "value",
-    "API_KEY": "a1b2c3d4e5",  #  the API key
+    "API_key": "a1b2c3d4e5",  #  the API key
 }
 
 
 def test_post_item_type(_url):
-    response = requests.post(_url, headers=headers)
-    assert response.status_code == 404
+    new_item_type = {
+        "id": 999999,
+        "name": "frontdesk",
+        "description": "",
+        "created_at": "2020-07-28 13:43:32",
+        "updated_at": "2020-07-28 13:43:32",
+    }
+
+    post_response = requests.post(_url, json=new_item_type, headers=headers)
+    assert post_response.status_code == 201
+
+    get_response = requests.get(_url + "/999999", headers=headers)
+
+    if get_response.content:
+        response_data = get_response.json()
+        assert response_data["name"] == "frontdesk"
+    else:
+        print("GET request returned 200 but no body")
+
+    del_response = requests.delete(_url + "/999999", headers=headers)
+    assert del_response.status_code == 200
 
 
 def test_get_item_type(_url):
-    response = requests.get(_url + "/1", headers=headers)
+    response = requests.get(_url + "/2", headers=headers)
     if response.content:
         response_data = response.json()  # Parse JSON response if body is not empty
-        assert response_data["id"] == 1
+        assert response_data["id"] == 2
     else:
         print("GET request returned 200 but no response body.")
 
@@ -65,7 +84,7 @@ def test_url_item_type(_url):
 
 def test_input_item_type(_url):
     get_response = requests.get(_url + "/seven", headers=headers)
-    assert get_response.status_code == 404
+    assert get_response.status_code == 400
 
 
 def test_url_specification_item_type(_url):

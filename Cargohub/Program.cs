@@ -14,6 +14,7 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IItemTypeService, ItemTypeService>();
+builder.Services.AddScoped<IShipmentService, ShipmentService>();
 
 // Add controllers
 builder.Services.AddControllers();
@@ -22,21 +23,21 @@ var app = builder.Build();
 app.Urls.Add("http://localhost:5000");
 app.MapControllers();
 
-// Add middleware
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/api/Orders")
-    {
-        if (!context.Request.Headers.ContainsKey("API_key"))
-        {
-            Console.WriteLine($"{context.Request.Path} was requested but there is no API_key header");
-            context.Response.StatusCode = 401;
-            return;
-        }
-    }
-    await next.Invoke();
-    Console.WriteLine($"{context.Request.Path} was handled");
-});
+//Add middleware
+// app.Use(async (context, next) =>
+// {
+//     if (context.Request.Path == "/api")
+//     {
+//         if (!context.Request.Headers.ContainsKey("API_key"))
+//         {
+//             Console.WriteLine($"{context.Request.Path} was requested but there is no API_key header");
+//             context.Response.StatusCode = 401;
+//             return;
+//         }
+//     }
+//     await next.Invoke();
+//     Console.WriteLine($"{context.Request.Path} was handled");
+// });
 
 // Seed the database with initial data (Optional)
 using (var scope = app.Services.CreateScope())

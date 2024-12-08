@@ -15,7 +15,7 @@ public class ManagerFilter : Attribute, IAsyncActionFilter
             return;
         }
 
-        if (context.Request.Headers["API_key"] != "e5f6g7h8")
+        if (context.Request.Headers["API_key"] != "e5f6g7h8" && context.Request.Headers["API_key"] != "a1b2c3d4")
         {
             context.Response.StatusCode = 401;
             return;

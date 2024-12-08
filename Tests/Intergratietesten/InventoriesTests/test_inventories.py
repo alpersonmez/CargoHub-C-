@@ -4,13 +4,12 @@ import requests
 
 @pytest.fixture
 def _url():
-    return "http://localhost:3000/api/v1/inventories"
+    return "http://localhost:5000/api/inventory"
 
 
 headers = {
     "Accept": "/",
-    "User-Agent": "value",
-    "API_KEY": "a1b2c3d4e5",  #  the API key
+    "API_key": "a1b2c3d4e5",  #  the API key
 }
 
 

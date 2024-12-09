@@ -62,11 +62,11 @@ jobs:
     # Run Python tests
     - name: Run Python tests with pytest
       run: |
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/ItemTests/test_items.py  # Run the tests
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/OrdersTests/test_orders.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ITs/ClientsTests/test_clients.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemTests/test_items.py  # Run the tests
+        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/OrdersTests/test_orders.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
+        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
+        pytest --disable-warnings -q Cargohub.Tests/ClientsTests/test_clients.py

@@ -18,6 +18,8 @@ builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IitemlinesService, ItemlinesService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 
 // Add controllers
 builder.Services.AddControllers();

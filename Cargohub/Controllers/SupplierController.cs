@@ -2,6 +2,7 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -33,6 +34,7 @@ public class SupplierController : ControllerBase
         return Ok(supplier);
     }
 
+    [AdminFilter]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Supplier New)
     {
@@ -43,7 +45,7 @@ public class SupplierController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = createdsupplier.Id }, createdsupplier);
     }
 
-
+    [AdminFilter]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] Supplier supplier)
     {
@@ -65,7 +67,7 @@ public class SupplierController : ControllerBase
         return NoContent();
     }
 
-
+    [AdminFilter]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

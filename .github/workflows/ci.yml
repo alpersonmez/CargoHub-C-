@@ -60,13 +60,27 @@ jobs:
         pip install -r Cargohub.Tests/requirements.txt  # Install dependencies listed in requirements.txt
 
     # Run Python tests
-    - name: Run Python tests with pytest
-      run: |
-        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemTests/test_items.py  # Run the tests
-        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
-        pytest --disable-warnings -q Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
-        pytest --disable-warnings -q Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
-        pytest --disable-warnings -q Cargohub.Tests/ITs/OrdersTests/test_orders.py
-        pytest --disable-warnings -q Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
-        pytest --disable-warnings -q Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
-        pytest --disable-warnings -q Cargohub.Tests/ClientsTests/test_clients.py
+  - name: Run Item Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemTests/test_items.py
+
+  - name: Run Item Lines Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
+
+  - name: Run Supplier Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
+
+  - name: Run Inventories Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
+
+  - name: Run Orders Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/OrdersTests/test_orders.py
+
+  - name: Run Shipments Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
+
+  - name: Run Item Groups Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
+
+  - name: Run Clients Tests
+    run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
+

@@ -14,6 +14,7 @@ builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IItemTypeService, ItemTypeService>();
+builder.Services.AddScoped<IInventoryService, IInventoryService>();
 
 // Add controllers
 builder.Services.AddControllers();

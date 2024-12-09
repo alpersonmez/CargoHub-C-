@@ -8,18 +8,18 @@ namespace Cargohub.Controllers
 
     [ApiController]
     [Route("api/v1/item_groups")]
-    public class Item_GroupsController : ControllerBase
+    public class InventoryController : ControllerBase
     {
 
-        private readonly IitemGroupsService _IitemGroupsService;
+        private readonly InventoryService _InventoryService;
 
-        public Item_GroupsController(IitemGroupsService IitemGroupsService)
+        public InventoryController(InventoryService InventoryService)
         {
-            _IitemGroupsService = IitemGroupsService;
+            InventoryService = InventoryService;
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllItem_groups()
+        public ActionResult<List<Item>> GetAllInventories()
         {
             return null;
         }
@@ -27,26 +27,26 @@ namespace Cargohub.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int Id)
         {
-            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupsById(Id);
-            if (itemGroup == null)
+            Inventory inventory = await _InventoryService.GetInventoryById(Id);
+            if (inventory == null)
             {
                 return NotFound();
             }
-            return Ok(itemGroup);
+            return Ok(inventory);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ItemGroup itemGroup)
+        public async Task<IActionResult> Update(int id, [FromBody] Inventory inventory)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
 
-            if (id != itemGroup.id)
+            if (id != inventory.id)
             {
                 return BadRequest($"Location Id {id} does not match");
             }
 
-            var updated = await _IitemGroupsService.UpdateItem_Groups(itemGroup);
+            var updated = await _InventoryService.UpdateInventory(inventory);
 
             if (!updated)
             {
@@ -59,7 +59,7 @@ namespace Cargohub.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            bool deleted = await _IitemGroupsService.DeleteItem_Groups(id);
+            bool deleted = await _InventoryService.DeleteInventory(id);
             if (!deleted)
             {
                 return NotFound();

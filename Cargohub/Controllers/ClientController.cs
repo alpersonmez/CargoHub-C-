@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Cargohub.Models;
 using Cargohub.Services;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
@@ -31,6 +32,7 @@ namespace Cargohub.Controllers
             return Ok(client);
         }
 
+        [AdminFilter]
         [HttpPost]
         public IActionResult CreateClient([FromBody] Client client)
         {
@@ -41,6 +43,7 @@ namespace Cargohub.Controllers
             return CreatedAtAction(nameof(GetClientById), new { id = createdClient.Id }, createdClient);
         }
 
+        [AdminFilter]
         [HttpPut("{id}")]
         public IActionResult UpdateClient(int id, [FromBody] Client client)
         {
@@ -54,6 +57,7 @@ namespace Cargohub.Controllers
             return Ok(updatedClient);
         }
 
+        [AdminFilter]
         [HttpDelete("{id}")]
         public IActionResult DeleteClient(int id)
         {

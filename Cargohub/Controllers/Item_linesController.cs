@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Cargohub.Controllers{
 
     [ApiController]
-    [Route("api/v1/item_lines")]
+    [Route("api/[controller]")]
     public class Item_linesController : ControllerBase{
 
         private readonly IitemlinesService _IitemlinesService;
@@ -17,56 +17,34 @@ namespace Cargohub.Controllers{
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllItem_lines()
+        public IActionResult GetAll()
         {
-            return Ok(_IitemlinesService.GetAllItem_lines());
+            var itemlines = _IitemlinesService.GetAllItem_lines();
+            return Ok(itemlines);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int Id)
+        public IActionResult GetById(int id)
         {
-            Item_lines item_lines = await _IitemlinesService.GetItem_linesById(Id);
-            if (item_lines == null)
-            {
-                return NotFound();
-            }
-            return Ok(item_lines);
+            var itemLine = _IitemlinesService.GetItem_linesById(id);
+            if (itemLine == null) return NotFound("ItemLine not found");
+            return Ok(itemLine);
         }
     
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Item_lines item_Lines)
+        public IActionResult Update(int id, [FromBody] Item_lines updatedItemLine)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
-            
-            if (id != item_Lines.id)
-            {
-                return BadRequest($"Location Id {id} does not match");
-            }
-            
-            var updated = await _IitemlinesService.UpdateItem_lines(item_Lines);
-
-            if (!updated)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            var updated = _IitemlinesService.UpdateItem_lines(id, updatedItemLine);
+            if (updated == null) return NotFound("ItemLine not found");
+            return Ok(updated);
         }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public IActionResult DeleteItem_lines(int id)
     {
-        bool deleted = await _IitemlinesService.DeleteItem_lines(id);
-        if (!deleted)
-        {
-            return NotFound();
-
-        } 
-        return NoContent();
+        var deleted = _IitemlinesService.DeleteItem_lines(id);
+        if (!deleted) return NotFound("ItemLine not found");
+        return Ok("ItemLine deleted successfully");
     }
-
-
-
     }
 }

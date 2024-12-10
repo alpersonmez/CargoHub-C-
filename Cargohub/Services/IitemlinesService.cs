@@ -5,9 +5,9 @@ namespace Cargohub.Services
 {
     public interface IitemlinesService
     {
-        Task<List<Item_lines>> GetAllItem_lines();
-        Task<Item_lines> GetItem_linesById(int id);
-        Task<bool> UpdateItem_lines(Item_lines item_lines);
-        Task<bool> DeleteItem_lines(int id);
+        List<Item_lines> GetAllItem_lines();
+        Item_lines GetItem_linesById(int id);
+        Item_lines UpdateItem_lines(int id, Item_lines Updateditem_lines);
+        bool DeleteItem_lines(int id);
     }
 }

@@ -7,55 +7,56 @@ using Cargohub.Models;
 namespace Cargohub.Services
 {
 
-    public class ItemGroupsService : IitemGroupsService
+    public class ItemGroupService : IItemGroupService
     {
         private readonly AppDbContext _context;
 
-        public ItemGroupsService(AppDbContext context)
+        public ItemGroupService(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<ItemGroup>> GetAllItem_Groups()
+        public async Task<List<ItemGroup>>? GetAllItem_Groups()
         {
-            return null;
-            //return await _context.Item_Groups.Take(100).ToListAsync();
+            return await _context.ItemGroups.Take(100).ToListAsync();
         }
 
-        public async Task<ItemGroup> GetItem_GroupsById(int id)
+        public async Task<ItemGroup>? GetItem_GroupById(int id)
         {
-            return null;
-            //return await _context.Item_Groups.FindAsync(id);
+            //ItemGroup? doesExist = await _context.ItemGroups.FindAsync(id);
+
+
+
+            return await _context.ItemGroups.FindAsync(id);
         }
 
         public async Task<bool> UpdateItem_Groups(ItemGroup item_Group)
         {
-            return false;
-            // ItemGroup existing = await _context.Item_Groups.FindAsync(item_Group.id);
+            ItemGroup existing = await _context.ItemGroups.FindAsync(item_Group.id);
 
-            // if (existing == null) return false;
+            if (existing == null) return false;
 
-            // existing.name = item_Group.name;
-            // existing.description = item_Group.description;
-            // existing.UpdatedAt = DateTime.UtcNow;
+            existing.name = item_Group.name;
+            existing.description = item_Group.description;
+            existing.UpdatedAt = DateTime.UtcNow;
 
-            // _context.Item_Groups.Update(existing);
-            // await _context.SaveChangesAsync();
-            // return true;
+            _context.ItemGroups.Update(existing);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteItem_Groups(int id)
         {
-            return false;
-            // var item = await _context.Item_Groups.FindAsync(id);
-            // if (item == null)
-            // {
-            //     return false;
-            // }
 
-            // _context.Item_Groups.Remove(item);
-            // await _context.SaveChangesAsync();
-            // return true;
+            var item = await _context.ItemGroups.FindAsync(id);
+            if (item == null)
+            {
+                return false;
+            }
+
+            _context.ItemGroups.Remove(item);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

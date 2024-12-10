@@ -12,6 +12,7 @@ public class Warehouse
     public string contactName { get; set; }
     public string contactPhone { get; set; }
     public string contactEmail { get; set; }
-    public DateTime created_at { get; set; }
-    public DateTime updated_at { get; set; }
+    public DateTime? created_at { get; set; }
+    public DateTime? updated_at { get; set; }
+    public bool isSoftDeleted { get; set; }
 }

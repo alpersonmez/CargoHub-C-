@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Http.Features;
 namespace Cargohub.Models
 {
-    public class Supplier{
+    public class Supplier
+    {
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
@@ -15,6 +16,7 @@ namespace Cargohub.Models
         public string Reference { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool isSoftDeleted { get; set; }
     }
 }
 

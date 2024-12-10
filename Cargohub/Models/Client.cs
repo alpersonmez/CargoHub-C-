@@ -14,5 +14,6 @@ namespace Cargohub.Models
         public string ContactEmail { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public bool isSoftDeleted { get; set; }
     }
 }

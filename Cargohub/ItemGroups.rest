@@ -7,23 +7,24 @@ GET http://localhost:5000/api/v1/item_groups/1
 ####
 
 
-POST http://localhost:5000/api/v1/item_groups
+POST http://localhost:5000/api/v1/item_groups/new
+API_key: a1b2c3d4
 Content-Type: application/json
 
 {             
-    "id": 1,
-    "name": "new item group",
-    "description": "this is for testing, no real data"
+    "id": 3,
+    "name": "new item group 2",
+    "description": "this is for testing, no real data. no 2 "
 }
 
 ####
 
 
-PUT http://localhost:5000/api/v1/item_groups/1 
+PUT http://localhost:5000/api/v1/item_groups/3
 Content-Type: application/json
  
 {
-    "Id": 5,
+    "id": 3,
     "name": "changed item group",
     "description": "this is a changed test item group"
 }

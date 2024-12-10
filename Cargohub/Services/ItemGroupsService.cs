@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
 
+
 namespace Cargohub.Services
 {
 
@@ -23,11 +24,12 @@ namespace Cargohub.Services
 
         public async Task<ItemGroup>? GetItem_GroupById(int id)
         {
-            //ItemGroup? doesExist = await _context.ItemGroups.FindAsync(id);
+            ItemGroup? doesExist = await _context.ItemGroups.FirstOrDefaultAsync(x => x.id == id);
+            Console.WriteLine("got here");
+            if (doesExist == null) return null;
 
 
-
-            return await _context.ItemGroups.FindAsync(id);
+            return doesExist;
         }
 
         public async Task<bool> UpdateItem_Groups(ItemGroup item_Group)
@@ -47,16 +49,24 @@ namespace Cargohub.Services
 
         public async Task<bool> DeleteItem_Groups(int id)
         {
-
-            var item = await _context.ItemGroups.FindAsync(id);
-            if (item == null)
-            {
-                return false;
-            }
-
+            ItemGroup? item = await _context.ItemGroups.FindAsync(id);
+            if (item == null) return false;
             _context.ItemGroups.Remove(item);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<bool> PostItemGroup(ItemGroup itemGroup)
+        {
+            ItemGroup? exists = await _context.ItemGroups.FindAsync(itemGroup.id);
+            if (exists != null) return false;
+            DateTime now = DateTime.Now;
+            itemGroup.CreatedAt = now;
+            itemGroup.UpdatedAt = now;
+            _context.ItemGroups.Add(itemGroup);
+            int saved = await _context.SaveChangesAsync();
+            if (saved == 1) return true;
+            return false;
         }
     }
 }

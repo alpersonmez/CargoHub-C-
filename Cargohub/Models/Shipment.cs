@@ -20,4 +20,5 @@ public class Shipment
     public double total_package_weight { get; set; }
     public DateTime created_at { get; set; }
     public DateTime updated_at { get; set; }
+    public bool isSoftDeleted { get; set; }
 }

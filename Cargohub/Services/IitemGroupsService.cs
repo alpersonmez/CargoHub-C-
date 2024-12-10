@@ -9,5 +9,6 @@ namespace Cargohub.Services
         Task<ItemGroup>? GetItem_GroupById(int id);
         Task<bool> UpdateItem_Groups(ItemGroup item_groups);
         Task<bool> DeleteItem_Groups(int id);
+        Task<bool> PostItemGroup(ItemGroup itemGroup);
     }
 }

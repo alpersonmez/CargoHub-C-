@@ -3,6 +3,7 @@ using System;
 using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210090632_AddItemGroupTable")]
+    partial class AddItemGroupTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -65,9 +68,6 @@ namespace Cargohub.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
@@ -85,9 +85,6 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("item_id")
                         .IsRequired()
@@ -188,9 +185,6 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Uid");
 
                     b.ToTable("Items");
@@ -202,18 +196,15 @@ namespace Cargohub.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -244,9 +235,6 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("ItemTypes");
@@ -272,9 +260,6 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Item_lines");
@@ -292,9 +277,6 @@ namespace Cargohub.Migrations
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
                         .IsRequired()
@@ -373,9 +355,6 @@ namespace Cargohub.Migrations
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
                         .HasColumnType("TEXT");
@@ -476,9 +455,6 @@ namespace Cargohub.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Supplier");
@@ -490,11 +466,8 @@ namespace Cargohub.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("created_at")
+                    b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("reference")
                         .HasColumnType("TEXT");
@@ -508,7 +481,7 @@ namespace Cargohub.Migrations
                     b.Property<int>("transfer_to")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("updated_at")
+                    b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
@@ -550,11 +523,8 @@ namespace Cargohub.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("created_at")
+                    b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("isSoftDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -564,7 +534,7 @@ namespace Cargohub.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("updated_at")
+                    b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("zip")
@@ -597,9 +567,6 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("WareHouse_Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("isSoftDeleted")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

@@ -24,6 +24,7 @@ namespace Cargohub.Models
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }
         //public List<Item> Items { get; set; }
+        public bool isSoftDeleted { get; set; }
 
     }
 }

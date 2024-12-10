@@ -1,5 +1,6 @@
 using Cargohub.Models;
 using Cargohub.Services;
+using Cargohub.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -11,23 +12,26 @@ namespace Cargohub.Controllers
     public class Item_GroupsController : ControllerBase
     {
 
-        private readonly IItemGroupService _IitemGroupsService;
+        private readonly IItemGroupService _itemGroupsService;
 
         public Item_GroupsController(IItemGroupService IitemGroupsService)
         {
-            _IitemGroupsService = IitemGroupsService;
+            _itemGroupsService = IitemGroupsService;
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllItem_groups()
+        public async Task<ActionResult<List<Item>>> GetAllItem_groups()
         {
-            return Ok();
+            List<ItemGroup>? allItemsGroups = await _itemGroupsService.GetAllItem_Groups();
+            if (allItemsGroups == null || !allItemsGroups.Any())
+                return NotFound("There are no Item Groups available.");
+            return Ok(allItemsGroups);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int Id)
         {
-            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupById(Id);
+            ItemGroup itemGroup = await _itemGroupsService.GetItem_GroupById(Id);
             if (itemGroup == null)
             {
                 return NotFound();
@@ -38,28 +42,25 @@ namespace Cargohub.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ItemGroup itemGroup)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             if (id != itemGroup.id)
             {
-                return BadRequest($"Location Id {id} does not match");
+                return BadRequest($"Item Group Id {id} does not match");
             }
 
-            var updated = await _IitemGroupsService.UpdateItem_Groups(itemGroup);
+            bool updated = await _itemGroupsService.UpdateItem_Groups(itemGroup);
 
             if (!updated)
             {
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(itemGroup);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            bool deleted = await _IitemGroupsService.DeleteItem_Groups(id);
+            bool deleted = await _itemGroupsService.DeleteItem_Groups(id);
             if (!deleted)
             {
                 return NotFound();
@@ -68,5 +69,13 @@ namespace Cargohub.Controllers
             return NoContent();
         }
 
+        [AdminFilter]
+        [HttpPost("new")]
+        public async Task<IActionResult> Post([FromBody] ItemGroup newItemGroup)
+        {
+            bool posted = await _itemGroupsService.PostItemGroup(newItemGroup);
+            if (!posted) return NotFound("this itemgroup already exists or it can not be posted");
+            return Ok(newItemGroup);
+        }
     }
 }

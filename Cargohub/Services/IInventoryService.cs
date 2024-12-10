@@ -10,5 +10,6 @@ namespace Cargohub.Services
         Inventory GetInventoryById(int id);
         bool UpdateInventory(Inventory inventory);
         bool DeleteInventory(int id);
+        //bool PostInventory(Inventory inventory);
     }
 }

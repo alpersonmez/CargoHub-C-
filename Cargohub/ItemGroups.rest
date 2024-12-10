@@ -1,0 +1,35 @@
+GET http://localhost:5000/api/v1/item_groups
+####
+
+
+GET http://localhost:5000/api/v1/item_groups/1
+
+####
+
+
+POST http://localhost:5000/api/v1/item_groups
+Content-Type: application/json
+
+{             
+    "id": 1,
+    "name": "new item group",
+    "description": "this is for testing, no real data"
+}
+
+####
+
+
+PUT http://localhost:5000/api/v1/item_groups/1 
+Content-Type: application/json
+ 
+{
+    "Id": 5,
+    "name": "changed item group",
+    "description": "this is a changed test item group"
+}
+
+####
+
+DELETE  http://localhost:5000/api/v1/item_groups/1 
+
+

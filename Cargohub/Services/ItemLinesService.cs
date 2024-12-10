@@ -15,44 +15,36 @@ namespace Cargohub.Services{
             _context = context;
         }
 
-        public async Task<List<Item_lines>> GetAllItem_lines()
+        public List<Item_lines> GetAllItem_lines()
         {
-            return await _context.Item_lines.Take(100).ToListAsync(); // Take(100) is that the limit is 100 locations
+            return _context.Item_lines.Take(100).ToList(); // Take(100) is that the limit is 100 locations
         }
 
-        public async Task<Item_lines> GetItem_linesById(int id)
+        public Item_lines GetItem_linesById(int id)
         {
-            return await _context.Item_lines.FindAsync(id);
+            return _context.Item_lines.FirstOrDefault(Item_lines => Item_lines.Id == id);
         }
 
-        public async Task<bool> UpdateItem_lines(Item_lines item_Lines)
+        public Item_lines UpdateItem_lines(int id, Item_lines Updateditem_lines)
         {
-            Item_lines existing = await _context.Item_lines.FindAsync(item_Lines.id);
-            
-            if (existing == null)
-            {
-                return false;
-            }
+            var existingItemLine = _context.Item_lines.SingleOrDefault(Item_lines => Item_lines.Id == id);
+            if (existingItemLine == null) return null;
 
-            existing.name = item_Lines.name;
-            existing.description = item_Lines.description;
-            existing.UpdatedAt = DateTime.UtcNow;
+            existingItemLine.Name = Updateditem_lines.Name;
+            existingItemLine.Description = Updateditem_lines.Description;
+            existingItemLine.UpdatedAt = DateTime.UtcNow;
 
-            _context.Item_lines.Update(existing);
-            await _context.SaveChangesAsync();
-            return true;
+            _context.SaveChanges();
+            return existingItemLine;
         }
 
-        public async Task<bool> DeleteItem_lines(int id)
+        public bool DeleteItem_lines(int id)
         {
-            var item = await _context.Item_lines.FindAsync(id);
-            if (item == null)
-            {
-                return false;
-            }
-            
-            _context.Item_lines.Remove(item);
-            await _context.SaveChangesAsync();
+            var itemLine = GetItem_linesById(id);
+            if (itemLine == null) return false;
+
+            _context.Item_lines.Remove(itemLine);
+            _context.SaveChanges();
             return true;
         }
     }

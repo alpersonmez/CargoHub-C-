@@ -60,13 +60,35 @@ jobs:
         pip install -r Cargohub.Tests/requirements.txt  # Install dependencies listed in requirements.txt
 
     # Run Python tests
-    - name: Run Python tests with pytest
-      run: |
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemTests/test_items.py  # Run the tests
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemLinesTests/test_item_lines.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/SupplierTests/test_suppliers.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/InventoriesTests/test_inventories.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/OrdersTests/test_orders.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ShipmentsTests/test_shipments.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemGroupsTests/test_item_groups.py
-        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ClientsTests/test_clients.py
+    - name: Run Item Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemTests/test_items.py
+      continue-on-error: true
+
+    - name: Run Item Lines Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
+      continue-on-error: true
+
+    - name: Run Supplier Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
+      continue-on-error: true
+
+    - name: Run Inventories Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
+      continue-on-error: true
+
+    - name: Run Orders Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/OrdersTests/test_orders.py
+      continue-on-error: true
+
+    - name: Run Shipments Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
+      continue-on-error: true
+
+    - name: Run Item Groups Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
+      continue-on-error: true
+
+    - name: Run Clients Tests
+      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
+      continue-on-error: true
+

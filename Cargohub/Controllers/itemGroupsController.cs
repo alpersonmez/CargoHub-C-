@@ -11,9 +11,9 @@ namespace Cargohub.Controllers
     public class Item_GroupsController : ControllerBase
     {
 
-        private readonly IitemGroupsService _IitemGroupsService;
+        private readonly IItemGroupService _IitemGroupsService;
 
-        public Item_GroupsController(IitemGroupsService IitemGroupsService)
+        public Item_GroupsController(IItemGroupService IitemGroupsService)
         {
             _IitemGroupsService = IitemGroupsService;
         }
@@ -21,32 +21,32 @@ namespace Cargohub.Controllers
         [HttpGet]
         public ActionResult<List<Item>> GetAllItem_groups()
         {
-            return null;
+            return Ok();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int Id)
         {
-            ItemGroup item_lines = await _IitemGroupsService.GetItem_GroupsById(Id);
-            if (item_lines == null)
+            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupById(Id);
+            if (itemGroup == null)
             {
                 return NotFound();
             }
-            return Ok(item_lines);
+            return Ok(itemGroup);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ItemGroup item_Lines)
+        public async Task<IActionResult> Update(int id, [FromBody] ItemGroup itemGroup)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+                return BadRequest(ModelState);
 
-            if (id != item_Lines.id)
+            if (id != itemGroup.id)
             {
                 return BadRequest($"Location Id {id} does not match");
             }
 
-            var updated = await _IitemGroupsService.UpdateItem_Groups(item_Lines);
+            var updated = await _IitemGroupsService.UpdateItem_Groups(itemGroup);
 
             if (!updated)
             {
@@ -67,8 +67,6 @@ namespace Cargohub.Controllers
             }
             return NoContent();
         }
-
-
 
     }
 }

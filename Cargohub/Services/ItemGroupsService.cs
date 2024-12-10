@@ -7,7 +7,7 @@ using Cargohub.Models;
 namespace Cargohub.Services
 {
 
-    public class ItemGroupsService : IitemGroupsService
+    public class ItemGroupsService : IItemGroupsService
     {
         private readonly AppDbContext _context;
 
@@ -16,13 +16,16 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<ItemGroup>> GetAllItem_Groups()
+        public async Task<List<ItemGroup>>? GetAllItem_Groups()
         {
             return await _context.ItemGroups.Take(100).ToListAsync();
         }
 
-        public async Task<ItemGroup> GetItem_GroupsById(int id)
+        public async Task<ItemGroup>? GetItem_GroupById(int id)
         {
+            //ItemGroup? doesExist = await _context.ItemGroups.FindAsync(id);
+
+
 
             return await _context.ItemGroups.FindAsync(id);
         }

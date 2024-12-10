@@ -11,9 +11,9 @@ namespace Cargohub.Controllers
     public class Item_GroupsController : ControllerBase
     {
 
-        private readonly IitemGroupsService _IitemGroupsService;
+        private readonly IItemGroupsService _IitemGroupsService;
 
-        public Item_GroupsController(IitemGroupsService IitemGroupsService)
+        public Item_GroupsController(IItemGroupsService IitemGroupsService)
         {
             _IitemGroupsService = IitemGroupsService;
         }
@@ -21,13 +21,13 @@ namespace Cargohub.Controllers
         [HttpGet]
         public ActionResult<List<Item>> GetAllItem_groups()
         {
-            return null;
+            return Ok();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int Id)
         {
-            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupsById(Id);
+            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupById(Id);
             if (itemGroup == null)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace Cargohub.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] ItemGroup itemGroup)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+                return BadRequest(ModelState);
 
             if (id != itemGroup.id)
             {
@@ -67,8 +67,6 @@ namespace Cargohub.Controllers
             }
             return NoContent();
         }
-
-
 
     }
 }

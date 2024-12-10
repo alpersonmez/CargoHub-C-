@@ -12,22 +12,22 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Inventory>> GetTotalOfInventories()
+        public List<Inventory> GetTotalOfInventories()
         {
             return null;
         }
-        public async Task<List<Inventory>> GetAllInventories()
+        public List<Inventory> GetAllInventories()
         {
             return _context.Inventories.Take(100).ToList();
             //return await _context.Inventories.Take(100).ToListAsync();
         }
-        public async Task<Inventory> GetInventoryById(int id)
+        public Inventory GetInventoryById(int id)
         {
-            return await _context.Inventories.FindAsync(id);
+            return _context.Inventories.Find(id);
         }
-        public async Task<bool> UpdateInventory(Inventory inventory)
+        public bool UpdateInventory(Inventory inventory)
         {
-            Inventory existing = await _context.Inventories.FindAsync(inventory.id);
+            Inventory? existing = _context.Inventories.Find(inventory.id);
 
             if (existing == null) return false;
 
@@ -41,19 +41,19 @@ namespace Cargohub.Services
             existing.updated_at = DateTime.UtcNow;
 
             _context.Inventories.Update(existing);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return true;
         }
-        public async Task<bool> DeleteInventory(int id)
+        public bool DeleteInventory(int id)
         {
-            var inventory = await _context.Inventories.FindAsync(id);
+            var inventory = _context.Inventories.Find(id);
             if (inventory == null)
             {
                 return false;
             }
 
             _context.Inventories.Remove(inventory);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return true;
         }
     }

@@ -7,27 +7,28 @@ namespace Cargohub.Controllers
 {
 
     [ApiController]
-    [Route("api/v1/item_groups")]
+    [Route("api/v1/inventory")]
     public class InventoryController : ControllerBase
     {
 
-        private readonly InventoryService _InventoryService;
+        private readonly InventoryService _inventoryService;
 
         public InventoryController(InventoryService InventoryService)
         {
-            InventoryService = InventoryService;
+            _inventoryService = InventoryService;
         }
 
         [HttpGet]
         public ActionResult<List<Item>> GetAllInventories()
         {
-            return null;
+            List<Inventory>? allInventories = _inventoryService.GetAllInventories();
+            return Ok(allInventories.ToList());
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int Id)
+        public IActionResult Get(int Id)
         {
-            Inventory inventory = await _InventoryService.GetInventoryById(Id);
+            Inventory inventory = _inventoryService.GetInventoryById(Id);
             if (inventory == null)
             {
                 return NotFound();
@@ -36,39 +37,31 @@ namespace Cargohub.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Inventory inventory)
+        public IActionResult Update(int id, [FromBody] Inventory inventory)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
-
             if (id != inventory.id)
             {
                 return BadRequest($"Location Id {id} does not match");
             }
-
-            var updated = await _InventoryService.UpdateInventory(inventory);
-
+            bool updated = _inventoryService.UpdateInventory(inventory);
             if (!updated)
             {
                 return NotFound();
             }
-
-            return NoContent();
+            return Ok(updated.ToString());
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            bool deleted = await _InventoryService.DeleteInventory(id);
+            bool deleted = _inventoryService.DeleteInventory(id);
             if (!deleted)
             {
                 return NotFound();
 
             }
-            return NoContent();
+            return Ok(deleted.ToString());
         }
-
-
 
     }
 }

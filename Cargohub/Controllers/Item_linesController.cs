@@ -2,6 +2,7 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers{
 
@@ -30,7 +31,8 @@ namespace Cargohub.Controllers{
             if (itemLine == null) return NotFound("ItemLine not found");
             return Ok(itemLine);
         }
-    
+
+        [AdminFilter]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Item_lines updatedItemLine)
         {
@@ -39,12 +41,13 @@ namespace Cargohub.Controllers{
             return Ok(updated);
         }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteItem_lines(int id)
-    {
-        var deleted = _IitemlinesService.DeleteItem_lines(id);
-        if (!deleted) return NotFound("ItemLine not found");
-        return Ok("ItemLine deleted successfully");
-    }
-    }
+        [AdminFilter]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteItem_lines(int id)
+        {
+            var deleted = _IitemlinesService.DeleteItem_lines(id);
+            if (!deleted) return NotFound("ItemLine not found");
+            return Ok("ItemLine deleted successfully");
+        }
+        }
 }

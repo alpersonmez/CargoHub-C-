@@ -3,6 +3,7 @@ using Cargohub.Services;
 using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register the database context
@@ -22,6 +23,8 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IitemlinesService, ItemlinesService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Add controllers
 builder.Services.AddControllers();
@@ -29,6 +32,15 @@ var app = builder.Build();
 
 app.Urls.Add("http://localhost:5000");
 app.MapControllers();
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 //Add middleware
 // app.Use(async (context, next) =>

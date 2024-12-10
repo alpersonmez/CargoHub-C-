@@ -1,24 +1,9 @@
 ### Get all itemLines
 GET http://localhost:5000/api/item_lines
 
-###
-
 ### Get a specific itemLines by ID
 GET http://localhost:5000/api/item_lines/5
 Content-Type: application/json
-
-###
-
-### Create a new itemLines
-POST http://localhost:5000/api/item_lines
-Content-Type: application/json
-
-{             
-    "name": "nieuw",
-    "description": "A123"
-}
-
-###
 
 ### Update an existing itemLines
 PUT http://localhost:5000/api/item_lines/5 
@@ -29,7 +14,6 @@ Content-Type: application/json
     "name": "nieuw",
     "description": "A123"
 }
-
 
 ### DELETE an existing itemLines
 DELETE  http://localhost:5000/api/item_lines/5 

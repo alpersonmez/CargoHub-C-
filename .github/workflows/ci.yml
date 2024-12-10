@@ -3,7 +3,8 @@ name: Python Tests for C# API / CI
 on:
   pull_request:
     branches:
-      - main  # This triggers the action only on pull requests to the main branch
+      - main # This triggers the action only on pull requests to the main branch
+      - development # This triggers the action only on pull requests to the development branch
 
 jobs:
   build-and-test:
@@ -36,13 +37,13 @@ jobs:
     # Install .NET dependencies and build the API
     - name: Install dependencies and build API
       run: |
-        dotnet restore CargoHub  # Restore project dependencies
-        dotnet build CargoHub --no-restore  # Build the API
+        dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
+        dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
 
     # Run the API
     - name: Start API
       run: |
-        cd CargoHub  # Navigate to the project folder (if not in root)
+        cd Cargohub  # Navigate to the project folder (if not in root)
         dotnet run &  # Start the API in the background
         sleep 15  # Wait for the API to start
 
@@ -56,9 +57,16 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r Tests/requirements.txt  # Install dependencies listed in requirements.txt
+        pip install -r Cargohub.Tests/requirements.txt  # Install dependencies listed in requirements.txt
 
     # Run Python tests
     - name: Run Python tests with pytest
       run: |
-        pytest --maxfail=1 --disable-warnings -q Tests/ItemTests/test_items.py  # Run the tests
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemTests/test_items.py  # Run the tests
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemLinesTests/test_item_lines.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/SupplierTests/test_suppliers.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/InventoriesTests/test_inventories.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/OrdersTests/test_orders.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ShipmentsTests/test_shipments.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ItemGroupsTests/test_item_groups.py
+        pytest --maxfail=1 --disable-warnings -q Cargohub.Tests/ClientsTests/test_clients.py

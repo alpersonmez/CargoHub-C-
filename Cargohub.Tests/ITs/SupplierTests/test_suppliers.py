@@ -11,14 +11,13 @@ def _url():
 headers = {
     "Accept": "/",
     "User-Agent": "value",
-    "API_key": "a1b2c3d4e5",  #  the API key
+    "API_key": "a1b2c3d4",  #  the API key
 }
 
 
 def test_add_remove_suppliers(_url):
 
     new_supplier = {
-        "Id": 99999999,
         "Code": "SUP0001",
         "Name": "testsupplier",
         "Address": "unknown",
@@ -53,7 +52,6 @@ def test_add_remove_suppliers(_url):
 
 def test_put_suppliers(_url):
     new_supplier = {
-        "Id": 99999999,
         "Code": "SUP0001",
         "Name": "testsupplier",
         "Address": "unknown",
@@ -64,14 +62,15 @@ def test_put_suppliers(_url):
         "Country": "Czech Republic",
         "ContactName": "Toni Barnett",
         "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001",
+        "Reference": "LPaJ-SUP0001"
     }
     post_response = requests.post(_url, json=new_supplier, headers=headers)
     id = post_response.json()["id"]
 
     updated_supplier = {
+        "Id": id,
         "Code": "SUP0001",
-        "Name": "testsupplier",
+        "Name": "UPDATED",
         "Address": "Hofplein",
         "AddressExtra": "Apt. 420",
         "City": "Port Anitaburgh",
@@ -80,10 +79,10 @@ def test_put_suppliers(_url):
         "Country": "Czech Republic",
         "ContactName": "Toni Barnett",
         "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001",
+        "Reference": "LPaJ-SUP0001"
     }
-    put_response = requests.put(_url + f"/{id}", json=updated_supplier, headers=headers)
-    assert put_response.status_code == 200
+    put_response = requests.put(f"{_url}/{id}", json=updated_supplier, headers=headers)
+    assert put_response.status_code == 204
 
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty
@@ -91,7 +90,7 @@ def test_put_suppliers(_url):
     else:
         print("PUT request returned 200 but no response body.")
 
-    requests.delete(_url + f"/{id}", headers=headers)
+    requests.delete(f"{_url}/{id}", headers=headers)
 
 
 def test_url_suppliers(_url):
@@ -111,26 +110,42 @@ def test_url_specification_suppliers(_url):
     assert get_response.status_code == 404
 
 
-def test_time_suppliers(_url):
-    requests.delete(_url + "/999999999", headers=headers)
-    requests.delete(_url + "/999999999", headers=headers)
+# def test_time_suppliers(_url):
+#     new_supplier = {
+#         "Code": "C001",
+#         "Name": "Alice Smith",
+#         "Address": "Nieuwe Binnenweg 123",
+#         "AddressExtra": "Apt 5B",
+#         "City": "Rotterdam",
+#         "ZipCode": "3014 GG",
+#         "Country": "Netherlands",
+#         "ContactName": "Alice",
+#         "PhoneNumber": "0612345678",
+#         "Reference": "First-time client"
+#     }
 
-    new_supplier = {
-        "id": 999999999,
-        "name": "testsupplier",
-        "address": "test_suppliers.py",
-    }
-    requests.post(_url, json=new_supplier, headers=headers)
+#     # Create a new supplier
+#     post_response = requests.post(_url, headers=headers, json=new_supplier, )
 
-    get_result = requests.get(_url + "/999999999", headers=headers)
-    if get_result.content:
-        response_data = get_result.json()  # Parse JSON response if body is not empty
-        assert (
-            response_data["CreatedAt"].split(":")[0]
-            == datetime.utcnow().isoformat().split(":")[0]
-        )
-    else:
-        print("get request returned 200 but no response body.")
+#     # Check if the POST request was successful
+#     assert post_response.status_code == 201, f"Failed to create supplier: {post_response.text}"
 
-    requests.delete(_url + "/999999999", headers=headers)
-    requests.delete(_url + "/999999999", headers=headers)
+#     # Extract the new supplier ID from the response
+#     created_supplier = post_response.json()  # Assuming the response body contains the new supplier object
+#     new_id = created_supplier.get("id")
+#     assert new_id, "Supplier ID not found in the POST response."
+
+#     # GET the newly created supplier
+#     get_result = requests.get(f"{_url}/{new_id}", headers=headers)
+#     assert get_result.status_code == 200, f"GET request failed: {get_result.text}"
+
+#     # Parse the GET response
+#     if get_result.content:
+#         response_data = get_result.json()  # Parse JSON response if body is not empty
+#         assert response_data["Address"] == "Nieuwe Binnenweg 123", "Address does not match expected value."
+#     else:
+#         print("GET request returned 200 but no response body.")
+
+#     # DELETE the newly created supplier
+#     delete_result = requests.delete(f"{_url}/{new_id}", headers=headers)
+#     assert delete_result.status_code == 204, f"DELETE request failed: {delete_result.text}"

@@ -5,13 +5,13 @@ import datetime
 
 @pytest.fixture
 def _url():
-    return 'http://localhost:3000/api/v1/'
+    return 'http://localhost:5000/api/v1/'
 
 
 headers = {
             'Accept': '/',
             'User-Agent': 'value',
-            'API_KEY': 'a1b2c3d4e5' 
+            'API_KEY': 'a1b2c3d4' 
         }
 
 def test_get_all_locations(_url):

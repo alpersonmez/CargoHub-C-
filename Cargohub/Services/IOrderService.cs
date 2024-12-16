@@ -4,14 +4,11 @@ namespace Cargohub.Services
 {
     public interface IOrderService
     {
-        public List<Order> GetOrders();
-        public Order GetOrder(int id);
-        //public List<Item> GetItems(int id);
-        public bool AddOrder(Order order);
-        public bool UpdateOrder(int id, Order order);
-        public bool DeleteOrder(int id);
-
-
+        public Task<List<Order>> GetAllOrders();
+        public Task<Order> GetOrderById(int id);
+        public Task<Order> AddOrder(Order newOrder);
+        public Task<bool> UpdateOrder(Order order);
+        public Task<bool> DeleteOrder(int id);
     }
 }
 

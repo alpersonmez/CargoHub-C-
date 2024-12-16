@@ -1,57 +1,104 @@
-using Cargohub.Models;
+using Microsoft.EntityFrameworkCore;
+using  Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class OrderService : IOrderService
     {
+        private readonly AppDbContext _context;
 
-        private AppDbContext data;
-
-        public OrderService(AppDbContext _data)
+        public OrderService(AppDbContext context)
         {
-            data = _data;
+            _context = context;
         }
 
-        public List<Order> GetOrders()
+        public async Task<List<Order>> GetAllOrders()
         {
-            if (data.Orders.Count() == 0) return new List<Order>();
-            return data.Orders.ToList();
+            return await _context.Orders.Take(100).ToListAsync();
         }
 
-        public Order? GetOrder(int id)
+        public async Task<Order> GetOrderById(int id)
         {
-            //if(data.Orders.SingleOrDefault(x => x.id == id) == null) return new Order()
-            return data.Orders.SingleOrDefault(x => x.id == id);
+            return await _context.Orders.FindAsync(id);
         }
 
-        // public List<Item>? GetItems(int id)
-        // {
-        //     if (data.Orders.SingleOrDefault(x => x.id == id) is null) return null;
-        //     return data.Orders.Where(x => x.id == id).Single().Items.ToList();
-        // }
-        public bool AddOrder(Order order)
+        public async Task<Order> AddOrder(Order newOrder)
         {
-            if (order is null || data.Orders.Contains(order)) return false;
-            data.Orders.Add(order);
-            data.SaveChanges();
+            Order order = new Order
+            {
+            Id = newOrder.Id,
+            SourceId = newOrder.SourceId,
+            OrderDate = newOrder.OrderDate,
+            RequestDate = newOrder.RequestDate,
+            Reference = newOrder.Reference,
+            ReferenceExtra = newOrder.ReferenceExtra,
+            OrderStatus = newOrder.OrderStatus,
+            Notes = newOrder.Notes,
+            ShippingNotes = newOrder.ShippingNotes,
+            PickingNotes = newOrder.PickingNotes,
+            WarehouseId = newOrder.WarehouseId,
+            ShipTo = newOrder.ShipTo,
+            BillTo = newOrder.BillTo,
+            ShipmentId = newOrder.ShipmentId,
+            TotalAmount = newOrder.TotalAmount,
+            TotalDiscount = newOrder.TotalDiscount,
+            TotalTax = newOrder.TotalTax,
+            TotalSurcharge = newOrder.TotalSurcharge,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        public async Task<bool> UpdateOrder(Order order)
+        {
+            Order existingOrder = await _context.Orders.FindAsync(order.Id);
+            if (existingOrder == null)
+            {
+                return false;
+            }
+
+            existingOrder.Id = order.Id;
+            existingOrder.SourceId = order.SourceId;
+            existingOrder.OrderDate = order.OrderDate;
+            existingOrder.RequestDate = order.RequestDate;
+            existingOrder.Reference = order.Reference;
+            existingOrder.ReferenceExtra = order.ReferenceExtra;
+            existingOrder.OrderStatus = order.OrderStatus;
+            existingOrder.Notes = order.Notes;
+            existingOrder.ShippingNotes = order.ShippingNotes;
+            existingOrder.PickingNotes = order.PickingNotes;
+            existingOrder.WarehouseId = order.WarehouseId;
+            existingOrder.ShipTo = order.ShipTo;
+            existingOrder.BillTo = order.BillTo;
+            existingOrder.ShipmentId = order.ShipmentId;
+            existingOrder.TotalAmount = order.TotalAmount;
+            existingOrder.TotalDiscount = order.TotalDiscount;
+            existingOrder.TotalTax = order.TotalTax;
+            existingOrder.TotalSurcharge = order.TotalSurcharge;
+            existingOrder.UpdatedAt = DateTime.UtcNow;
+        
+
+            _context.Orders.Update(existingOrder);
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool UpdateOrder(int id, Order order)
+
+        public async Task<bool> DeleteOrder(int id)
         {
-            if (order is null || id != order.id) return false;
-            if (data.Orders.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Orders.Remove(data.Orders.Where(x => x.id == id).Single());
-            data.Orders.Add(order);
-            data.SaveChanges();
-            return true;
-        }
-        public bool DeleteOrder(int id)
-        {
-            if (data.Orders.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Orders.Remove(data.Orders.Where(x => x.id == id).Single());
-            data.SaveChanges();
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return false;
+            }
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
             return true;
         }
     }
 }
-

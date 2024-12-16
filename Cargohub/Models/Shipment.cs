@@ -1,23 +1,28 @@
 using System;
-namespace Cargohub.Models;
-public class Shipment
+using Microsoft.AspNetCore.Http.Features;
+
+
+namespace Cargohub.Models
 {
-    public int id { get; set; }
-    public int order_id { get; set; }
-    public int source_id { get; set; }
-    public DateTime order_date { get; set; }
-    public DateTime request_date { get; set; }
-    public DateTime shipment_date { get; set; }
-    public string? shipment_type { get; set; }
-    public string? shipment_status { get; set; }
-    public string? notes { get; set; }
-    public string? carrier_code { get; set; }
-    public string? carrier_description { get; set; }
-    public string? service_code { get; set; }
-    public string? payment_type { get; set; }
-    public string? transfer_mode { get; set; }
-    public int total_package_count { get; set; }
-    public double total_package_weight { get; set; }
-    public DateTime created_at { get; set; }
-    public DateTime updated_at { get; set; }
+    public class Shipment
+    {
+        public int Id { get; set; }
+        public int OrderId { get; set; }
+        public int SourceId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public DateTime RequestDate { get; set; }
+        public DateTime ShipmentDate { get; set; }
+        public string ShipmentType { get; set; }
+        public string ShipmentStatus { get; set; }
+        public string Notes { get; set; }
+        public string CarrierCode { get; set; }
+        public string CarrierDescription { get; set; }
+        public string ServiceCode { get; set; }
+        public string PaymentType { get; set; }
+        public string TransferMode { get; set; }
+        public int TotalPackageCount { get; set; }
+        public double TotalPackageWeight { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
 }

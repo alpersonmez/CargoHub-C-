@@ -1,5 +1,7 @@
 import pytest
 import requests
+from datetime import datetime
+
 
 @pytest.fixture
 def base_url():
@@ -103,7 +105,7 @@ def test_update_shipment(base_url):
     # Check if the PUT response has a body (it shouldn't)
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty
-        assert response_data["ShipmentStatus"] == "UPDATED"
+        assert response_data["shipmentStatus"] == "UPDATED"
     else:
         print("PUT request returned 200 but no response body.")
 

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241211175029_Cargohub")]
-    partial class Cargohub
+    [Migration("20241216155305_NewMMigration")]
+    partial class NewMMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,76 +267,76 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("bill_to")
+                    b.Property<string>("BillTo")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("created_at")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("notes")
+                    b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("order_date")
+                    b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("order_status")
+                    b.Property<string>("OrderStatus")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("picking_notes")
+                    b.Property<string>("PickingNotes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("reference")
+                    b.Property<string>("Reference")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("reference_extra")
+                    b.Property<string>("ReferenceExtra")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("request_date")
+                    b.Property<DateTime>("RequestDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ship_to")
+                    b.Property<string>("ShipTo")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("shipment_id")
+                    b.Property<int>("ShipmentId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("shipping_notes")
+                    b.Property<string>("ShippingNotes")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("source_id")
+                    b.Property<int>("SourceId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("total_amount")
+                    b.Property<double>("TotalAmount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_discount")
+                    b.Property<double>("TotalDiscount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_surcharge")
+                    b.Property<double>("TotalSurcharge")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_tax")
+                    b.Property<double>("TotalTax")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("updated_at")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("warehouse_id")
+                    b.Property<int>("WarehouseId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Orders");
                 });

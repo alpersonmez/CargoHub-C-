@@ -1,4 +1,4 @@
-using Cargohub.Data;
+//using Cargohub.Data;
 using Cargohub.Services;
 using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
@@ -59,12 +59,12 @@ if (app.Environment.IsDevelopment())
 // });
 
 // Seed the database with initial data (Optional)
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-    ItemSeeder.SeedDatabase(context);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     var context = services.GetRequiredService<AppDbContext>();
+//     ItemSeeder.SeedDatabase(context);
+// }
 
 // Run the application
 app.Run();

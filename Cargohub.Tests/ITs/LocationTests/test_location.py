@@ -18,9 +18,9 @@ headers = {
 # Test adding and removing shipment
 def test_add_remove_location(base_url):
     new_location = {
-        "WareHouseID": 10,
-        "Code": "POST",
-        "Name": "Johannes"
+        "warehouse_id": 10,
+        "code": "POST",
+        "name": "Johannes"
     }
 
     # POST request to add shipment
@@ -33,7 +33,7 @@ def test_add_remove_location(base_url):
 
     if get_response.content:
         response_data = get_response.json()
-        assert response_data["Code"] == "POST"
+        assert response_data["code"] == "POST"
     else:
         print("GET request returned 200 but no body")
 
@@ -46,9 +46,9 @@ def test_add_remove_location(base_url):
 # Test updating a shipment
 def test_update_location(base_url):
     new_location = {
-        "WareHouseID": 10,
-        "Code": "POST",
-        "Name": "Johannes"
+        "warehouse_id": 10,
+        "code": "POST",
+        "name": "Johannes"
     }
     
     # POST request to add shipment
@@ -56,10 +56,10 @@ def test_update_location(base_url):
     location_id = post_response.json()["id"]
 
     updated_location = {
-        "Id": location_id,
-        "WareHouseID": 10,
-        "Code": "POST",
-        "Name": "UPDATED"
+        "id": location_id,
+        "warehouse_id": 10,
+        "code": "UPDATED",
+        "name": "UPDATED"
     }
 
     # PUT request to update shipment

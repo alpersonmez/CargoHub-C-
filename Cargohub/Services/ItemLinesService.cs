@@ -22,17 +22,17 @@ namespace Cargohub.Services{
 
         public Item_lines GetItem_linesById(int id)
         {
-            return _context.Item_lines.FirstOrDefault(Item_lines => Item_lines.Id == id);
+            return _context.Item_lines.FirstOrDefault(Item_lines => Item_lines.id == id);
         }
 
         public Item_lines UpdateItem_lines(int id, Item_lines Updateditem_lines)
         {
-            var existingItemLine = _context.Item_lines.SingleOrDefault(Item_lines => Item_lines.Id == id);
+            var existingItemLine = _context.Item_lines.SingleOrDefault(Item_lines => Item_lines.id == id);
             if (existingItemLine == null) return null;
 
-            existingItemLine.Name = Updateditem_lines.Name;
-            existingItemLine.Description = Updateditem_lines.Description;
-            existingItemLine.UpdatedAt = DateTime.UtcNow;
+            existingItemLine.name = Updateditem_lines.name;
+            existingItemLine.description = Updateditem_lines.description;
+            existingItemLine.update_at = DateTime.UtcNow;
 
             _context.SaveChanges();
             return existingItemLine;

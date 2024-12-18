@@ -1,9 +1,12 @@
-public class Location
+namespace Cargohub.Models
 {
-    public int Id { get; set; }
-    public int WareHouse_Id { get; set; }
-    public string Code { get; set; }
-    public string Name { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public class Location
+    {
+        public int id { get; set; }
+        public int warehouse_id { get; set; }
+        public string code { get; set; }
+        public string name { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime update_at { get; set; }
+    }
 }

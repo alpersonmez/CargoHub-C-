@@ -42,7 +42,7 @@ public class SupplierController : ControllerBase
             return BadRequest(ModelState);
 
         Supplier createdsupplier = await _SupplierService.AddSupplier(New);
-        return CreatedAtAction(nameof(Get), new { id = createdsupplier.Id }, createdsupplier);
+        return CreatedAtAction(nameof(Get), new { id = createdsupplier.id }, createdsupplier);
     }
 
     [AdminFilter]
@@ -52,7 +52,7 @@ public class SupplierController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
         
-        if (id != supplier.Id)
+        if (id != supplier.id)
         {
             return BadRequest($"Location Id {id} does not match");
         }

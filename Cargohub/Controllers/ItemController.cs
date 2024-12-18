@@ -33,13 +33,13 @@ namespace Cargohub.Controllers
         [HttpPost]
         public ActionResult<Item> CreateItem([FromBody] Item item)
         {
-            if (item.CreatedAt != default || item.UpdatedAt != default)
+            if (item.created_at != default || item.updated_at != default)
             {
                 return BadRequest("The fields 'createdAt' and 'updatedAt' cannot be specified.");
             }
 
             var createdItem = _itemService.CreateItem(item);
-            return CreatedAtAction(nameof(GetItemByUid), new { uid = createdItem.Uid }, createdItem);
+            return CreatedAtAction(nameof(GetItemByUid), new { uid = createdItem.uid }, createdItem);
         }
 
 

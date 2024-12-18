@@ -42,7 +42,7 @@ public class LocationController : ControllerBase
             return BadRequest(ModelState);
 
         Location createdLocation = await _locationService.AddLocation(New);
-        return CreatedAtAction(nameof(Get), new { id = createdLocation.Id }, createdLocation);
+        return CreatedAtAction(nameof(Get), new { id = createdLocation.id }, createdLocation);
     }
 
     [AdminFilter]
@@ -52,7 +52,7 @@ public class LocationController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
         
-        if (id != location.Id)
+        if (id != location.id)
         {
             return BadRequest($"Location Id {id} does not match");
         }

@@ -169,17 +169,17 @@ namespace Cargohub.ApplyDefaultValues{
                 item.commodity_code = "Unknown commodity code";
             }
 
-            if (item.ItemLineId == null)
+            if (item.ItemLineId <= 0)
             {
                 item.ItemLineId = -1;
             }
 
-            if (item.ItemGroupId == null)
+            if (item.ItemGroupId <= 0)
             {
                 item.ItemGroupId = -1;
             }
 
-            if (item.ItemTypeId == null)
+            if (item.ItemTypeId <= 0)
             {
                 item.ItemTypeId = -1;
             }
@@ -314,6 +314,11 @@ namespace Cargohub.ApplyDefaultValues{
 
         public static void ApplyDefaultValuesOrders(this Order order)
         {
+            if (order.source_id == null)
+            {
+                order.source_id = -1;
+            }
+            
             if (string.IsNullOrEmpty(order.reference))
             {
                 order.reference = "Unknown order reference";
@@ -322,6 +327,66 @@ namespace Cargohub.ApplyDefaultValues{
             if (string.IsNullOrEmpty(order.reference_extra))
             {
                 order.reference_extra = "Unknown extra reference";
+            }
+
+            if (string.IsNullOrEmpty(order.order_status))
+            {
+                order.order_status = "Unknown order status";
+            }
+
+            if (string.IsNullOrEmpty(order.notes))
+            {
+                order.notes = "Unknown notes";
+            }
+
+            if (string.IsNullOrEmpty(order.shipping_notes))
+            {
+                order.shipping_notes = "Unknown shipping notes";
+            }
+
+            if (string.IsNullOrEmpty(order.picking_notes))
+            {
+                order.picking_notes = "Unknown picking notes";
+            }
+
+            if (order.warehouse_id <= 0)
+            {
+                order.warehouse_id = -1;
+            }
+
+            if (string.IsNullOrEmpty(order.ship_to))
+            {
+                order.ship_to = "Unknown shipping destination";
+            }
+
+            if (string.IsNullOrEmpty(order.bill_to))
+            {
+                order.bill_to = "Unknown bill to";
+            }
+
+            if (order.shipment_id <= 0)
+            {
+                order.shipment_id = -1;
+            }
+
+            if (order.total_amount <= 0.0)
+            {
+                order.total_amount = -1.0;
+            }
+
+            if (order.total_discount <= 0.0)
+            {
+                order.total_discount = -1.0;
+            }
+
+            if (order.total_tax <= 0.0)
+            {
+                order.total_tax = -1.0;
+            }
+
+            if (order.total_surcharge <= 0.0)
+            {
+                order.total_surcharge = -1.0;
             }
 
             if (order.order_date == default)
@@ -352,6 +417,71 @@ namespace Cargohub.ApplyDefaultValues{
 
         public static void ApplyDefaultValuesShipment(this Shipment shipment)
         {
+            if (shipment.order_id <= 0)
+            {
+                shipment.order_id = -1;
+            }
+
+            if (shipment.source_id <= 0)
+            {
+                shipment.source_id = -1;
+            }
+
+            if (string.IsNullOrEmpty(shipment.shipment_type))
+            {
+                shipment.shipment_type = "Unknown shipment type";
+            }
+
+            if (string.IsNullOrEmpty(shipment.shipment_status))
+            {
+                shipment.shipment_status = "Unknown shipment status";
+            } 
+
+            if (string.IsNullOrEmpty(shipment.notes))
+            {
+                shipment.notes = "Unknown notes";
+            }
+
+            if (string.IsNullOrEmpty(shipment.carrier_code))
+            {
+                shipment.carrier_code = "Unknown carrier code";
+            }
+
+            if (string.IsNullOrEmpty(shipment.carrier_description))
+            {
+                shipment.carrier_description = "Unknown carrier description";
+            }
+
+            if (string.IsNullOrEmpty(shipment.service_code))
+            {
+                shipment.service_code = "Unknown service code";
+            }
+
+            if (string.IsNullOrEmpty(shipment.payment_type))
+            {
+                shipment.payment_type = "Unknown payment type";
+            }
+
+            if (string.IsNullOrEmpty(shipment.transfer_mode))
+            {
+                shipment.transfer_mode = "Unknown transfer mode";
+            }
+
+            if (shipment.total_package_count <= 0)
+            {
+                shipment.total_package_count = -1;
+            }
+
+            if (shipment.total_package_weight <= 0.0)
+            {
+                shipment.total_package_weight = -1.0;
+            }                            
+            
+            if (shipment.order_date == default)
+            {
+                shipment.order_date = DateTime.UtcNow;
+            }
+
             if (shipment.order_date == default)
             {
                 shipment.order_date = DateTime.UtcNow;
@@ -400,6 +530,11 @@ namespace Cargohub.ApplyDefaultValues{
                 supplier.address = "Unknown address";
             }
 
+            if (string.IsNullOrEmpty(supplier.address_extra))
+            {
+                supplier.address_extra = "Unknown address extra";
+            }
+
             if (string.IsNullOrEmpty(supplier.city))
             {
                 supplier.city = "Unknown city";
@@ -413,6 +548,21 @@ namespace Cargohub.ApplyDefaultValues{
             if (string.IsNullOrEmpty(supplier.country))
             {
                 supplier.country = "Unknown country";
+            }
+
+            if (string.IsNullOrEmpty(supplier.contact_name))
+            {
+                supplier.contact_name = "Unknown contact name";
+            }
+
+            if (string.IsNullOrEmpty(supplier.phone_number))
+            {
+                supplier.phone_number = "Unknown phone number";
+            }
+
+            if (string.IsNullOrEmpty(supplier.reference))
+            {
+                supplier.reference = "Unknown reference";
             }
 
             if (supplier.created_at == default)
@@ -463,29 +613,12 @@ namespace Cargohub.ApplyDefaultValues{
                 transfer.updated_at = DateTime.UtcNow;
             }
 
-            if (transfer.items == null)
-            {
-                transfer.items = new Transfer.ItemTransfers();
-            }
 
             if (transfer.isdeleted == null)
             {
                 transfer.isdeleted = false;
             }
 
-            // Default values for ItemTransfers
-            if (transfer.items != null)
-            {
-                if (string.IsNullOrEmpty(transfer.items.item_id))
-                {
-                    transfer.items.item_id = "Unknown item ID";
-                }
-
-                if (transfer.items.amount == null)
-                {
-                    transfer.items.amount = 0;
-                }
-            }
         }
 
         public static void ApplyDefaultValuesWareHouse(this Warehouse warehouse)

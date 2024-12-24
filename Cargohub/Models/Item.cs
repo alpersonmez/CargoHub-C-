@@ -29,18 +29,18 @@ namespace Cargohub.Models
 
         // Foreign key for ItemLine (optional)
         [JsonProperty("item_line")]
-        public int? ItemLineId { get; set; }
-        public ItemLines? ItemLine { get; set; } // Navigation property
+        public int ItemLineId { get; set; }
+        public ItemLines ItemLine { get; set; } // Navigation property
 
         // Foreign key for ItemGroup (optional)
         [JsonProperty("item_group")]
-        public int? ItemGroupId { get; set; }
-        public ItemGroup? ItemGroup { get; set; } // Navigation property
+        public int ItemGroupId { get; set; }
+        public ItemGroup ItemGroup { get; set; } // Navigation property
 
         // Foreign key for ItemType (optional)
         [JsonProperty("item_type")]
-        public int? ItemTypeId { get; set; }
-        public ItemType? ItemType { get; set; } // Navigation property
+        public int ItemTypeId { get; set; }
+        public ItemType ItemType { get; set; } // Navigation property
 
         [JsonProperty("unit_purchase_quantity")]
         public int? unit_purchase_quantity { get; set; }

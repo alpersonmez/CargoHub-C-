@@ -8,8 +8,9 @@ namespace Cargohub.DataConverters
     {
         private readonly string[] _formats = new[]
         {
-        "yyyy-MM-dd HH:mm:ss",
-        "yyyy-MM-ddTHH:mm:ssZ"
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-ddTHH:mm:ssZ",
+            "MM/dd/yyyy hh:mm:ss tt" // Added format
         };
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -21,18 +22,42 @@ namespace Cargohub.DataConverters
         {
             if (reader.TokenType == JsonToken.Null)
             {
-                return null;
+                return null; // Handle null values gracefully
             }
 
             if (reader.TokenType == JsonToken.Date)
-                return reader.Value;
-
-            if (DateTime.TryParseExact((string)reader.Value, _formats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date))
             {
-                return date;
+                return reader.Value; // Handle DateTime tokens
             }
 
-            throw new JsonSerializationException("Invalid date format");
+            if (reader.TokenType == JsonToken.Integer)
+            {
+                // Handle Unix timestamp as integer
+                long timestamp = (long)reader.Value;
+                return DateTimeOffset.FromUnixTimeSeconds(timestamp).UtcDateTime;
+            }
+
+            if (reader.TokenType == JsonToken.String)
+            {
+                string dateString = (string)reader.Value;
+
+                // Attempt to parse using the predefined formats
+                if (DateTime.TryParseExact(dateString, _formats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date))
+                {
+                    return date;
+                }
+
+                // Attempt to parse as a fallback general format
+                if (DateTime.TryParse(dateString, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out date))
+                {
+                    return date;
+                }
+
+                // Log or output details about the unexpected input
+                throw new JsonSerializationException($"Invalid date format: {dateString}");
+            }
+
+            throw new JsonSerializationException($"Unexpected token type: {reader.TokenType} at path {reader.Path}");
         }
     }
 }

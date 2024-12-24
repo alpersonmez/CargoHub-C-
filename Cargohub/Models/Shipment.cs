@@ -14,7 +14,6 @@ namespace Cargohub.Models
         public int? order_id { get; set; }
 
         [JsonProperty("source_id")]
-        [JsonConverter(typeof(DateTimeConverter))]
         public int? source_id { get; set; }
 
         [JsonProperty("order_date")]
@@ -66,9 +65,10 @@ namespace Cargohub.Models
         [JsonProperty("updated_at")]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime updated_at { get; set; }
-        
+
+        // Change from single ItemShipment to List<ItemShipment>
         [JsonProperty("items")]
-        public ItemShipment? items { get; set; }
+        public List<ItemShipment>? items { get; set; }
 
         [JsonProperty("isdeleted")]
         public bool? isdeleted { get; set; } = false;

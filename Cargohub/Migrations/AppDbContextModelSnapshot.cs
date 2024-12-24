@@ -24,48 +24,39 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("city")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("contact_email")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("contact_name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("contact_phone")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("country")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("province")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("zip_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
@@ -83,37 +74,33 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("item_id")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("item_reference")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("locations")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("total_allocated")
+                    b.Property<int?>("total_allocated")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("total_available")
+                    b.Property<int?>("total_available")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("total_expected")
+                    b.Property<int?>("total_expected")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("total_on_hand")
+                    b.Property<int?>("total_on_hand")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("total_ordered")
+                    b.Property<int?>("total_ordered")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("updated_at")
@@ -129,63 +116,55 @@ namespace Cargohub.Migrations
                     b.Property<string>("uid")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ItemGroupId")
+                    b.Property<int>("ItemGroupId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ItemLineId")
+                    b.Property<int>("ItemLineId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ItemTypeId")
+                    b.Property<int>("ItemTypeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("commodity_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("model_number")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("pack_order_quantity")
+                    b.Property<int?>("pack_order_quantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("short_description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("supplier_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("supplier_id")
+                    b.Property<int?>("supplier_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("supplier_part_number")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("unit_order_quantity")
+                    b.Property<int?>("unit_order_quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("unit_purchase_quantity")
+                    b.Property<int?>("unit_purchase_quantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("upc_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
@@ -212,14 +191,12 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
@@ -240,14 +217,12 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
@@ -268,14 +243,12 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
@@ -293,23 +266,21 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("warehouse_id")
+                    b.Property<int?>("warehouse_id")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("id");
@@ -324,71 +295,63 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("bill_to")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("order_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("order_status")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("picking_notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("reference")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("reference_extra")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("request_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ship_to")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("shipment_id")
+                    b.Property<int?>("shipment_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("shipping_notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("source_id")
+                    b.Property<int?>("source_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("total_amount")
+                    b.Property<double?>("total_amount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_discount")
+                    b.Property<double?>("total_discount")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_surcharge")
+                    b.Property<double?>("total_surcharge")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("total_tax")
+                    b.Property<double?>("total_tax")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("warehouse_id")
+                    b.Property<int?>("warehouse_id")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("id");
@@ -403,62 +366,54 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("carrier_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("carrier_description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("order_date")
+                    b.Property<DateTime?>("order_date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("order_id")
+                    b.Property<int?>("order_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("payment_type")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("request_date")
+                    b.Property<DateTime?>("request_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("service_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("shipment_date")
+                    b.Property<DateTime?>("shipment_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("shipment_status")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("shipment_type")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("source_id")
+                    b.Property<int?>("source_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("total_package_count")
+                    b.Property<int?>("total_package_count")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("total_package_weight")
+                    b.Property<double?>("total_package_weight")
                         .HasColumnType("REAL");
 
                     b.Property<string>("transfer_mode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
@@ -476,52 +431,42 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("address_extra")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("city")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("contact_name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("country")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("phone_number")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("reference")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("zip_code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
@@ -538,7 +483,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("reference")
@@ -550,7 +495,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("transfer_status")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("transfer_to")
+                    b.Property<int?>("transfer_to")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("updated_at")
@@ -568,40 +513,33 @@ namespace Cargohub.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("city")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("code")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("country")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("isdeleted")
+                    b.Property<bool?>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("province")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("zip")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
@@ -614,17 +552,20 @@ namespace Cargohub.Migrations
                     b.HasOne("Cargohub.Models.ItemGroup", "ItemGroup")
                         .WithMany()
                         .HasForeignKey("ItemGroupId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("Cargohub.Models.ItemLines", "ItemLine")
                         .WithMany()
                         .HasForeignKey("ItemLineId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("Cargohub.Models.ItemType", "ItemType")
                         .WithMany()
                         .HasForeignKey("ItemTypeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("ItemGroup");
 
@@ -651,23 +592,18 @@ namespace Cargohub.Migrations
                                 .HasForeignKey("Orderid");
                         });
 
-                    b.Navigation("items")
-                        .IsRequired();
+                    b.Navigation("items");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Shipment", b =>
                 {
-                    b.OwnsOne("Cargohub.Models.ItemShipment", "items", b1 =>
+                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.ItemShipment>", "items", b1 =>
                         {
                             b1.Property<int>("Shipmentid")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<int>("amount")
+                            b1.Property<int>("Capacity")
                                 .HasColumnType("INTEGER");
-
-                            b1.Property<string>("item_id")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
 
                             b1.HasKey("Shipmentid");
 
@@ -677,23 +613,18 @@ namespace Cargohub.Migrations
                                 .HasForeignKey("Shipmentid");
                         });
 
-                    b.Navigation("items")
-                        .IsRequired();
+                    b.Navigation("items");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Transfer", b =>
                 {
-                    b.OwnsOne("Cargohub.Models.Transfer+ItemTransfers", "items", b1 =>
+                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.Transfer+ItemTransfers>", "items", b1 =>
                         {
                             b1.Property<int>("Transferid")
                                 .HasColumnType("INTEGER");
 
-                            b1.Property<int>("amount")
+                            b1.Property<int>("Capacity")
                                 .HasColumnType("INTEGER");
-
-                            b1.Property<string>("item_id")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
 
                             b1.HasKey("Transferid");
 
@@ -703,8 +634,7 @@ namespace Cargohub.Migrations
                                 .HasForeignKey("Transferid");
                         });
 
-                    b.Navigation("items")
-                        .IsRequired();
+                    b.Navigation("items");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
@@ -715,15 +645,12 @@ namespace Cargohub.Migrations
                                 .HasColumnType("INTEGER");
 
                             b1.Property<string>("email")
-                                .IsRequired()
                                 .HasColumnType("TEXT");
 
                             b1.Property<string>("name")
-                                .IsRequired()
                                 .HasColumnType("TEXT");
 
                             b1.Property<string>("phone")
-                                .IsRequired()
                                 .HasColumnType("TEXT");
 
                             b1.HasKey("Warehouseid");
@@ -734,8 +661,7 @@ namespace Cargohub.Migrations
                                 .HasForeignKey("Warehouseid");
                         });
 
-                    b.Navigation("contact")
-                        .IsRequired();
+                    b.Navigation("contact");
                 });
 #pragma warning restore 612, 618
         }

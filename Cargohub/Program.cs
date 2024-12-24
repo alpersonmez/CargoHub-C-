@@ -1,8 +1,7 @@
-//using Cargohub.Data;
-using Cargohub.Services;
 using Cargohub.Models;
+using Cargohub.Services;
+using Cargohub.DatetimeConverter; // Added this namespace
 using Microsoft.EntityFrameworkCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,18 +20,25 @@ builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<IitemlinesService, ItemlinesService>();
+builder.Services.AddScoped<IItemLinesService, ItemLinesService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add controllers
 builder.Services.AddControllers();
+
+// Register the DataLoader class as a singleton
+builder.Services.AddSingleton<DataLoader>(); // Added this line
+
 var app = builder.Build();
 
-app.Urls.Add("http://localhost:5000");
-app.MapControllers();
-
+// Call the ImportData method after the app is built
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    DataLoader.ImportData(context); // Call the import function
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -41,30 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-//Add middleware
-// app.Use(async (context, next) =>
-// {
-//     if (context.Request.Path == "/api")
-//     {
-//         if (!context.Request.Headers.ContainsKey("API_key"))
-//         {
-//             Console.WriteLine($"{context.Request.Path} was requested but there is no API_key header");
-//             context.Response.StatusCode = 401;
-//             return;
-//         }
-//     }
-//     await next.Invoke();
-//     Console.WriteLine($"{context.Request.Path} was handled");
-// });
-
-// Seed the database with initial data (Optional)
-// using (var scope = app.Services.CreateScope())
-// {
-//     var services = scope.ServiceProvider;
-//     var context = services.GetRequiredService<AppDbContext>();
-//     ItemSeeder.SeedDatabase(context);
-// }
+// Add endpoints
+app.MapControllers();
 
 // Run the application
 app.Run();

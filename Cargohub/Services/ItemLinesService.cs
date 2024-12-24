@@ -1,50 +1,52 @@
+using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using System.Threading.Tasks;
 
-namespace Cargohub.Services{
-
-    public class ItemlinesService : IitemlinesService
+namespace Cargohub.Services
+{
+    public class ItemLinesService : IItemLinesService
     {
         private readonly AppDbContext _context;
 
-        public ItemlinesService(AppDbContext context)
+        public ItemLinesService(AppDbContext context)
         {
             _context = context;
         }
 
-        public List<Item_lines> GetAllItem_lines()
+        public async Task<List<ItemLines>> GetAllItemLines()
         {
-            return _context.Item_lines.Take(100).ToList(); // Take(100) is that the limit is 100 locations
+            return await _context.Item_lines.Take(100).ToListAsync();  // Take(100) as a limit
         }
 
-        public Item_lines GetItem_linesById(int id)
+        public async Task<ItemLines> GetItemLineById(int id)
         {
-            return _context.Item_lines.FirstOrDefault(Item_lines => Item_lines.id == id);
+            return await _context.Item_lines.FindAsync(id);
         }
 
-        public Item_lines UpdateItem_lines(int id, Item_lines Updateditem_lines)
+        public async Task<ItemLines> UpdateItemLine(int id, ItemLines updatedItemLine)
         {
-            var existingItemLine = _context.Item_lines.SingleOrDefault(Item_lines => Item_lines.id == id);
+            var existingItemLine = await _context.Item_lines.FindAsync(id);
             if (existingItemLine == null) return null;
 
-            existingItemLine.name = Updateditem_lines.name;
-            existingItemLine.description = Updateditem_lines.description;
-            existingItemLine.update_at = DateTime.UtcNow;
+            existingItemLine.name = updatedItemLine.name;
+            existingItemLine.description = updatedItemLine.description;
+            existingItemLine.updated_at = DateTime.UtcNow;
 
-            _context.SaveChanges();
+            _context.Item_lines.Update(existingItemLine);
+            await _context.SaveChangesAsync();
             return existingItemLine;
         }
 
-        public bool DeleteItem_lines(int id)
+        public async Task<bool> DeleteItemLine(int id)
         {
-            var itemLine = GetItem_linesById(id);
+            var itemLine = await _context.Item_lines.FindAsync(id);
             if (itemLine == null) return false;
 
             _context.Item_lines.Remove(itemLine);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
     }

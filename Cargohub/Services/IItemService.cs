@@ -5,10 +5,10 @@ namespace Cargohub.Services
 {
     public interface IItemService
     {
-        List<Item> GetAllItems();
-        Item GetItemByUid(string uid);
-        Item CreateItem(Item item);
-        Item UpdateItem(string uid, Item item);
-        void DeleteItem(string uid);
+        Task<List<Item>> GetAllItems();
+        Task<Item> GetItemByUid(string uid);
+        Task<Item> AddItem(Item Newitem);
+        Task<bool> UpdateItem(Item item);
+        Task<bool> DeleteItem(string uid);
     }
 }

@@ -1,89 +1,90 @@
-using Cargohub.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using  Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class ItemService : IItemService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _context;
 
-        public ItemService(AppDbContext dbContext)
+        public ItemService(AppDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public List<Item> GetAllItems()
+        public async Task<List<Item>> GetAllItems()
         {
             //return _dbContext.Items.ToList();
-            return  _dbContext.Items
-                .Include(i => i.item_line)
-                .Include(i => i.item_group)
-                .Include(i => i.item_type)
+            return  await _context.Items
+                .Include(i => i.ItemLine)
+                .Include(i => i.ItemGroup)
+                .Include(i => i.ItemGroup)
                 //.Include(i => i.supplier) werkt nog niet
                 .OrderBy(i => i.uid) // Order by Id in ascending order
-                .Take(10)
-                .ToList();
+                .Take(100)
+                .ToListAsync();
             
         }
 
-        public Item GetItemByUid(string uid)
+        public async Task<Item> GetItemByUid(string uid)
         {
-            return _dbContext.Items.FirstOrDefault(item => item.uid == uid);
+            return await _context.Items.FindAsync(uid);
         }
 
-        public Item CreateItem(Item item)
+        public async Task<Item> AddItem(Item NewItem)
         {
             // Automatically set createdAt and updatedAt
-            item.created_at = DateTime.UtcNow;
-            item.updated_at = DateTime.UtcNow;
-
-            _dbContext.Items.Add(item);
-            _dbContext.SaveChanges();
+        Item item = new Item
+        { 
+            created_at = DateTime.UtcNow,
+            updated_at = DateTime.UtcNow
+        };
+            _context.Items.Add(item);
+            await _context.SaveChangesAsync();
             return item;
         }
 
 
-       public Item UpdateItem(string uid, Item updatedItem)
+       public async Task<bool> UpdateItem(Item item)
         {
-            var existingItem = _dbContext.Items.SingleOrDefault(item => item.uid == uid);
-            if (existingItem == null) return null;
+            Item existingItem = await _context.Items.FindAsync(item.uid);
+            if (existingItem == null) return false;
 
             // Update fields except createdAt
-            existingItem.code = updatedItem.code;
-            existingItem.description = updatedItem.description;
-            existingItem.short_description = updatedItem.short_description;
-            existingItem.upc_code = updatedItem.upc_code;
-            existingItem.model_number = updatedItem.model_number;
-            existingItem.commodity_code = updatedItem.commodity_code;
-            existingItem.item_line = updatedItem.item_line;
-            existingItem.item_group = updatedItem.item_group;
-            existingItem.item_type = updatedItem.item_type;
-            existingItem.unit_purchase_quantity = updatedItem.unit_purchase_quantity;
-            existingItem.unit_order_quantity = updatedItem.unit_order_quantity;
-            existingItem.pack_order_quantity = updatedItem.pack_order_quantity;
-            existingItem.supplier_id = updatedItem.supplier_id;
-            existingItem.supplier_code = updatedItem.supplier_code;
-            existingItem.supplier_part_number = updatedItem.supplier_part_number;
+            existingItem.code = item.code;
+            existingItem.description = item.description;
+            existingItem.short_description = item.short_description;
+            existingItem.upc_code = item.upc_code;
+            existingItem.model_number = item.model_number;
+            existingItem.commodity_code = item.commodity_code;
+            existingItem.ItemLine = item.ItemLine;
+            existingItem.ItemGroup = item.ItemGroup;
+            existingItem.ItemType = item.ItemType;
+            existingItem.unit_purchase_quantity = item.unit_purchase_quantity;
+            existingItem.unit_order_quantity = item.unit_order_quantity;
+            existingItem.pack_order_quantity = item.pack_order_quantity;
+            existingItem.supplier_id = item.supplier_id;
+            existingItem.supplier_code = item.supplier_code;
+            existingItem.supplier_part_number = item.supplier_part_number;
             existingItem.updated_at = DateTime.UtcNow; // Update updatedAt timestamp
 
-            _dbContext.SaveChanges();
-            return existingItem;
+            _context.Items.Update(existingItem);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
 
-        public void DeleteItem(string uid)
+        public async Task<bool> DeleteItem(string uid)
         {
-            var item = GetItemByUid(uid);
-            if (item != null)
+            var item = await _context.Items.FindAsync(uid);
+            if (item == null)
             {
-                _dbContext.Items.Remove(item);
-                _dbContext.SaveChanges();
+                return false;
             }
+            
+            _context.Items.Remove(item);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

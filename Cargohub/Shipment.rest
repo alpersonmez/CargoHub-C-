@@ -66,8 +66,9 @@ Content-Type: application/json
 DELETE  http://localhost:5000/api/shipment/1
 ########
 
-DELETE  http://localhost:5000/api/shipment/1
+DELETE  http://localhost:5000/api/items/"P002"
 API_key: a1b2c3d4
+###helli res
 ########
 
 

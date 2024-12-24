@@ -30,7 +30,7 @@ namespace Cargohub.Services
                 code = NewLocation.code,
                 name = NewLocation.name,
                 created_at = DateTime.UtcNow,
-                update_at = DateTime.UtcNow
+                updated_at = DateTime.UtcNow
             };
 
             _context.Locations.Add(location);
@@ -51,7 +51,7 @@ namespace Cargohub.Services
             existingLocation.warehouse_id = location.warehouse_id;
             existingLocation.code = location.code;
             existingLocation.name = location.name;
-            existingLocation.update_at = DateTime.UtcNow;
+            existingLocation.updated_at = DateTime.UtcNow;
 
             _context.Locations.Update(existingLocation);
             await _context.SaveChangesAsync();

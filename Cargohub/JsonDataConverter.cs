@@ -71,52 +71,40 @@ namespace Cargohub.DatetimeConverter
         public static void ImportData(AppDbContext context)
         {
             // Import Clients
-            // var clients = LoadDataFromFile<Client>("data/clients.json");
-            // foreach (var client in clients)
-            // {
-            //     client.ApplyDefaultValuesClient();
-            //     client.created_at = ToUtc(client.created_at);
-            //     client.updated_at = ToUtc(client.updated_at);
-            //     client.id = 0; // Resetting the Id to 0
-            // }
-            // context.Clients.AddRange(clients);
-            // context.SaveChanges();
+            var clients = LoadDataFromFile<Client>("data/clients.json");
+            foreach (var client in clients)
+            {
+                client.ApplyDefaultValuesClient();
+                client.created_at = ToUtc(client.created_at);
+                client.updated_at = ToUtc(client.updated_at);
+                client.id = 0; // Resetting the Id to 0
+            }
+            context.Clients.AddRange(clients);
+            context.SaveChanges();
 
-            // // Import Inventories
-            // var inventories = LoadDataFromFile<Inventory>("data/inventories.json");
-            // foreach (var inventory in inventories)
-            // {
-            //     inventory.ApplyDefaultValuesInventory();
-            //     inventory.created_at = ToUtc(inventory.created_at);
-            //     inventory.updated_at = ToUtc(inventory.updated_at);
-            //     inventory.id = 0; // Resetting the Id to 0
-            // }
-            // context.Inventories.AddRange(inventories);
-            // context.SaveChanges();
+            // Import Inventories
+            var inventories = LoadDataFromFile<Inventory>("data/inventories.json");
+            foreach (var inventory in inventories)
+            {
+                inventory.ApplyDefaultValuesInventory();
+                inventory.created_at = ToUtc(inventory.created_at);
+                inventory.updated_at = ToUtc(inventory.updated_at);
+                inventory.id = 0; // Resetting the Id to 0
+            }
+            context.Inventories.AddRange(inventories);
+            context.SaveChanges();
 
-            // // Import Suppliers
-            // var suppliers = LoadDataFromFile<Supplier>("data/suppliers.json");
-            // foreach (var supplier in suppliers)
-            // {
-            //     supplier.ApplyDefaultValuesSupplier();
-            //     supplier.created_at = ToUtc(supplier.created_at);
-            //     supplier.updated_at = ToUtc(supplier.updated_at);
-            //     supplier.id = 0; // Resetting the Id to 0
-            // }
-            // context.Supplier.AddRange(suppliers);
-            // context.SaveChanges();
-
-            // Now Import Items
-            // var items = LoadDataFromFile<Item>("data/items.json");
-            // foreach (var item in items)
-            // {
-            //     item.ApplyDefaultValuesItems();
-            //     item.created_at = ToUtc(item.created_at);
-            //     item.updated_at = ToUtc(item.updated_at);
-            //     item.uid = "0"; // Resetting the Id to 0
-            // }
-            // context.Items.AddRange(items);
-            // context.SaveChanges();
+            // Import Suppliers
+            var suppliers = LoadDataFromFile<Supplier>("data/suppliers.json");
+            foreach (var supplier in suppliers)
+            {
+                supplier.ApplyDefaultValuesSupplier();
+                supplier.created_at = ToUtc(supplier.created_at);
+                supplier.updated_at = ToUtc(supplier.updated_at);
+                supplier.id = 0; // Resetting the Id to 0
+            }
+            context.Supplier.AddRange(suppliers);
+            context.SaveChanges();
 
             // // Import Item Groups before Items
             // var itemGroups = LoadDataFromFile<ItemGroup>("data/item_groups.json");
@@ -169,65 +157,65 @@ namespace Cargohub.DatetimeConverter
             // context.SaveChanges();
 
             // Import Warehouses
-            // var warehouses = LoadDataFromFile<Warehouse>("data/warehouses.json");
-            // foreach (var warehouse in warehouses)
-            // {
-            //     warehouse.ApplyDefaultValuesWareHouse();
-            //     warehouse.created_at = ToUtc(warehouse.created_at);
-            //     warehouse.updated_at = ToUtc(warehouse.updated_at);
-            //     warehouse.id = 0; // Resetting the Id to 0
-            // }
-            // context.Warehouses.AddRange(warehouses);
-            // context.SaveChanges();
-
-            // Import Orders
-            var orders = LoadDataFromFile<Order>("data/orders.json");
-            foreach (var order in orders)
+            var warehouses = LoadDataFromFile<Warehouse>("data/warehouses.json");
+            foreach (var warehouse in warehouses)
             {
-                order.ApplyDefaultValuesOrders();
-                order.created_at = ToUtc(order.created_at);
-                order.updated_at = ToUtc(order.updated_at);
-                order.request_date = ToUtc(order.request_date);
-                order.order_date = ToUtc(order.order_date);
-                order.id = 0; // Resetting the Id to 0
+                warehouse.ApplyDefaultValuesWareHouse();
+                warehouse.created_at = ToUtc(warehouse.created_at);
+                warehouse.updated_at = ToUtc(warehouse.updated_at);
+                warehouse.id = 0; // Resetting the Id to 0
             }
-            context.Orders.AddRange(orders);
+            context.Warehouses.AddRange(warehouses);
             context.SaveChanges();
 
+            // Import Orders Werkt nog niet!!!!!!!!!! ik moet ff kijken waarom maar snap het zelf niet
+            // var orders = LoadDataFromFile<Order>("data/orders.json");
+            // foreach (var order in orders)
+            // {
+            //     order.ApplyDefaultValuesOrders();
+            //     order.created_at = ToUtc(order.created_at);
+            //     order.updated_at = ToUtc(order.updated_at);
+            //     // order.request_date = ToUtc(order.request_date);
+            //     // order.order_date = ToUtc(order.order_date);
+            //     order.id = 0; // Resetting the Id to 0
+            // }
+            // context.Orders.AddRange(orders);
+            // context.SaveChanges();
+
             // //Load Shipments
-            // var shipments = LoadDataFromFile<Shipment>("data/shipments.json");
-            // foreach (var shipment in shipments)
-            // {
-            //     shipment.ApplyDefaultValuesShipment();
-            //     shipment.created_at = ToUtc(shipment.created_at);
-            //     shipment.updated_at = ToUtc(shipment.updated_at);
-            //     shipment.id = 0; // Resetting the Id to 0
-            // }
-            // context.Shipments.AddRange(shipments);
-            // context.SaveChanges();
+            var shipments = LoadDataFromFile<Shipment>("data/shipments.json");
+            foreach (var shipment in shipments)
+            {
+                shipment.ApplyDefaultValuesShipment();
+                shipment.created_at = ToUtc(shipment.created_at);
+                shipment.updated_at = ToUtc(shipment.updated_at);
+                shipment.id = 0; // Resetting the Id to 0
+            }
+            context.Shipments.AddRange(shipments);
+            context.SaveChanges();
 
-            // //Load Transfers
-            // var transfers = LoadDataFromFile<Transfer>("data/transfers.json");
-            // foreach (var transfer in transfers)
-            // {
-            //     transfer.ApplyDefaultValuesTransfers();
-            //     transfer.created_at = ToUtc(transfer.created_at);
-            //     transfer.updated_at = ToUtc(transfer.updated_at);
-            //     transfer.id = 0; // Resetting the Id to 0
-            // }
-            // context.Transfers.AddRange(transfers);
-            // context.SaveChanges();
+            //Load Transfers
+            var transfers = LoadDataFromFile<Transfer>("data/transfers.json");
+            foreach (var transfer in transfers)
+            {
+                transfer.ApplyDefaultValuesTransfers();
+                transfer.created_at = ToUtc(transfer.created_at);
+                transfer.updated_at = ToUtc(transfer.updated_at);
+                transfer.id = 0; // Resetting the Id to 0
+            }
+            context.Transfers.AddRange(transfers);
+            context.SaveChanges();
 
-            // var locations = LoadDataFromFile<Location>("data/locations.json");
-            // foreach (var location in locations)
-            // {
-            //     location.ApplyDefaultValuesLocations();
-            //     location.created_at = ToUtc(location.created_at);
-            //     location.updated_at = ToUtc(location.updated_at);
-            //     location.id = 0; // Resetting the Id to 0
-            // }
-            // context.Locations.AddRange(locations);
-            // context.SaveChanges();
+            var locations = LoadDataFromFile<Location>("data/locations.json");
+            foreach (var location in locations)
+            {
+                location.ApplyDefaultValuesLocations();
+                location.created_at = ToUtc(location.created_at);
+                location.updated_at = ToUtc(location.updated_at);
+                location.id = 0; // Resetting the Id to 0
+            }
+            context.Locations.AddRange(locations);
+            context.SaveChanges();
         }
     }
 }

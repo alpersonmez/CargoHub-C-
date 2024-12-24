@@ -70,7 +70,7 @@ Content-Type: application/json
 DELETE  http://localhost:5000/api/order/1
 ########
 
-DELETE  http://localhost:5000/api/order/1
+DELETE  http://localhost:5000/api/order/2
 API_key: a1b2c3d4
 ########
 

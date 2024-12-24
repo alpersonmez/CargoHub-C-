@@ -576,7 +576,7 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
-                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.orderItem>", "items", b1 =>
+                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.Order+orderItem>", "items", b1 =>
                         {
                             b1.Property<int>("Orderid")
                                 .HasColumnType("INTEGER");

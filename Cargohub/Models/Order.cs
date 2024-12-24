@@ -15,11 +15,11 @@ namespace Cargohub.Models
 
         [JsonProperty("order_date")]
         [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime order_date { get; set; }
+        public DateTime? order_date { get; set; }
 
         [JsonProperty("request_date")]
         [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime request_date { get; set; }
+        public DateTime? request_date { get; set; }
 
         [JsonProperty("reference")]
         public string? reference { get; set; }
@@ -76,9 +76,8 @@ namespace Cargohub.Models
 
         [JsonProperty("isdeleted")]
         public bool? isdeleted { get; set; } = false;
-    }
 
-    public class orderItem
+        public class orderItem
     {
         [JsonProperty("item_id")]
         public string? item_id { get; set; }
@@ -86,4 +85,6 @@ namespace Cargohub.Models
         [JsonProperty("amount")]
         public int? amount { get; set; }
     }
+    }
+
 }

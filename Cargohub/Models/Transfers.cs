@@ -30,7 +30,6 @@ namespace Cargohub.Models
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime updated_at { get; set; }
 
-        // Updated from ItemTransfers to a list of ItemTransfers
         [JsonProperty("items")]
         public List<ItemTransfers>? items { get; set; }
 

@@ -16,9 +16,9 @@ public class ItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int amount)
     {
-        var item = await _itemService.GetAllItems();
+        var item = await _itemService.GetAllItems(amount);
         return Ok(item);
     }
 

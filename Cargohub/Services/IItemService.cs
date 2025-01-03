@@ -5,7 +5,7 @@ namespace Cargohub.Services
 {
     public interface IItemService
     {
-        Task<List<Item>> GetAllItems();
+        Task<List<Item>> GetAllItems(int amount);
         Task<Item> GetItemByUid(string uid);
         Task<Item> AddItem(Item Newitem);
         Task<bool> UpdateItem(Item item);

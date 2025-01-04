@@ -306,7 +306,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("notes")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("order_date")
+                    b.Property<DateTime>("order_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("order_status")
@@ -321,7 +321,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("reference_extra")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("request_date")
+                    b.Property<DateTime>("request_date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ship_to")
@@ -458,10 +458,6 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("phone_number")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("province")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("reference")

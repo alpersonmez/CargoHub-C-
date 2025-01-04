@@ -32,7 +32,6 @@ namespace Cargohub.Services
                 address_extra = Newsupplier.address_extra,
                 city = Newsupplier.city,
                 zip_code = Newsupplier.zip_code,
-                province = Newsupplier.province,
                 country = Newsupplier.country,
                 contact_name = Newsupplier.contact_name,
                 phone_number = Newsupplier.phone_number,

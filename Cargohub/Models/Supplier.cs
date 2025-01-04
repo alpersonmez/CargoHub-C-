@@ -27,9 +27,6 @@ namespace Cargohub.Models
         [JsonProperty("zip_code")]
         public string? zip_code { get; set; }
 
-        [JsonProperty("province")]
-        public string province { get; set; }
-
         [JsonProperty("country")]
         public string? country { get; set; }
 

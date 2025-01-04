@@ -545,6 +545,11 @@ namespace Cargohub.ApplyDefaultValues{
                 supplier.zip_code = "Unknown zip code";
             }
 
+            if (string.IsNullOrEmpty(supplier.province))
+            {
+                supplier.province = "Unknown province";
+            }
+
             if (string.IsNullOrEmpty(supplier.country))
             {
                 supplier.country = "Unknown country";

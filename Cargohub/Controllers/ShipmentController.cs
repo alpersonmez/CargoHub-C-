@@ -1,68 +1,82 @@
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Cargohub.Services;
 using Cargohub.Models;
+using Cargohub.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using Cargohub.Filters;
-
 namespace Cargohub.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class ShipmentController : Controller
+    public class ShipmentController : ControllerBase
     {
-        private readonly IShipmentService shipmentService;
+        private readonly IShipmentService _shipmentService;
 
-        public ShipmentController(IShipmentService _shipmentService)
+        public ShipmentController(IShipmentService shipmentService)
         {
-            shipmentService = _shipmentService;
+            _shipmentService = shipmentService;
         }
 
         [HttpGet]
-        public IActionResult GetShipments()
+        public async Task<IActionResult> GetAll()
         {
-            List<Shipment> shipments = shipmentService.GetShipments();
-            if (shipments is null || !shipments.Any()) return NotFound("empty");
+            var shipments = await _shipmentService.GetAllShipments();
             return Ok(shipments);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetShipment(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            Shipment shipment = shipmentService.GetShipment(id);
-            if (shipment is null) return BadRequest("shipment with the given id does not exist.");
+            Shipment shipment = await _shipmentService.GetShipmentById(id);
+            if (shipment == null)
+            {
+                return NotFound();
+            }
             return Ok(shipment);
         }
 
-        // [HttpGet("/{Id}/items")]
-        // public IActionResult GetShipmentItems(int id)
-        // {
-        //     List<Item> shipments = shipmentService.GetItems(id);
-        //     if (shipments is null) return BadRequest("Shipment with the given id does not exist.");
-        //     return Ok(shipments);
-        // }
         [AdminFilter]
         [HttpPost]
-        public IActionResult AddShipment([FromBody] Shipment shipment)
+        public async Task<IActionResult> Create([FromBody] Shipment newShipment)
         {
-            if (shipmentService.AddShipment(shipment)) return Ok($"Succesfully added {shipment}");
-            if (shipment is null) return BadRequest("Shipment is empty.");
-            return BadRequest("Shipment Already exists.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Shipment createdShipment = await _shipmentService.AddShipment(newShipment);
+            return CreatedAtAction(nameof(Get), new { id = createdShipment.id }, createdShipment);
         }
+
         [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult UpdateShipment(int id, [FromBody] Shipment shipment)
+        public async Task<IActionResult> Update(int id, [FromBody] Shipment shipment)
         {
-            if (shipmentService.UpdateShipment(id, shipment) == false) return BadRequest("Failed to update shipment. Check if you have the correct id and a valid shipment.");
-            return Ok($"Succesfully updated shipment with id: {id}");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (id != shipment.id)
+            {
+                return BadRequest($"Shipment Id {id} does not match");
+            }
+
+            var updated = await _shipmentService.UpdateShipment(shipment);
+
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
+
         [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult DeleteShipment(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (shipmentService.DeleteShipment(id) == false) return BadRequest("shipment with given id doesnt exist.");
-            return Ok($"Succesfully deleted shipment with id: {id}");
+            bool deleted = await _shipmentService.DeleteShipment(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-
-
-
     }
 }

@@ -1,50 +1,68 @@
 using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cargohub.Filters;
 
-namespace Cargohub.Controllers{
-
+namespace Cargohub.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
-    public class Item_linesController : ControllerBase{
+    public class ItemLinesController : ControllerBase
+    {
+        private readonly IItemLinesService _itemLinesService;
 
-        private readonly IitemlinesService _IitemlinesService;
-
-        public Item_linesController(IitemlinesService IitemlinesService)
+        public ItemLinesController(IItemLinesService itemLinesService)
         {
-            _IitemlinesService = IitemlinesService;
+            _itemLinesService = itemLinesService;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var itemlines = _IitemlinesService.GetAllItem_lines();
-            return Ok(itemlines);
+            var itemLines = await _itemLinesService.GetAllItemLines();
+            return Ok(itemLines);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var itemLine = _IitemlinesService.GetItem_linesById(id);
-            if (itemLine == null) return NotFound("ItemLine not found");
+            var itemLine = await _itemLinesService.GetItemLineById(id);
+            if (itemLine == null)
+            {
+                return NotFound("ItemLine not found");
+            }
             return Ok(itemLine);
         }
-    
+
+        [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Item_lines updatedItemLine)
+        public async Task<IActionResult> Update(int id, [FromBody] ItemLines updatedItemLine)
         {
-            var updated = _IitemlinesService.UpdateItem_lines(id, updatedItemLine);
-            if (updated == null) return NotFound("ItemLine not found");
+            if (id != updatedItemLine.id)
+            {
+                return BadRequest("ItemLine ID mismatch");
+            }
+
+            var updated = await _itemLinesService.UpdateItemLine(id, updatedItemLine);
+            if (updated == null)
+            {
+                return NotFound("ItemLine not found");
+            }
+
             return Ok(updated);
         }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteItem_lines(int id)
-    {
-        var deleted = _IitemlinesService.DeleteItem_lines(id);
-        if (!deleted) return NotFound("ItemLine not found");
-        return Ok("ItemLine deleted successfully");
-    }
+        [AdminFilter]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _itemLinesService.DeleteItemLine(id);
+            if (!deleted)
+            {
+                return NotFound("ItemLine not found");
+            }
+            return NoContent();
+        }
     }
 }

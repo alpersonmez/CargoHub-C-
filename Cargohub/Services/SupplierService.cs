@@ -26,18 +26,18 @@ namespace Cargohub.Services
         {
             Supplier supplier = new Supplier
             {
-                Code = Newsupplier.Code,
-                Name = Newsupplier.Name,
-                Address = Newsupplier.Address,
-                AddressExtra = Newsupplier.AddressExtra,
-                City = Newsupplier.City,
-                ZipCode = Newsupplier.ZipCode,
-                Country = Newsupplier.Country,
-                ContactName = Newsupplier.ContactName,
-                PhoneNumber = Newsupplier.PhoneNumber,
-                Reference = Newsupplier.Reference,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                code = Newsupplier.code,
+                name = Newsupplier.name,
+                address = Newsupplier.address,
+                address_extra = Newsupplier.address_extra,
+                city = Newsupplier.city,
+                zip_code = Newsupplier.zip_code,
+                country = Newsupplier.country,
+                contact_name = Newsupplier.contact_name,
+                phone_number = Newsupplier.phone_number,
+                reference = Newsupplier.reference,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
             };
 
             _context.Supplier.Add(supplier);
@@ -48,16 +48,16 @@ namespace Cargohub.Services
 
         public async Task<bool> UpdateSupplier(Supplier supplier) 
         {
-            Supplier ExistingSupplier = await _context.Supplier.FindAsync(supplier.Id);
+            Supplier ExistingSupplier = await _context.Supplier.FindAsync(supplier.id);
             
             if (ExistingSupplier == null)
             {
                 return false;
             }
 
-            ExistingSupplier.Code = supplier.Code;
-            ExistingSupplier.Name = supplier.Name;
-            ExistingSupplier.UpdatedAt = DateTime.UtcNow;
+            ExistingSupplier.code = supplier.code;
+            ExistingSupplier.name = supplier.name;
+            ExistingSupplier.updated_at = DateTime.UtcNow;
 
             _context.Supplier.Update(ExistingSupplier);
             await _context.SaveChangesAsync();

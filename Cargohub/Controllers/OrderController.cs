@@ -1,68 +1,82 @@
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Cargohub.Services;
 using Cargohub.Models;
+using Cargohub.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using Cargohub.Filters;
-
 namespace Cargohub.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
-        private readonly IOrderService orderService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService _orderService)
+        public OrderController(IOrderService orderService)
         {
-            orderService = _orderService;
+            _orderService = orderService;
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetAll()
         {
-            List<Order> orders = orderService.GetOrders();
-            if (orders is null || !orders.Any()) return NotFound("empty");
+            var orders = await _orderService.GetAllOrders();
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetOrder(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            Order order = orderService.GetOrder(id);
-            if (order is null) return BadRequest("Order with the given id does not exist.");
+            Order order = await _orderService.GetOrderById(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
             return Ok(order);
         }
 
-        // [HttpGet("/{Id}/items")]
-        // public IActionResult GetOrderItems(int id)
-        // {
-        //     List<Item> orders = orderService.GetItems(id);
-        //     if (orders is null) return BadRequest("Order with the given id does not exist.");
-        //     return Ok(orders);
-        // }
         [AdminFilter]
         [HttpPost]
-        public IActionResult AddOrder([FromBody] Order order)
+        public async Task<IActionResult> Create([FromBody] Order newOrder)
         {
-            if (orderService.AddOrder(order)) return Ok($"Succesfully added {order}");
-            if (order is null) return BadRequest("Order is empty.");
-            return BadRequest("Order Already exists.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Order CreatedOrder = await _orderService.AddOrder(newOrder);
+            return CreatedAtAction(nameof(Get), new { id = CreatedOrder.id }, CreatedOrder);
         }
+
         [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, [FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] Order order)
         {
-            if (orderService.UpdateOrder(id, order) == false) return BadRequest("Failed to update order. Check if you have the correct id and a valid order.");
-            return Ok($"Succesfully updated order with id: {id}");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (id != order.id)
+            {
+                return BadRequest($"Shipment Id {id} does not match");
+            }
+
+            var updated = await _orderService.UpdateOrder(order);
+
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
+
         [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (orderService.DeleteOrder(id) == false) return BadRequest("Order with given id doesnt exist.");
-            return Ok($"Succesfully deleted order with id: {id}");
+            bool deleted = await _orderService.DeleteOrder(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-
-
-
     }
 }

@@ -1,3 +1,5 @@
+using Cargohub.Models;
+
 namespace Cargohub.Services
 {
     public interface ILocationService

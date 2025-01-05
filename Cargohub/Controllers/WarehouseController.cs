@@ -1,63 +1,63 @@
 using Cargohub.Models;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
 using Cargohub.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Cargohub.Filters;
 
-namespace Cargohub.Controllers;
-
-[Route("api/v1/Warehouses")]
-public class WarehouseController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class WarehouseController : ControllerBase
 {
-    private readonly IWarehouseService warehouseService;
+    private readonly IWarehouseService _warehouseService;
 
-    public WarehouseController(IWarehouseService _warehouseService)
+    public WarehouseController(IWarehouseService warehouseService)
     {
-        warehouseService = _warehouseService;
+        _warehouseService = warehouseService;
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<Warehouse> GetWarehouse(int id)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
     {
-        Warehouse? warehouse = warehouseService.GetWarehouse(id);
-        if (warehouse == null) return Ok($"there is no warehouse with id {id}, {warehouse}");
+        var warehouse = await _warehouseService.GetAllWareHouses();
         return Ok(warehouse);
     }
 
 
-    [HttpGet]
-    public ActionResult<List<Warehouse>> GetAllWarehouses()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(int id)
     {
-        List<Warehouse> warehouseList = warehouseService.GetAllWarehouses();
-        if (warehouseList == null) return Ok("there are no warehouses");
-        return Ok(warehouseList);
+        Warehouse warehouse = await _warehouseService.GetWareHouseById(id);
+        if (warehouse == null)
+        {
+            return NotFound();
+        }
+        return Ok(warehouse);
     }
 
-    [HttpPost("new")]
-    public ActionResult<Warehouse> PostWarehouse([FromBody] object objWarehouse)
+    [AdminFilter]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] Warehouse New)
     {
-        try
-        {
-            // Deserialize the object into the Warehouse class
-            Warehouse warehouse = JsonSerializer.Deserialize<Warehouse>(objWarehouse.ToString());
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            if (warehouse == null)
-            {
-                return BadRequest("Invalid warehouse data.");
-            }
-
-            // Now you have a Warehouse object that you can use
-            Warehouse? postedWarehouse = warehouseService.AddWarehouse(warehouse);
-            if (postedWarehouse == null)
-            {
-                return BadRequest("Warehouse already exists");
-            }
-
-            return Ok($"Successfully posted warehouse \n{JsonSerializer.Serialize(postedWarehouse, new JsonSerializerOptions { WriteIndented = true })}");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error: {ex.Message}");
-        }
-
+        Warehouse createdwarehouse = await _warehouseService.AddWarehouse(New);
+        return CreatedAtAction(nameof(Get), new { id = createdwarehouse.id }, createdwarehouse);
     }
+    
+    //PUT moet ik nog ff checken hoe en wat
+    
+    [AdminFilter]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        bool deleted = await _warehouseService.DeleteWarehouse(id);
+        if (!deleted)
+        {
+            return NotFound();
+
+        } 
+        return NoContent();
+    }
+    
 }

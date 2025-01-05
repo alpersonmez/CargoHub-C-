@@ -1,38 +1,61 @@
-using Cargohub.Models;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using  Cargohub.Models;
 
-namespace Cargohub.Services;
-
-public class WarehouseService : IWarehouseService
+namespace Cargohub.Services
 {
+    public class WarehouseService : IWarehouseService
+    {   
+        private readonly AppDbContext _context;
 
-    private AppDbContext data;
+        public WarehouseService(AppDbContext context)
+        {
+            _context = context;
+        }
 
-    public WarehouseService(AppDbContext _data)
-    {
-        data = _data;
-    }
+        public async Task<List<Warehouse>> GetAllWareHouses()
+        {
+            return await _context.Warehouses.Take(100).ToListAsync(); 
+        }
 
-    public List<Warehouse> GetAllWarehouses()
-    {
-        return data.Warehouses.Where(w => w.id <= 100).ToList();
-    }
+        public async Task<Warehouse> GetWareHouseById(int id)
+        {
+            return await _context.Warehouses.FindAsync(id);
+        }
 
-    public Warehouse? GetWarehouse(int id)
-    {
-        return data.Warehouses.FirstOrDefault(warehouse => warehouse.id == id);
-    }
+        public async Task<Warehouse> AddWarehouse(Warehouse newWarehouse)
+        {
+            Warehouse warehouse = new Warehouse
+            {
+                id = newWarehouse.id,
+                code = newWarehouse.code,
+                name = newWarehouse.name,
+                address = newWarehouse.address,
+                zip = newWarehouse.zip,
+                city = newWarehouse.city,
+                province = newWarehouse.province,
+                country = newWarehouse.country,
+                contact = newWarehouse.contact,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
+            };
 
-    public Warehouse? AddWarehouse(Warehouse warehouseToAdd)
-    {
-        // Check if a warehouse with the same ID already exists
-        Warehouse? alreadyExists = data.Warehouses.FirstOrDefault(w => w.id == warehouseToAdd.id);
-        if (alreadyExists != null) return null;
+            _context.Warehouses.Add(warehouse);
+            await _context.SaveChangesAsync();
+            return warehouse;
+        }
 
-        // Add the warehouse to the database
-        data.Warehouses.Add(warehouseToAdd);
-        data.SaveChanges();
-        return warehouseToAdd;
 
+        public async Task<bool> DeleteWarehouse(int id)
+        {
+            var warehouse = await _context.Warehouses.FindAsync(id);
+            if (warehouse == null)
+            {
+                return false;
+            }
+            
+            _context.Warehouses.Remove(warehouse);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

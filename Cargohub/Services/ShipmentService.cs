@@ -1,57 +1,98 @@
-using Cargohub.Models;
+using Microsoft.EntityFrameworkCore;
+using  Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class ShipmentService : IShipmentService
     {
+        private readonly AppDbContext _context;
 
-        private AppDbContext data;
-
-        public ShipmentService(AppDbContext _data)
+        public ShipmentService(AppDbContext context)
         {
-            data = _data;
+            _context = context;
         }
 
-        public List<Shipment> GetShipments()
+        public async Task<List<Shipment>> GetAllShipments()
         {
-            if (data.Shipments.Count() == 0) return new List<Shipment>();
-            return data.Shipments.ToList();
+            return await _context.Shipments.Take(100).ToListAsync();
         }
 
-        public Shipment? GetShipment(int id)
+        public async Task<Shipment> GetShipmentById(int id)
         {
-            //if(data.Shipment.SingleOrDefault(x => x.id == id) == null) return new Shipment()
-            return data.Shipments.SingleOrDefault(x => x.id == id);
+            return await _context.Shipments.FindAsync(id);
         }
 
-        // public List<Item>? GetItems(int id)
-        // {
-        //     if (data.Shipment.SingleOrDefault(x => x.id == id) is null) return null;
-        //     return data.Shipment.Where(x => x.id == id).Single().Items.ToList();
-        // }
-        public bool AddShipment(Shipment shipment)
+        public async Task<Shipment> AddShipment(Shipment newShipment)
         {
-            if (shipment is null || data.Shipments.Contains(shipment)) return false;
-            data.Shipments.Add(shipment);
-            data.SaveChanges();
+            Shipment shipment = new Shipment
+        {
+            order_id = newShipment.order_id,
+            source_id = newShipment.source_id,
+            order_date = newShipment.order_date,
+            request_date = newShipment.request_date,
+            shipment_date = newShipment.shipment_date,
+            shipment_type = newShipment.shipment_type,
+            shipment_status = newShipment.shipment_status,
+            notes = newShipment.notes,
+            carrier_code = newShipment.carrier_code,
+            carrier_description = newShipment.carrier_description,
+            service_code = newShipment.service_code,
+            payment_type = newShipment.payment_type,
+            transfer_mode = newShipment.transfer_mode,
+            total_package_count = newShipment.total_package_count,
+            total_package_weight = newShipment.total_package_weight,
+            created_at = DateTime.UtcNow,
+            updated_at = DateTime.UtcNow
+        };
+
+
+            _context.Shipments.Add(shipment);
+            await _context.SaveChangesAsync();
+            return shipment;
+        }
+
+        public async Task<bool> UpdateShipment(Shipment shipment)
+        {
+            Shipment existingShipment = await _context.Shipments.FindAsync(shipment.id);
+            if (existingShipment == null)
+            {
+                return false;
+            }
+
+            existingShipment.order_id = shipment.order_id;
+            existingShipment.source_id = shipment.source_id;
+            existingShipment.order_date = shipment.order_date;
+            existingShipment.request_date = shipment.request_date;
+            existingShipment.shipment_date = shipment.shipment_date;
+            existingShipment.shipment_type = shipment.shipment_type;
+            existingShipment.shipment_status = shipment.shipment_status;
+            existingShipment.notes = shipment.notes;
+            existingShipment.carrier_code = shipment.carrier_code;
+            existingShipment.carrier_description = shipment.carrier_description;
+            existingShipment.service_code = shipment.service_code;
+            existingShipment.payment_type = shipment.payment_type;
+            existingShipment.transfer_mode = shipment.transfer_mode;
+            existingShipment.total_package_count = shipment.total_package_count;
+            existingShipment.total_package_weight = shipment.total_package_weight;
+            existingShipment.updated_at = DateTime.UtcNow;
+
+
+            _context.Shipments.Update(existingShipment);
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool UpdateShipment(int id, Shipment shipment)
+
+        public async Task<bool> DeleteShipment(int id)
         {
-            if (shipment is null || id != shipment.id) return false;
-            if (data.Shipments.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Shipments.Remove(data.Shipments.Where(x => x.id == id).Single());
-            data.Shipments.Add(shipment);
-            data.SaveChanges();
-            return true;
-        }
-        public bool DeleteShipment(int id)
-        {
-            if (data.Shipments.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Shipments.Remove(data.Shipments.Where(x => x.id == id).Single());
-            data.SaveChanges();
+            var shipment = await _context.Shipments.FindAsync(id);
+            if (shipment == null)
+            {
+                return false;
+            }
+
+            _context.Shipments.Remove(shipment);
+            await _context.SaveChangesAsync();
             return true;
         }
     }
 }
-

@@ -2,6 +2,8 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -21,7 +23,6 @@ public class LocationController : ControllerBase
         return Ok(locations);
     }
 
-
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
@@ -33,6 +34,7 @@ public class LocationController : ControllerBase
         return Ok(location);
     }
 
+    [AdminFilter]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Location New)
     {
@@ -40,17 +42,17 @@ public class LocationController : ControllerBase
             return BadRequest(ModelState);
 
         Location createdLocation = await _locationService.AddLocation(New);
-        return CreatedAtAction(nameof(Get), new { id = createdLocation.Id }, createdLocation);
+        return CreatedAtAction(nameof(Get), new { id = createdLocation.id }, createdLocation);
     }
 
-
+    [AdminFilter]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] Location location)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
         
-        if (id != location.Id)
+        if (id != location.id)
         {
             return BadRequest($"Location Id {id} does not match");
         }
@@ -65,7 +67,7 @@ public class LocationController : ControllerBase
         return NoContent();
     }
 
-
+    [AdminFilter]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

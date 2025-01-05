@@ -1,13 +1,14 @@
 using Cargohub.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cargohub.Services
 {
-    public interface IitemlinesService
+    public interface IItemLinesService
     {
-        List<Item_lines> GetAllItem_lines();
-        Item_lines GetItem_linesById(int id);
-        Item_lines UpdateItem_lines(int id, Item_lines Updateditem_lines);
-        bool DeleteItem_lines(int id);
+        Task<List<ItemLines>> GetAllItemLines();
+        Task<ItemLines> GetItemLineById(int id);
+        Task<ItemLines> UpdateItemLine(int id, ItemLines updatedItemLine);
+        Task<bool> DeleteItemLine(int id);
     }
 }

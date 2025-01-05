@@ -1,17 +1,59 @@
-namespace Cargohub.Models;
-public class Warehouse
+using Newtonsoft.Json;
+using Cargohub.DataConverters;
+using System;
+
+namespace Cargohub.Models
 {
-    public int id { get; set; }
-    public string code { get; set; }
-    public string name { get; set; }
-    public string address { get; set; }
-    public string zip { get; set; }
-    public string city { get; set; }
-    public string province { get; set; }
-    public string country { get; set; }
-    public string contactName { get; set; }
-    public string contactPhone { get; set; }
-    public string contactEmail { get; set; }
-    public DateTime created_at { get; set; }
-    public DateTime updated_at { get; set; }
+    public class Warehouse
+    {
+        [JsonProperty("id")]
+        public int id { get; set; }
+
+        [JsonProperty("code")]
+        public string? code { get; set; }
+
+        [JsonProperty("name")]
+        public string? name { get; set; }
+
+        [JsonProperty("address")]
+        public string? address { get; set; }
+
+        [JsonProperty("zip")]
+        public string? zip { get; set; }
+
+        [JsonProperty("city")]
+        public string? city { get; set; }
+
+        [JsonProperty("province")]
+        public string? province { get; set; }
+
+        [JsonProperty("country")]
+        public string? country { get; set; }
+
+        [JsonProperty("contact")]
+        public Contact? contact { get; set; }
+
+        [JsonProperty("created_at")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime created_at { get; set; }
+
+        [JsonProperty("updated_at")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime updated_at { get; set; }
+
+        [JsonProperty("isdeleted")]
+        public bool? isdeleted { get; set; } = false;
+
+        public class Contact
+        {
+            [JsonProperty("name")]
+            public string? name { get; set; }
+
+            [JsonProperty("phone")]
+            public string? phone { get; set; }
+
+            [JsonProperty("email")]
+            public string? email { get; set; }
+        }
+    }
 }

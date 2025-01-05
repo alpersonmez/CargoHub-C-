@@ -25,24 +25,26 @@ namespace Cargohub.Services
         public async Task<Shipment> AddShipment(Shipment newShipment)
         {
             Shipment shipment = new Shipment
-            {
-            OrderId = newShipment.OrderId,
-            SourceId = newShipment.SourceId, 
-            OrderDate = newShipment.OrderDate,
-            RequestDate = newShipment.RequestDate,
-            ShipmentDate = newShipment.ShipmentDate,
-            ShipmentType = newShipment.ShipmentType,
-            ShipmentStatus = newShipment.ShipmentStatus,
-            Notes = newShipment.Notes,
-            CarrierCode = newShipment.CarrierCode,
-            CarrierDescription = newShipment.CarrierDescription,
-            ServiceCode = newShipment.ServiceCode,
-            PaymentType = newShipment.PaymentType,
-            TransferMode = newShipment.TransferMode,
-            TotalPackageCount = newShipment.TotalPackageCount,
-            TotalPackageWeight = newShipment.TotalPackageWeight,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow};
+        {
+            order_id = newShipment.order_id,
+            source_id = newShipment.source_id,
+            order_date = newShipment.order_date,
+            request_date = newShipment.request_date,
+            shipment_date = newShipment.shipment_date,
+            shipment_type = newShipment.shipment_type,
+            shipment_status = newShipment.shipment_status,
+            notes = newShipment.notes,
+            carrier_code = newShipment.carrier_code,
+            carrier_description = newShipment.carrier_description,
+            service_code = newShipment.service_code,
+            payment_type = newShipment.payment_type,
+            transfer_mode = newShipment.transfer_mode,
+            total_package_count = newShipment.total_package_count,
+            total_package_weight = newShipment.total_package_weight,
+            created_at = DateTime.UtcNow,
+            updated_at = DateTime.UtcNow
+        };
+
 
             _context.Shipments.Add(shipment);
             await _context.SaveChangesAsync();
@@ -51,28 +53,29 @@ namespace Cargohub.Services
 
         public async Task<bool> UpdateShipment(Shipment shipment)
         {
-            Shipment existingShipment = await _context.Shipments.FindAsync(shipment.Id);
+            Shipment existingShipment = await _context.Shipments.FindAsync(shipment.id);
             if (existingShipment == null)
             {
                 return false;
             }
 
-            existingShipment.OrderId = shipment.OrderId;
-            existingShipment.SourceId = shipment.SourceId;
-            existingShipment.OrderDate = shipment.OrderDate;
-            existingShipment.RequestDate = shipment.RequestDate;
-            existingShipment.ShipmentDate = shipment.ShipmentDate;
-            existingShipment.ShipmentType = shipment.ShipmentType;
-            existingShipment.ShipmentStatus = shipment.ShipmentStatus;
-            existingShipment.Notes = shipment.Notes;
-            existingShipment.CarrierCode = shipment.CarrierCode;
-            existingShipment.CarrierDescription = shipment.CarrierDescription;
-            existingShipment.ServiceCode = shipment.ServiceCode;
-            existingShipment.PaymentType = shipment.PaymentType;
-            existingShipment.TransferMode = shipment.TransferMode;
-            existingShipment.TotalPackageCount = shipment.TotalPackageCount;
-            existingShipment.TotalPackageWeight = shipment.TotalPackageWeight;
-            existingShipment.UpdatedAt = DateTime.UtcNow;
+            existingShipment.order_id = shipment.order_id;
+            existingShipment.source_id = shipment.source_id;
+            existingShipment.order_date = shipment.order_date;
+            existingShipment.request_date = shipment.request_date;
+            existingShipment.shipment_date = shipment.shipment_date;
+            existingShipment.shipment_type = shipment.shipment_type;
+            existingShipment.shipment_status = shipment.shipment_status;
+            existingShipment.notes = shipment.notes;
+            existingShipment.carrier_code = shipment.carrier_code;
+            existingShipment.carrier_description = shipment.carrier_description;
+            existingShipment.service_code = shipment.service_code;
+            existingShipment.payment_type = shipment.payment_type;
+            existingShipment.transfer_mode = shipment.transfer_mode;
+            existingShipment.total_package_count = shipment.total_package_count;
+            existingShipment.total_package_weight = shipment.total_package_weight;
+            existingShipment.updated_at = DateTime.UtcNow;
+
 
             _context.Shipments.Update(existingShipment);
             await _context.SaveChangesAsync();

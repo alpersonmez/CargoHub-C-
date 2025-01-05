@@ -33,5 +33,5 @@ Content-Type: application/json
 ###
 
 ### Delete an Item Type
-DELETE http://localhost:5000/api/itemtypes/1
+DELETE http://localhost:5000/api/itemtypes/5
 Content-Type: application/json

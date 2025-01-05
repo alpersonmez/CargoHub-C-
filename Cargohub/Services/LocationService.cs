@@ -26,11 +26,11 @@ namespace Cargohub.Services
         {
             Location location = new Location
             {
-                WareHouse_Id = NewLocation.WareHouse_Id,
-                Code = NewLocation.Code,
-                Name = NewLocation.Name,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                warehouse_id = NewLocation.warehouse_id,
+                code = NewLocation.code,
+                name = NewLocation.name,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
             };
 
             _context.Locations.Add(location);
@@ -41,16 +41,17 @@ namespace Cargohub.Services
 
         public async Task<bool> UpdateLocation(Location location) // moet checken hoe ik met required fields te werk moet gaan hetzelfde geld bij POST
         {
-            Location existingLocation = await _context.Locations.FindAsync(location.Id);
+            Location existingLocation = await _context.Locations.FindAsync(location.id);
             
             if (existingLocation == null)
             {
                 return false;
             }
 
-            existingLocation.Code = location.Code;
-            existingLocation.Name = location.Name;
-            existingLocation.UpdatedAt = DateTime.UtcNow;
+            existingLocation.warehouse_id = location.warehouse_id;
+            existingLocation.code = location.code;
+            existingLocation.name = location.name;
+            existingLocation.updated_at = DateTime.UtcNow;
 
             _context.Locations.Update(existingLocation);
             await _context.SaveChangesAsync();

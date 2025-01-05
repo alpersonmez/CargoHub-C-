@@ -36,7 +36,7 @@ namespace Cargohub.Controllers
         {
             if (itemType == null) return BadRequest("Invalid data");
             var createdItemType = _itemTypeService.CreateItemType(itemType);
-            return CreatedAtAction(nameof(GetById), new { id = createdItemType.Id }, createdItemType);
+            return CreatedAtAction(nameof(GetById), new { id = createdItemType.id }, createdItemType);
         }
 
         [HttpPut("{id}")]

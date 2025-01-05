@@ -4,7 +4,10 @@ namespace Cargohub.Services;
 
 public interface IWarehouseService
 {
-    public Warehouse? GetWarehouse(int id);
-    public List<Warehouse> GetAllWarehouses();
-    public Warehouse? AddWarehouse(Warehouse warehouse);
+    Task<List<Warehouse>> GetAllWareHouses();
+    Task<Warehouse> GetWareHouseById(int id);
+    Task<Warehouse> AddWarehouse(Warehouse warehouse);
+    //Task<bool> UpdateWareHouse(Warehouse warehouse);
+    //moet nog ff kijken hoe ik dit ga doen
+    Task<bool> DeleteWarehouse(int id);
 }

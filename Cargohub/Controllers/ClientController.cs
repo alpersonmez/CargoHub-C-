@@ -40,14 +40,14 @@ namespace Cargohub.Controllers
                 return BadRequest("Client is null.");
 
             var createdClient = _clientService.CreateClient(client);
-            return CreatedAtAction(nameof(GetClientById), new { id = createdClient.Id }, createdClient);
+            return CreatedAtAction(nameof(GetClientById), new { id = createdClient.id }, createdClient);
         }
 
         [AdminFilter]
         [HttpPut("{id}")]
         public IActionResult UpdateClient(int id, [FromBody] Client client)
         {
-            if (client == null || client.Id != id)
+            if (client == null || client.id != id)
                 return BadRequest("Client ID mismatch.");
 
             var updatedClient = _clientService.UpdateClient(client);

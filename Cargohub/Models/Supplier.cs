@@ -1,20 +1,53 @@
-using Microsoft.AspNetCore.Http.Features;
+using Newtonsoft.Json;
+using Cargohub.DataConverters;
+using System;
+
 namespace Cargohub.Models
 {
-    public class Supplier{
-        public int Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string AddressExtra { get; set; }
-        public string City { get; set; }
-        public string ZipCode { get; set; }
-        public string Country { get; set; }
-        public string ContactName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Reference { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+    public class Supplier
+    {
+        [JsonProperty("id")]
+        public int id { get; set; }
+
+        [JsonProperty("code")]
+        public string? code { get; set; }
+
+        [JsonProperty("name")]
+        public string? name { get; set; }
+
+        [JsonProperty("address")]
+        public string? address { get; set; }
+
+        [JsonProperty("address_extra")]
+        public string? address_extra { get; set; }
+
+        [JsonProperty("city")]
+        public string? city { get; set; }
+
+        [JsonProperty("zip_code")]
+        public string? zip_code { get; set; }
+
+        [JsonProperty("country")]
+        public string? country { get; set; }
+
+        [JsonProperty("contact_name")]
+        public string? contact_name { get; set; }
+
+        [JsonProperty("phone_number")]
+        public string? phone_number { get; set; }
+
+        [JsonProperty("reference")]
+        public string? reference { get; set; }
+
+        [JsonProperty("created_at")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime created_at { get; set; }
+
+        [JsonProperty("updated_at")]
+        [JsonConverter(typeof(DateTimeConverter))]
+        public DateTime updated_at { get; set; }
+
+        [JsonProperty("isdeleted")]
+        public bool? isdeleted { get; set; } = false;
     }
 }
-

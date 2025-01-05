@@ -20,13 +20,13 @@ namespace Cargohub.Services
 
         public ItemType GetItemTypeById(int id)
         {
-            return _dbContext.ItemTypes.FirstOrDefault(itemType => itemType.Id == id);
+            return _dbContext.ItemTypes.FirstOrDefault(itemType => itemType.id == id);
         }
 
         public ItemType CreateItemType(ItemType itemType)
         {
-            itemType.CreatedAt = DateTime.UtcNow;
-            itemType.UpdatedAt = DateTime.UtcNow;
+            itemType.created_at = DateTime.UtcNow;
+            itemType.updated_at = DateTime.UtcNow;
 
             _dbContext.ItemTypes.Add(itemType);
             _dbContext.SaveChanges();
@@ -35,12 +35,12 @@ namespace Cargohub.Services
 
         public ItemType UpdateItemType(int id, ItemType updatedItemType)
         {
-            var existingItemType = _dbContext.ItemTypes.SingleOrDefault(itemType => itemType.Id == id);
+            var existingItemType = _dbContext.ItemTypes.SingleOrDefault(itemType => itemType.id == id);
             if (existingItemType == null) return null;
 
-            existingItemType.Name = updatedItemType.Name;
-            existingItemType.Description = updatedItemType.Description;
-            existingItemType.UpdatedAt = DateTime.UtcNow;
+            existingItemType.name = updatedItemType.name;
+            existingItemType.description = updatedItemType.description;
+            existingItemType.updated_at = DateTime.UtcNow;
 
             _dbContext.SaveChanges();
             return existingItemType;

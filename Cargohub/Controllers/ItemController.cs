@@ -2,61 +2,82 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
 
-namespace Cargohub.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class ItemController : ControllerBase
 {
-    [ApiController]
-    [Route("api/v1/items")]
-    public class ItemController : ControllerBase
+    private readonly IItemService _itemService;
+
+    public ItemController(IItemService itemService)
     {
-        private readonly IItemService _itemService;
+        _itemService = itemService;
+    }
 
-        public ItemController(IItemService itemService)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var item = await _itemService.GetAllItems();
+        return Ok(item);
+    }
+
+    [HttpGet("{uid}")]
+    public async Task<IActionResult> Get(string uid)
+    {
+        Item item = await _itemService.GetItemByUid(uid);
+        if (item == null)
         {
-            _itemService = itemService;
+            return NotFound();
+        }
+        return Ok(item);
+    }
+
+    [AdminFilter]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] Item New)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        Item CreatedItem = await _itemService.AddItem(New);
+        return CreatedAtAction(nameof(Get), new { uid = CreatedItem.uid }, CreatedItem);
+    }
+
+
+
+    [AdminFilter]
+    [HttpPut("{uid}")]
+    public async Task<IActionResult> Update(string uid, [FromBody] Item item)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+        
+        if (uid != item.uid)
+        {
+            return BadRequest($"Location Id {uid} does not match");
+        }
+        
+        var updated = await _itemService.UpdateItem(item);
+
+        if (!updated)
+        {
+            return NotFound();
         }
 
-        [HttpGet]
-        public ActionResult<List<Item>> GetAllItems()
+        return NoContent();
+    }
+
+    [AdminFilter]
+    [HttpDelete("{uid}")]
+    public async Task<IActionResult> Delete(string uid)
+    {
+        bool deleted = await _itemService.DeleteItem(uid);
+        if (!deleted)
         {
-            return Ok(_itemService.GetAllItems());
-        }
+            return NotFound();
 
-        [HttpGet("{uid}")]
-        public ActionResult<Item> GetItemByUid(string uid)
-        {
-            var item = _itemService.GetItemByUid(uid);
-            if (item == null) return NotFound();
-            return Ok(item);
-        }
-
-        [HttpPost]
-        public ActionResult<Item> CreateItem([FromBody] Item item)
-        {
-            if (item.CreatedAt != default || item.UpdatedAt != default)
-            {
-                return BadRequest("The fields 'createdAt' and 'updatedAt' cannot be specified.");
-            }
-
-            var createdItem = _itemService.CreateItem(item);
-            return CreatedAtAction(nameof(GetItemByUid), new { uid = createdItem.Uid }, createdItem);
-        }
-
-
-
-        [HttpPut("{uid}")]
-        public ActionResult<Item> UpdateItem(string uid, [FromBody] Item item)
-        {
-            var updatedItem = _itemService.UpdateItem(uid, item);
-            if (updatedItem == null) return NotFound();
-            return Ok(updatedItem);
-        }
-
-        [HttpDelete("{uid}")]
-        public IActionResult DeleteItem(string uid)
-        {
-            _itemService.DeleteItem(uid);
-            return NoContent();
-        }
+        } 
+        return NoContent();
     }
 }

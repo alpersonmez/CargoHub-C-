@@ -23,7 +23,7 @@ namespace Cargohub.Services
         // Get a client by ID
         public Client GetClientById(int id)
         {
-            return _dbContext.Clients.FirstOrDefault(c => c.Id == id);
+            return _dbContext.Clients.FirstOrDefault(c => c.id == id);
         }
 
         // Create a new client
@@ -31,8 +31,8 @@ namespace Cargohub.Services
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
-            client.CreatedAt = DateTime.UtcNow;
-            client.UpdatedAt = DateTime.UtcNow;
+            client.created_at = DateTime.UtcNow;
+            client.updated_at = DateTime.UtcNow;
 
             _dbContext.Clients.Add(client);
             _dbContext.SaveChanges();
@@ -45,20 +45,20 @@ namespace Cargohub.Services
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
-            var existingClient = _dbContext.Clients.FirstOrDefault(c => c.Id == client.Id);
+            var existingClient = _dbContext.Clients.FirstOrDefault(c => c.id == client.id);
             if (existingClient == null) return null;
 
             // Update fields
-            existingClient.Name = client.Name;
-            existingClient.Address = client.Address;
-            existingClient.City = client.City;
-            existingClient.ZipCode = client.ZipCode;
-            existingClient.Province = client.Province;
-            existingClient.Country = client.Country;
-            existingClient.ContactName = client.ContactName;
-            existingClient.ContactPhone = client.ContactPhone;
-            existingClient.ContactEmail = client.ContactEmail;
-            existingClient.UpdatedAt = DateTime.UtcNow;
+            existingClient.name = client.name;
+            existingClient.address = client.address;
+            existingClient.city = client.city;
+            existingClient.zip_code = client.zip_code;
+            existingClient.province = client.province;
+            existingClient.country = client.country;
+            existingClient.contact_name = client.contact_name;
+            existingClient.contact_phone = client.contact_phone;
+            existingClient.contact_email = client.contact_email;
+            existingClient.updated_at = DateTime.UtcNow;
 
             _dbContext.SaveChanges();
 
@@ -68,7 +68,7 @@ namespace Cargohub.Services
         // Delete a client
         public bool DeleteClient(int id)
         {
-            var client = _dbContext.Clients.FirstOrDefault(c => c.Id == id);
+            var client = _dbContext.Clients.FirstOrDefault(c => c.id == id);
             if (client == null) return false;
 
             _dbContext.Clients.Remove(client);

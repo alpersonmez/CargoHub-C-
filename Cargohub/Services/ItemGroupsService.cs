@@ -38,7 +38,7 @@ namespace Cargohub.Services
 
             existing.name = item_Group.name;
             existing.description = item_Group.description;
-            existing.UpdatedAt = DateTime.UtcNow;
+            existing.updated_at = DateTime.UtcNow;
 
             _context.ItemGroups.Update(existing);
             await _context.SaveChangesAsync();

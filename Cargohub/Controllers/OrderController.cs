@@ -42,7 +42,7 @@ namespace Cargohub.Controllers
                 return BadRequest(ModelState);
 
             Order CreatedOrder = await _orderService.AddOrder(newOrder);
-            return CreatedAtAction(nameof(Get), new { id = CreatedOrder.Id }, CreatedOrder);
+            return CreatedAtAction(nameof(Get), new { id = CreatedOrder.id }, CreatedOrder);
         }
 
         [AdminFilter]
@@ -52,7 +52,7 @@ namespace Cargohub.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (id != order.Id)
+            if (id != order.id)
             {
                 return BadRequest($"Shipment Id {id} does not match");
             }

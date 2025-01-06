@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
@@ -12,11 +12,11 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Order>> GetAllOrders()
-        {
-            return await _context.Orders.Take(100).ToListAsync();
-        }
 
+        public IEnumerable<Order> GetAllOrders(int amount = 100)
+        {
+            return _context.Orders.Take(amount).ToList();
+        }
         public async Task<Order> GetOrderById(int id)
         {
             return await _context.Orders.FindAsync(id);
@@ -26,27 +26,27 @@ namespace Cargohub.Services
         {
             Order order = new Order
             {
-            id = newOrder.id,
-            source_id = newOrder.source_id,
-            order_date = newOrder.order_date,
-            request_date = newOrder.request_date,
-            reference = newOrder.reference,
-            reference_extra = newOrder.reference_extra,
-            order_status = newOrder.order_status,
-            notes = newOrder.notes,
-            shipping_notes = newOrder.shipping_notes,
-            picking_notes = newOrder.picking_notes,
-            warehouse_id = newOrder.warehouse_id,
-            ship_to = newOrder.ship_to,
-            bill_to = newOrder.bill_to,
-            shipment_id = newOrder.shipment_id,
-            total_amount = newOrder.total_amount,
-            total_discount = newOrder.total_discount,
-            total_tax = newOrder.total_tax,
-            total_surcharge = newOrder.total_surcharge,
-            created_at = DateTime.UtcNow,
-            updated_at = DateTime.UtcNow
-        };
+                id = newOrder.id,
+                source_id = newOrder.source_id,
+                order_date = newOrder.order_date,
+                request_date = newOrder.request_date,
+                reference = newOrder.reference,
+                reference_extra = newOrder.reference_extra,
+                order_status = newOrder.order_status,
+                notes = newOrder.notes,
+                shipping_notes = newOrder.shipping_notes,
+                picking_notes = newOrder.picking_notes,
+                warehouse_id = newOrder.warehouse_id,
+                ship_to = newOrder.ship_to,
+                bill_to = newOrder.bill_to,
+                shipment_id = newOrder.shipment_id,
+                total_amount = newOrder.total_amount,
+                total_discount = newOrder.total_discount,
+                total_tax = newOrder.total_tax,
+                total_surcharge = newOrder.total_surcharge,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
+            };
 
 
             _context.Orders.Add(order);

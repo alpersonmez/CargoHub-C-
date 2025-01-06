@@ -17,9 +17,9 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            var orders = await _orderService.GetAllOrders();
+            var orders = _orderService.GetAllOrders();
             return Ok(orders);
         }
 

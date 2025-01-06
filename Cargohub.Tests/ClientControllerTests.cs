@@ -28,8 +28,8 @@ namespace Cargohub.Tests
             // Arrange
             var clients = new List<Client>
             {
-                new Client { Id = 1, Name = "Client A" },
-                new Client { Id = 2, Name = "Client B" }
+                new Client { id = 1, name = "Client A" },
+                new Client { id = 2, name = "Client B" }
             };
             _mockClientService.Setup(service => service.GetAllClients()).Returns(clients);
 
@@ -48,7 +48,7 @@ namespace Cargohub.Tests
         public void GetClientById_ReturnsOkResult_WithClient()
         {
             // Arrange
-            var client = new Client { Id = 1, Name = "Client A" };
+            var client = new Client { id = 1, name = "Client A" };
             _mockClientService.Setup(service => service.GetClientById(1)).Returns(client);
 
             // Act
@@ -80,7 +80,7 @@ namespace Cargohub.Tests
         public void CreateClient_ReturnsCreatedAtActionResult_WithCreatedClient()
         {
             // Arrange
-            var client = new Client { Id = 1, Name = "Client A" };
+            var client = new Client { id = 1, name = "Client A" };
             _mockClientService.Setup(service => service.CreateClient(client)).Returns(client);
 
             // Act
@@ -98,7 +98,7 @@ namespace Cargohub.Tests
         public void UpdateClient_ReturnsOkResult_WithUpdatedClient()
         {
             // Arrange
-            var client = new Client { Id = 1, Name = "Updated Client" };
+            var client = new Client { id = 1, name = "Updated Client" };
             _mockClientService.Setup(service => service.UpdateClient(client)).Returns(client);
 
             // Act
@@ -116,7 +116,7 @@ namespace Cargohub.Tests
         public void UpdateClient_ReturnsNotFound_WhenClientDoesNotExist()
         {
             // Arrange
-            var client = new Client { Id = 1, Name = "Updated Client" };
+            var client = new Client { id = 1, name = "Updated Client" };
             _mockClientService.Setup(service => service.UpdateClient(client)).Returns((Client)null);
 
             // Act
@@ -155,3 +155,5 @@ namespace Cargohub.Tests
         }
     }
 }
+
+

@@ -7,7 +7,7 @@ namespace Cargohub.Controllers
 {
 
     [ApiController]
-    [Route("api/v1/inventory")]
+    [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
 

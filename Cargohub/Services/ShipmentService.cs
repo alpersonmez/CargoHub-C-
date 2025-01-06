@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Shipment>> GetAllShipments()
+        public async Task<List<Shipment>> GetAllShipments(int amount = 100)
         {
-            return await _context.Shipments.Take(100).ToListAsync();
+            return await _context.Shipments.Take(amount).ToListAsync();
         }
 
         public async Task<Shipment> GetShipmentById(int id)
@@ -25,25 +25,25 @@ namespace Cargohub.Services
         public async Task<Shipment> AddShipment(Shipment newShipment)
         {
             Shipment shipment = new Shipment
-        {
-            order_id = newShipment.order_id,
-            source_id = newShipment.source_id,
-            order_date = newShipment.order_date,
-            request_date = newShipment.request_date,
-            shipment_date = newShipment.shipment_date,
-            shipment_type = newShipment.shipment_type,
-            shipment_status = newShipment.shipment_status,
-            notes = newShipment.notes,
-            carrier_code = newShipment.carrier_code,
-            carrier_description = newShipment.carrier_description,
-            service_code = newShipment.service_code,
-            payment_type = newShipment.payment_type,
-            transfer_mode = newShipment.transfer_mode,
-            total_package_count = newShipment.total_package_count,
-            total_package_weight = newShipment.total_package_weight,
-            created_at = DateTime.UtcNow,
-            updated_at = DateTime.UtcNow
-        };
+            {
+                order_id = newShipment.order_id,
+                source_id = newShipment.source_id,
+                order_date = newShipment.order_date,
+                request_date = newShipment.request_date,
+                shipment_date = newShipment.shipment_date,
+                shipment_type = newShipment.shipment_type,
+                shipment_status = newShipment.shipment_status,
+                notes = newShipment.notes,
+                carrier_code = newShipment.carrier_code,
+                carrier_description = newShipment.carrier_description,
+                service_code = newShipment.service_code,
+                payment_type = newShipment.payment_type,
+                transfer_mode = newShipment.transfer_mode,
+                total_package_count = newShipment.total_package_count,
+                total_package_weight = newShipment.total_package_weight,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
+            };
 
 
             _context.Shipments.Add(shipment);

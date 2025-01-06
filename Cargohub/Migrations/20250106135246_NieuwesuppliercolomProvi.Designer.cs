@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250104162942_NieuwesuppliercolomProvi")]
+    [Migration("20250106135246_NieuwesuppliercolomProvi")]
     partial class NieuwesuppliercolomProvi
     {
         /// <inheritdoc />

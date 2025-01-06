@@ -55,5 +55,8 @@ namespace Cargohub.Models
             [JsonProperty("email")]
             public string? email { get; set; }
         }
+        [JsonProperty("gevarenclassificatie")]
+        public int? gevarenclassificatie { get; set; } // Nullable int
+
     }
 }

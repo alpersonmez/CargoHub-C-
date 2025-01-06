@@ -17,9 +17,9 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var orders = _orderService.GetAllOrders();
+            var orders = await _orderService.GetAllOrders();
             return Ok(orders);
         }
 
@@ -64,7 +64,7 @@ namespace Cargohub.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(order);
         }
 
         [AdminFilter]

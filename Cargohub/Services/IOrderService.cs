@@ -4,7 +4,7 @@ namespace Cargohub.Services
 {
     public interface IOrderService
     {
-        public IEnumerable<Order> GetAllOrders(int amount = 100);
+        public Task<List<Order>> GetAllOrders(int amount = 100);
 
         public Task<Order> GetOrderById(int id);
         public Task<Order> AddOrder(Order newOrder);

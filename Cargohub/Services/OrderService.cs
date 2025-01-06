@@ -13,9 +13,9 @@ namespace Cargohub.Services
         }
 
 
-        public IEnumerable<Order> GetAllOrders(int amount = 100)
+        public async Task<List<Order>> GetAllOrders(int amount = 100)
         {
-            return _context.Orders.Take(amount).ToList();
+            return await _context.Orders.Take(amount).ToListAsync();
         }
         public async Task<Order> GetOrderById(int id)
         {

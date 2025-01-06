@@ -1,4 +1,5 @@
 using Cargohub.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Services
 {
@@ -12,16 +13,14 @@ namespace Cargohub.Services
             data = _data;
         }
 
-        public List<Transfer> GetTransfers()
+        public async Task<List<Transfer>> GetTransfers(int amount = 100)
         {
-            if (data.Transfers.Count() == 0) return new List<Transfer>();
-            return data.Transfers.ToList();
+            return await data.Transfers.Take(amount).ToListAsync();
         }
 
-        public Transfer? GetTransfer(int id)
+        public async Task<Transfer> GetTransfer(int id)
         {
-            //if(data.Transfer.SingleOrDefault(x => x.id == id) == null) return new Transfer()
-            return data.Transfers.SingleOrDefault(x => x.id == id);
+            return await data.Transfers.FindAsync(id);
         }
 
         // public List<Item>? GetItems(int id)
@@ -30,27 +29,47 @@ namespace Cargohub.Services
         //     return data.Transfers.Where(x => x.id == id).Single().items.ToList();
         // }
 
-        public bool AddTransfer(Transfer transfer)
+        public async Task<Transfer> AddTransfer(Transfer transfer)
         {
-            if (transfer is null || data.Transfers.Contains(transfer)) return false;
+            transfer.id = data.Transfers.Count() + 1;
+            transfer.created_at = DateTime.UtcNow;
+            transfer.updated_at = DateTime.UtcNow;
+
             data.Transfers.Add(transfer);
-            data.SaveChanges();
+            await data.SaveChangesAsync();
+            return transfer;
+        }
+        public async Task<bool> UpdateTransfer(Transfer transfer)
+        {
+            Transfer existingTransfer = await data.Transfers.FindAsync(transfer.id);
+            if (existingTransfer == null)
+            {
+                return false;
+            }
+
+            existingTransfer.reference = transfer.reference;
+            existingTransfer.transfer_from = transfer.transfer_from;
+            existingTransfer.transfer_to = transfer.transfer_to;
+            existingTransfer.transfer_status = transfer.transfer_status;
+            existingTransfer.items = transfer.items;
+            existingTransfer.isdeleted = transfer.isdeleted;
+            existingTransfer.updated_at = DateTime.UtcNow;
+
+
+            data.Transfers.Update(existingTransfer);
+            await data.SaveChangesAsync();
             return true;
         }
-        public bool UpdateTransfer(int id, Transfer transfer)
+        public async Task<bool> DeleteTransfer(int id)
         {
-            if (transfer is null || id != transfer.id) return false;
-            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
-            data.Transfers.Add(transfer);
-            data.SaveChanges();
-            return true;
-        }
-        public bool DeleteTransfer(int id)
-        {
-            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
-            data.SaveChanges();
+            var transfer = await data.Transfers.FindAsync(id);
+            if (transfer == null)
+            {
+                return false;
+            }
+
+            data.Transfers.Remove(transfer);
+            await data.SaveChangesAsync();
             return true;
         }
     }

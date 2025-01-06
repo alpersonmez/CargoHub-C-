@@ -29,12 +29,19 @@ namespace Cargohub.Tests
             // Arrange
             var transfers = new List<Transfer>
             {
-
+                new Transfer{
+                    id = 1,
+                    transfer_status = "complete"
+                },
+                new Transfer{
+                    id = 2,
+                    transfer_status = "complete"
+                }
             };
-            _mockTransferService.Setup(service => service.GetAllTransfers(100)).ReturnsAsync(transfers);
+            _mockTransferService.Setup(service => service.GetTransfers(100)).ReturnsAsync(transfers);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetTransfers();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -43,147 +50,131 @@ namespace Cargohub.Tests
             Assert.AreEqual(transfers, okResult.Value);
         }
 
-//         // Test GetTransferById - Success
-//         [TestMethod]
-//         public async Task GetTransferById_ReturnsOkResult_WithTransfer()
-//         {
-//             // Arrange
-//             var transfer = new Transfer
-//             {
-//                 id = 1,
-//                 source_id = 33,
-//                 transfer_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-//                 request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
-//                 reference = "ORD00001",
-//                 reference_extra = "Bedreven arm straffen bureau.",
-//                 transfer_status = "Delivered",
-//                 notes = "Voedsel vijf vork heel.",
-//                 shipping_notes = "Buurman betalen plaats bewolkt.",
-//                 picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
-//                 warehouse_id = 18,
-//                 ship_to = "Duitsland",
-//                 bill_to = "Nederland",
-//                 shipment_id = 1
-//             };
-//             _mockTransferService.Setup(service => service.GetTransferById(1)).ReturnsAsync(transfer);
+        // Test GetTransferById - Success
+        [TestMethod]
+        public async Task GetTransferById_ReturnsOkResult_WithTransfer()
+        {
+            // Arrange
+            var transfer = new Transfer
+            {
+                id = 1,
+                transfer_status = "complete"
+            };
+            _mockTransferService.Setup(service => service.GetTransfer(1)).ReturnsAsync(transfer);
 
-//             // Act
-//             var result = await _controller.Get(1);
+            // Act
+            var result = await _controller.GetTransfer(1);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-//             var okResult = result as OkObjectResult;
-//             Assert.IsNotNull(okResult);
-//             Assert.AreEqual(transfer, okResult.Value);
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(transfer, okResult.Value);
+        }
 
-//         // Test GetTransferById - Not Found
-//         [TestMethod]
-//         public async Task GetTransferById_ReturnsNotFound_WhenTransferDoesNotExist()
-//         {
-//             // Arrange
-//             _mockTransferService.Setup(service => service.GetTransferById(It.IsAny<int>())).ReturnsAsync((Transfer)null);
+        // Test GetTransferById - Not Found
+        [TestMethod]
+        public async Task GetTransferById_ReturnsNotFound_WhenTransferDoesNotExist()
+        {
+            // Arrange
+            _mockTransferService.Setup(service => service.GetTransfer(It.IsAny<int>())).ReturnsAsync((Transfer)null);
 
-//             // Act
-//             var result = await _controller.Get(1);
+            // Act
+            var result = await _controller.GetTransfer(1);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
 
-//         // Test CreateTransfer - Success
-//         [TestMethod]
-//         public async Task CreateTransfer_ReturnsCreatedAtActionResult_WithCreatedTransfer()
-//         {
-//             // Arrange
-//             var transfer = new Transfer
-//             {
-//                 id = 1,
-//                 source_id = 33,
-//                 transfer_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-//                 request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
-//                 reference = "ORD00001",
-//                 reference_extra = "Bedreven arm straffen bureau.",
-//                 transfer_status = "Delivered",
-//                 notes = "Voedsel vijf vork heel.",
-//                 shipping_notes = "Buurman betalen plaats bewolkt.",
-//                 picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
-//                 warehouse_id = 18,
-//                 ship_to = "Duitsland",
-//                 bill_to = "Nederland",
-//                 shipment_id = 1
-//             };
-//             _mockTransferService.Setup(service => service.AddTransfer(transfer)).ReturnsAsync(transfer);
+        // Test CreateTransfer - Success
+        [TestMethod]
+        public async Task CreateTransfer_ReturnsCreatedAtActionResult_WithCreatedTransfer()
+        {
+            // Arrange
+            var transfer = new Transfer
+            {
+                id = 1,
+                transfer_status = "complete"
+            };
+            _mockTransferService.Setup(service => service.AddTransfer(transfer)).ReturnsAsync(transfer);
 
-//             // Act
-//             var result = await _controller.Create(transfer);
+            // Act
+            var result = await _controller.AddTransfer(transfer);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
-//             var createdResult = result as CreatedAtActionResult;
-//             Assert.IsNotNull(createdResult);
-//             Assert.AreEqual(transfer, createdResult.Value);
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
+            var createdResult = result as CreatedAtActionResult;
+            Assert.IsNotNull(createdResult);
+            Assert.AreEqual(transfer, createdResult.Value);
+        }
 
-//         // Test UpdateTransfer - Success
-//         [TestMethod]
-//         public async Task UpdateTransfer_ReturnsOkResult_WithUpdatedTransfer()
-//         {
-//             // Arrange
-//             var transfer = new Transfer { id = 1, notes = "Updated Transfer" };
-//             _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(true);
+        // Test UpdateTransfer - Success
+        [TestMethod]
+        public async Task UpdateTransfer_ReturnsOkResult_WithUpdatedTransfer()
+        {
+            // Arrange
+            var transfer = new Transfer
+            {
+                id = 1,
+                transfer_status = "complete"
+            };
+            _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(true);
 
-//             // Act
-//             var result = await _controller.Update(1, transfer);
+            // Act
+            var result = await _controller.UpdateTransfer(1, transfer);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-//             var okResult = result as OkObjectResult;
-//             Assert.IsNotNull(okResult);
-//             Assert.AreEqual(transfer, okResult.Value);
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(transfer, okResult.Value);
+        }
 
-//         // Test UpdateTransfer - Not Found
-//         [TestMethod]
-//         public async Task UpdateTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
-//         {
-//             // Arrange
-//             var transfer = new Transfer { id = 1, notes = "Updated Transfer" };
-//             _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(false);
+        // Test UpdateTransfer - Not Found
+        [TestMethod]
+        public async Task UpdateTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
+        {
+            // Arrange
+            var transfer = new Transfer
+            {
+                id = 1,
+                transfer_status = "complete"
+            };
+            _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(false);
 
-//             // Act
-//             var result = await _controller.Update(1, transfer);
+            // Act
+            var result = await _controller.UpdateTransfer(1, transfer);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
 
-//         // Test DeleteTransfer - Success
-//         [TestMethod]
-//         public async Task DeleteTransfer_ReturnsNoContentResult_WhenTransferIsDeleted()
-//         {
-//             // Arrange
-//             _mockTransferService.Setup(service => service.DeleteTransfer(1)).ReturnsAsync(true);
+        // Test DeleteTransfer - Success
+        [TestMethod]
+        public async Task DeleteTransfer_ReturnsNoContentResult_WhenTransferIsDeleted()
+        {
+            // Arrange
+            _mockTransferService.Setup(service => service.DeleteTransfer(1)).ReturnsAsync(true);
 
-//             // Act
-//             var result = await _controller.Delete(1);
+            // Act
+            var result = await _controller.DeleteTransfer(1);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(NoContentResult));
-//         }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+        }
 
-//         // Test DeleteTransfer - Not Found
-//         [TestMethod]
-//         public async Task DeleteTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
-//         {
-//             // Arrange
-//             _mockTransferService.Setup(service => service.DeleteTransfer(1)).ReturnsAsync(false);
+        // Test DeleteTransfer - Not Found
+        [TestMethod]
+        public async Task DeleteTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
+        {
+            // Arrange
+            _mockTransferService.Setup(service => service.DeleteTransfer(1)).ReturnsAsync(false);
 
-//             // Act
-//             var result = await _controller.Delete(1);
+            // Act
+            var result = await _controller.DeleteTransfer(1);
 
-//             // Assert
-//             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-//         }
-//     }
-// }
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+    }
+}

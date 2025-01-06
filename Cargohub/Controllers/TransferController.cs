@@ -27,7 +27,7 @@ namespace Cargohub.Controllers
         public async Task<IActionResult> GetTransfer(int id)
         {
             Transfer transfer = await transferService.GetTransfer(id);
-            if (transfer is null) return BadRequest("transfer with the given id does not exist.");
+            if (transfer is null) return NotFound("transfer with the given id does not exist.");
             return Ok(transfer);
         }
 
@@ -47,7 +47,7 @@ namespace Cargohub.Controllers
                 return BadRequest(ModelState);
 
             Transfer CreatedTransfer = await transferService.AddTransfer(transfer);
-            return Ok(CreatedTransfer);
+            return CreatedAtAction(nameof(GetTransfer), new { id = CreatedTransfer.id }, CreatedTransfer);
         }
         [AdminFilter]
         [HttpPut("{id}")]

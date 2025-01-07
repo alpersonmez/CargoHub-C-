@@ -24,15 +24,12 @@ namespace Cargohub.Services
         public async Task<ItemGroup>? GetItem_GroupById(int id)
         {
             //ItemGroup? doesExist = await _context.ItemGroups.FindAsync(id);
-
-
-
             return await _context.ItemGroups.FindAsync(id);
         }
 
         public async Task<bool> UpdateItem_Groups(ItemGroup item_Group)
         {
-            ItemGroup existing = await _context.ItemGroups.FindAsync(item_Group.id);
+            ItemGroup? existing = await _context.ItemGroups.FindAsync(item_Group.id);
 
             if (existing == null) return false;
 
@@ -47,6 +44,7 @@ namespace Cargohub.Services
 
         public async Task<bool> DeleteItem_Groups(int id)
         {
+            if (!await _context.ItemGroups.AnyAsync()) return false;
 
             var item = await _context.ItemGroups.FindAsync(id);
             if (item == null)

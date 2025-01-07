@@ -1,0 +1,56 @@
+### Get all inventories
+GET http://localhost:5000/api/inventory
+###
+
+### Get a specific inventory by ID
+GET http://localhost:5000/api/inventory/0
+Content-Type: application/json
+
+###
+
+
+###get the amount, expected, allocated etc.
+GET http://localhost:5000/api/inventory/total/5
+
+
+### 
+POST http://localhost:5000/api/inventory/new
+Content-Type: application/json
+API_key: a1b2c3d4
+
+{
+    "item_id": "P1test",
+    "description": "Stand-alone 24hour emulation",
+    "item_reference": "mHo61152n",
+    "locations": [32709],
+    "total_on_hand": 329,
+    "total_expected": 1,
+    "total_ordered": 1,
+    "total_allocated": 85,
+    "total_available": 244
+}
+###
+
+### Update an existing inventory
+PUT http://localhost:5000/api/inventory/199246
+Content-Type: application/json
+ 
+{
+    "item_id": "P1test",
+    "description": "Stand-alone 24hour emulation",
+    "item_reference": "mHo61152n",
+    "locations": [32709],
+    "total_on_hand": 333,
+    "total_expected": 0,
+    "total_ordered": 0,
+    "total_allocated": 88,
+    "total_available": 247
+}
+###
+
+
+### DELETE an existing inventory
+DELETE  http://localhost:5000/api/inventory/199246
+API_key: a1b2c3d4
+Content-Type: application/json
+

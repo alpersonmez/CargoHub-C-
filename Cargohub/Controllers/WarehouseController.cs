@@ -18,7 +18,7 @@ public class WarehouseController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var warehouse = await _warehouseService.GetAllWareHouses();
+        var warehouse = await _warehouseService.GetAllWarehouses();
         return Ok(warehouse);
     }
 
@@ -26,7 +26,7 @@ public class WarehouseController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        Warehouse warehouse = await _warehouseService.GetWareHouseById(id);
+        Warehouse warehouse = await _warehouseService.GetWarehouseById(id);
         if (warehouse == null)
         {
             return NotFound();
@@ -44,9 +44,28 @@ public class WarehouseController : ControllerBase
         Warehouse createdwarehouse = await _warehouseService.AddWarehouse(New);
         return CreatedAtAction(nameof(Get), new { id = createdwarehouse.id }, createdwarehouse);
     }
-    
-    //PUT moet ik nog ff checken hoe en wat
-    
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] Warehouse warehouse)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (id != warehouse.id)
+        {
+            return BadRequest($"Shipment Id {id} does not match");
+        }
+
+        var updated = await _warehouseService.UpdateWarehouse(warehouse);
+
+        if (!updated)
+        {
+            return NotFound();
+        }
+
+        return Ok(warehouse);
+    }
+
     [AdminFilter]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
@@ -56,8 +75,8 @@ public class WarehouseController : ControllerBase
         {
             return NotFound();
 
-        } 
+        }
         return NoContent();
     }
-    
+
 }

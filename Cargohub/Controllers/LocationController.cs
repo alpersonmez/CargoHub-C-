@@ -51,12 +51,12 @@ public class LocationController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
-        
+
         if (id != location.id)
         {
             return BadRequest($"Location Id {id} does not match");
         }
-        
+
         var updated = await _locationService.UpdateLocation(location);
 
         if (!updated)
@@ -64,7 +64,7 @@ public class LocationController : ControllerBase
             return NotFound();
         }
 
-        return NoContent();
+        return Ok(location);
     }
 
     [AdminFilter]
@@ -76,7 +76,7 @@ public class LocationController : ControllerBase
         {
             return NotFound();
 
-        } 
+        }
         return NoContent();
     }
 }

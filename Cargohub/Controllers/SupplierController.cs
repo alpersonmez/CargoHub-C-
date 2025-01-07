@@ -18,7 +18,7 @@ public class SupplierController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var supplier = await _SupplierService.GetAllSupplier();
+        var supplier = await _SupplierService.GetAllSuppliers();
         return Ok(supplier);
     }
 
@@ -51,12 +51,12 @@ public class SupplierController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
-        
+
         if (id != supplier.id)
         {
             return BadRequest($"Location Id {id} does not match");
         }
-        
+
         var updated = await _SupplierService.UpdateSupplier(supplier);
 
         if (!updated)
@@ -64,7 +64,7 @@ public class SupplierController : ControllerBase
             return NotFound();
         }
 
-        return NoContent();
+        return Ok(supplier);
     }
 
     [AdminFilter]
@@ -76,7 +76,7 @@ public class SupplierController : ControllerBase
         {
             return NotFound();
 
-        } 
+        }
         return NoContent();
     }
 }

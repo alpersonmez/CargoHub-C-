@@ -64,7 +64,7 @@ namespace Cargohub.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(order);
         }
 
         [AdminFilter]

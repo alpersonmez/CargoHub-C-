@@ -1,67 +1,115 @@
 using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Cargohub.Controllers
 {
 
     [ApiController]
-    [Route("api/v1/inventory")]
+    [Route("api/inventory")]
     public class InventoryController : ControllerBase
     {
 
-        private readonly InventoryService _inventoryService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryController(InventoryService InventoryService)
+        public InventoryController(IInventoryService InventoryService)
         {
             _inventoryService = InventoryService;
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllInventories()
+        public async Task<ActionResult<List<Item>>> GetAllInventories()
         {
-            List<Inventory>? allInventories = _inventoryService.GetAllInventories();
+            List<Inventory>? allInventories = await _inventoryService.GetAllInventories();
             return Ok(allInventories.ToList());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult Get(int Id)
+        [HttpGet("total/{id}")]
+        public async Task<IActionResult> GetInventoryAmmount(int Id)
         {
-            Inventory inventory = _inventoryService.GetInventoryById(Id);
+            Inventory inventory = await _inventoryService.GetInventoryById(Id);
             if (inventory == null)
             {
                 return NotFound();
             }
+            return Ok(new
+            {
+                inventoryId = inventory.id,
+                itemReference = inventory.item_reference,
+                totalOnHand = inventory.total_on_hand,
+                totalExpected = inventory.total_expected,
+                totalOrdered = inventory.total_ordered,
+                totalAllocated = inventory.total_allocated,
+                totalAvailable = inventory.total_available
+            });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int Id)
+        {
+            Inventory? inventory = await _inventoryService.GetInventoryById(Id);
+            if (inventory == null)
+            {
+                return NotFound($"Inventory with id {Id} doesn't exist");
+            }
+            else if (inventory.isdeleted == true) return NotFound("Inventory has been deleted");
             return Ok(inventory);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Inventory inventory)
+
+        [HttpPost("new")]
+        public async Task<IActionResult> Post(Inventory inventory)
         {
-            if (id != inventory.id)
+            int postCode = await _inventoryService.PostInventory(inventory);
+            switch (postCode)
             {
-                return BadRequest($"Location Id {id} does not match");
+                case 1: //code voor niet alle velden zijn gevuld
+                    return BadRequest("Error: not all nessecery info has been sent");
+                case 2: //code voor deze inventory bestaat al
+                    return BadRequest("Error: Inventory already exists");
+                case 3: //Too many lines changed
+                    return Problem("Error: Too many lines got affected");
+                case 4: //Succes
+                    return CreatedAtAction(nameof(Get), new { id = inventory.id }, inventory);
+                //return Created($"api/inventory/{inventory.id}", $"Inventory posted succesfully\n{inventory}");
+                default:
+                    return Problem($"Error: An unexpected error occurred when adding the inventory to the database.");
             }
-            bool updated = _inventoryService.UpdateInventory(inventory);
-            if (!updated)
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Inventory inventory)
+        {
+            int updateCode = await _inventoryService.UpdateInventory(id, inventory);
+            switch (updateCode)
             {
-                return NotFound();
+                case 1: //code voor geen inventory om aan te passen
+                    return NotFound($"no inventory found with id {id}");
+                case 2: //code voor niet alle velden zijn gevuld
+                    return BadRequest("not all required fields are given");
+                case 3: //Succes
+                    return Ok(new
+                    {
+                        message = "Succesfully updated inventory",
+                        updated_inventory = await _inventoryService.GetInventoryById(id)
+                    });
+                default:
+                    return Problem("unexpected error occurred");
             }
-            return Ok(updated.ToString());
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            bool deleted = _inventoryService.DeleteInventory(id);
-            if (!deleted)
+            Inventory? inventoryToDelete = await _inventoryService.GetInventoryById(id);
+            bool deleted = await _inventoryService.DeleteInventory(id);
+            if (!deleted || inventoryToDelete == null)
             {
-                return NotFound();
-
+                return NotFound($"no inventory found with id {id}");
             }
-            return Ok(deleted.ToString());
+            return Ok(new { deleted_inventory = inventoryToDelete });
         }
-
     }
 }

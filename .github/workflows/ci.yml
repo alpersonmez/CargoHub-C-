@@ -32,7 +32,7 @@ jobs:
     # Install EF Core tools globally (if needed)
     - name: Install EF Core tools globally
       run: |
-        dotnet tool install --global dotnet-ef
+        dotnet tool install --global dotnet-ef --version 7.0.0
 
     # Install .NET dependencies and build the API
     - name: Install dependencies and build API

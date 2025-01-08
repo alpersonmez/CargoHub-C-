@@ -3,6 +3,7 @@ using Cargohub.Services;
 using Cargohub.DatetimeConverter; // Added this namespace
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register the database context
@@ -31,6 +32,10 @@ builder.Services.AddControllers();
 // Register the DataLoader class as a singleton
 builder.Services.AddSingleton<DataLoader>(); // Added this line
 
+// Register Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Call the ImportData method after the app is built
@@ -49,6 +54,8 @@ if (app.Environment.IsDevelopment())
 
 // Add endpoints
 app.MapControllers();
+
+
 
 // Run the application
 app.Run();

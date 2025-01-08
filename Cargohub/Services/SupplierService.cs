@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class SupplierService : ISupplierService
-    {   
+    {
         private readonly AppDbContext _context;
 
         public SupplierService(AppDbContext context)
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Supplier>> GetAllSupplier()
+        public async Task<List<Supplier>> GetAllSuppliers(int amount = 100)
         {
-            return await _context.Supplier.Take(100).ToListAsync(); 
+            return await _context.Supplier.Take(amount).ToListAsync();
         }
 
         public async Task<Supplier> GetSupplierById(int id)
@@ -47,10 +47,10 @@ namespace Cargohub.Services
         }
 
 
-        public async Task<bool> UpdateSupplier(Supplier supplier) 
+        public async Task<bool> UpdateSupplier(Supplier supplier)
         {
             Supplier ExistingSupplier = await _context.Supplier.FindAsync(supplier.id);
-            
+
             if (ExistingSupplier == null)
             {
                 return false;
@@ -72,7 +72,7 @@ namespace Cargohub.Services
             {
                 return false;
             }
-            
+
             _context.Supplier.Remove(supplier);
             await _context.SaveChangesAsync();
             return true;

@@ -52,12 +52,12 @@ public class ItemController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
-        
+
         if (uid != item.uid)
         {
             return BadRequest($"Location Id {uid} does not match");
         }
-        
+
         var updated = await _itemService.UpdateItem(item);
 
         if (!updated)
@@ -65,7 +65,7 @@ public class ItemController : ControllerBase
             return NotFound();
         }
 
-        return NoContent();
+        return Ok(item);
     }
 
     [AdminFilter]
@@ -77,7 +77,7 @@ public class ItemController : ControllerBase
         {
             return NotFound();
 
-        } 
+        }
         return NoContent();
     }
 }

@@ -17,18 +17,17 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTransfers()
+        public async Task<IActionResult> GetTransfers()
         {
-            List<Transfer> transfers = transferService.GetTransfers();
-            if (transfers is null || !transfers.Any()) return NotFound("empty");
+            var transfers = await transferService.GetTransfers();
             return Ok(transfers);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTransfer(int id)
+        public async Task<IActionResult> GetTransfer(int id)
         {
-            Transfer transfer = transferService.GetTransfer(id);
-            if (transfer is null) return BadRequest("transfer with the given id does not exist.");
+            Transfer transfer = await transferService.GetTransfer(id);
+            if (transfer is null) return NotFound("transfer with the given id does not exist.");
             return Ok(transfer);
         }
 
@@ -42,25 +41,45 @@ namespace Cargohub.Controllers
 
         [AdminFilter]
         [HttpPost]
-        public IActionResult AddTransfer([FromBody] Transfer transfer)
+        public async Task<IActionResult> AddTransfer([FromBody] Transfer transfer)
         {
-            if (transferService.AddTransfer(transfer)) return Ok($"Succesfully added {transfer}");
-            if (transfer is null) return BadRequest("Transfer is empty.");
-            return BadRequest("Transfer Already exists.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Transfer CreatedTransfer = await transferService.AddTransfer(transfer);
+            return CreatedAtAction(nameof(GetTransfer), new { id = CreatedTransfer.id }, CreatedTransfer);
         }
         [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult UpdateTransfer(int id, [FromBody] Transfer transfer)
+        public async Task<IActionResult> UpdateTransfer(int id, [FromBody] Transfer transfer)
         {
-            if (transferService.UpdateTransfer(id, transfer) == false) return BadRequest("Failed to update transfer. Check if you have the correct id and a valid transfer.");
-            return Ok($"Succesfully updated transfer with id: {id}");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (id != transfer.id)
+            {
+                return BadRequest($"given Id {id} does not match");
+            }
+
+            var updated = await transferService.UpdateTransfer(transfer);
+
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return Ok(transfer);
         }
         [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult DeleteTransfer(int id)
+        public async Task<IActionResult> DeleteTransfer(int id)
         {
-            if (transferService.DeleteTransfer(id) == false) return BadRequest("Transfer with given id doesnt exist.");
-            return Ok($"Succesfully deleted transfer with id: {id}");
+            bool deleted = await transferService.DeleteTransfer(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
 
 

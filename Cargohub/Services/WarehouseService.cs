@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class WarehouseService : IWarehouseService
-    {   
+    {
         private readonly AppDbContext _context;
 
         public WarehouseService(AppDbContext context)
@@ -12,12 +12,12 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Warehouse>> GetAllWareHouses()
+        public async Task<List<Warehouse>> GetAllWarehouses(int amount = 100)
         {
-            return await _context.Warehouses.Take(100).ToListAsync(); 
+            return await _context.Warehouses.Take(amount).ToListAsync();
         }
 
-        public async Task<Warehouse> GetWareHouseById(int id)
+        public async Task<Warehouse> GetWarehouseById(int id)
         {
             return await _context.Warehouses.FindAsync(id);
         }
@@ -44,6 +44,29 @@ namespace Cargohub.Services
             return warehouse;
         }
 
+        public async Task<bool> UpdateWarehouse(Warehouse warehouse)
+        {
+            Warehouse existingWarehouse = await _context.Warehouses.FindAsync(warehouse.id);
+            if (existingWarehouse == null)
+            {
+                return false;
+            }
+
+            existingWarehouse.code = warehouse.code;
+            existingWarehouse.name = warehouse.name;
+            existingWarehouse.address = warehouse.address;
+            existingWarehouse.zip = warehouse.zip;
+            existingWarehouse.province = warehouse.province;
+            existingWarehouse.country = warehouse.country;
+            existingWarehouse.contact = warehouse.contact;
+            existingWarehouse.isdeleted = warehouse.isdeleted;
+            existingWarehouse.updated_at = DateTime.UtcNow;
+
+
+            _context.Warehouses.Update(existingWarehouse);
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
         public async Task<bool> DeleteWarehouse(int id)
         {
@@ -52,7 +75,7 @@ namespace Cargohub.Services
             {
                 return false;
             }
-            
+
             _context.Warehouses.Remove(warehouse);
             await _context.SaveChangesAsync();
             return true;

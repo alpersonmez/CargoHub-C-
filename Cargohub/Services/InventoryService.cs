@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Cargohub.Services
 {
-    public class InventoryService : IInventoryService
+    public class InventoryService : IinventoryService
     {
         private readonly AppDbContext _context;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cargohub.Services
 {
-    public interface IInventoryService
+    public interface IinventoryService
     {
         public Task<List<Inventory>> GetAllInventories(int amount = 100);
         public Task<Inventory?> GetInventoryById(int id);

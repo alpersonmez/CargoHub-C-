@@ -3,6 +3,7 @@ using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
@@ -12,9 +13,9 @@ namespace Cargohub.Controllers
     public class InventoryController : ControllerBase
     {
 
-        private readonly IInventoryService _inventoryService;
+        private readonly IinventoryService _inventoryService;
 
-        public InventoryController(IInventoryService InventoryService)
+        public InventoryController(IinventoryService InventoryService)
         {
             _inventoryService = InventoryService;
         }
@@ -27,9 +28,9 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet("total/{id}")]
-        public async Task<IActionResult> GetInventoryAmmount(int Id)
+        public async Task<IActionResult> GetInventoryTotalById(int id)
         {
-            Inventory inventory = await _inventoryService.GetInventoryById(Id);
+            Inventory inventory = await _inventoryService.GetInventoryById(id);
             if (inventory == null)
             {
                 return NotFound();
@@ -47,7 +48,7 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int Id)
+        public async Task<IActionResult> GetById(int Id)
         {
             Inventory? inventory = await _inventoryService.GetInventoryById(Id);
             if (inventory == null)
@@ -58,10 +59,13 @@ namespace Cargohub.Controllers
             return Ok(inventory);
         }
 
-
+        [AdminFilter]
         [HttpPost("new")]
-        public async Task<IActionResult> Post(Inventory inventory)
+        public async Task<IActionResult> Post([FromBody] Inventory inventory)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             int postCode = await _inventoryService.PostInventory(inventory);
             switch (postCode)
             {
@@ -72,16 +76,20 @@ namespace Cargohub.Controllers
                 case 3: //Too many lines changed
                     return Problem("Error: Too many lines got affected");
                 case 4: //Succes
-                    return CreatedAtAction(nameof(Get), new { id = inventory.id }, inventory);
+                    return CreatedAtAction(nameof(GetById), new { id = inventory.id }, inventory);
                 //return Created($"api/inventory/{inventory.id}", $"Inventory posted succesfully\n{inventory}");
                 default:
                     return Problem($"Error: An unexpected error occurred when adding the inventory to the database.");
             }
         }
 
+        [AdminFilter]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Inventory inventory)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             int updateCode = await _inventoryService.UpdateInventory(id, inventory);
             switch (updateCode)
             {
@@ -100,6 +108,7 @@ namespace Cargohub.Controllers
             }
         }
 
+        [AdminFilter]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -28,22 +28,22 @@ namespace Cargohub.Models
             modelBuilder.Entity<Item>()
                 .HasOne(i => i.ItemLine)
                 .WithMany() // No navigation property in ItemLines, so we leave this empty
-                .HasForeignKey(i => i.ItemLineId)
-                .OnDelete(DeleteBehavior.SetNull); // Set to null when ItemLine is deleted (soft deletion behavior)
+                .HasForeignKey(i => i.ItemLineId);
+                //.OnDelete(DeleteBehavior.SetNull); // Set to null when ItemLine is deleted (soft deletion behavior)
 
             // Configure Item -> ItemGroup relationship
             modelBuilder.Entity<Item>()
                 .HasOne(i => i.ItemGroup)
                 .WithMany() // No navigation property in ItemGroup, so we leave this empty
-                .HasForeignKey(i => i.ItemGroupId)
-                .OnDelete(DeleteBehavior.SetNull); // Set to null when ItemGroup is deleted (soft deletion behavior)
+                .HasForeignKey(i => i.ItemGroupId);
+                //.OnDelete(DeleteBehavior.SetNull); // Set to null when ItemGroup is deleted (soft deletion behavior)
 
             // Configure Item -> ItemType relationship
             modelBuilder.Entity<Item>()
                 .HasOne(i => i.ItemType)
                 .WithMany() // No navigation property in ItemType, so we leave this empty
-                .HasForeignKey(i => i.ItemTypeId)
-                .OnDelete(DeleteBehavior.SetNull); // Set to null when ItemType is deleted (soft deletion behavior)
+                .HasForeignKey(i => i.ItemTypeId);
+                //.OnDelete(DeleteBehavior.SetNull); // Set to null when ItemType is deleted (soft deletion behavior)
 
     // Set primary key for Item entity
     modelBuilder.Entity<Item>()

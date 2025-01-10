@@ -27,20 +27,20 @@ namespace Cargohub.Models
         [JsonProperty("commodity_code")]
         public string? commodity_code { get; set; }
 
-        // Foreign key for ItemLine (optional)
+        public ItemLines ItemLine { get; set; } // Navigation property
+        // Foreign key for ItemLine
         [JsonProperty("item_line")]
         public int ItemLineId { get; set; }
-        public ItemLines ItemLine { get; set; } // Navigation property
 
-        // Foreign key for ItemGroup (optional)
+        public ItemGroup ItemGroup { get; set; } // Navigation property
+        // Foreign key for ItemGroup
         [JsonProperty("item_group")]
         public int ItemGroupId { get; set; }
-        public ItemGroup ItemGroup { get; set; } // Navigation property
 
-        // Foreign key for ItemType (optional)
+        public ItemType ItemType { get; set; } // Navigation property
+        // Foreign key for ItemType
         [JsonProperty("item_type")]
         public int ItemTypeId { get; set; }
-        public ItemType ItemType { get; set; } // Navigation property
 
         [JsonProperty("unit_purchase_quantity")]
         public int? unit_purchase_quantity { get; set; }
@@ -61,9 +61,11 @@ namespace Cargohub.Models
         public string? supplier_part_number { get; set; }
 
         [JsonProperty("created_at")]
+        //[JsonConverter(typeof(DateTimeConverter))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
+        //[JsonConverter(typeof(DateTimeConverter))]
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]

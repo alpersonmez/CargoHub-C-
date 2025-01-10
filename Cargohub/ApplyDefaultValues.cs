@@ -184,6 +184,36 @@ namespace Cargohub.ApplyDefaultValues{
                 item.ItemTypeId = -1;
             }
 
+            if (item.unit_purchase_quantity <= 0)
+            {
+                item.unit_purchase_quantity = -1;
+            }
+
+            if (item.unit_order_quantity <= 0)
+            {
+                item.unit_order_quantity = -1;
+            }
+
+            if (item.pack_order_quantity <= 0)
+            {
+                item.pack_order_quantity = -1;
+            }
+
+            if (item.supplier_id <= 0)
+            {
+                item.supplier_id = -1;
+            }
+
+            if (string.IsNullOrEmpty(item.supplier_code))
+            {
+                item.supplier_code = "Unknown supplier code";
+            }
+
+            if (string.IsNullOrEmpty(item.supplier_part_number))
+            {
+                item.supplier_part_number = "Unknown supplier part number";
+            }
+
             if (item.created_at == default)
             {
                 item.created_at = DateTime.UtcNow;

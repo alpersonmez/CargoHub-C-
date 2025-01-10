@@ -5,7 +5,7 @@ from datetime import datetime
 
 @pytest.fixture
 def _url():
-    return "http://localhost:5000/api/inventories"
+    return "http://localhost:5000/api/inventory"
 
 
 headers = {
@@ -39,7 +39,7 @@ def test_add_remove_inventories(_url):
     }
 
     post_response = requests.post(_url, json=new_inventories, headers=headers)
-    assert post_response.status_code == 201
+    assert post_response.status_code == 201 
 
     get_response = requests.get(
         _url + f"/{post_response.json()['id']}", headers=headers

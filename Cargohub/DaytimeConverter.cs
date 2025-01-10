@@ -10,7 +10,8 @@ namespace Cargohub.DataConverters
         {
             "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-ddTHH:mm:ssZ",
-            "MM/dd/yyyy hh:mm:ss tt"
+            "MM/dd/yyyy hh:mm:ss tt",
+            "MM/dd/yyyy hh:mm:ss TT"
         };
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

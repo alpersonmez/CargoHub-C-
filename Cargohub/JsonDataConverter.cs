@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Runtime.Serialization;
-using Cargohub.Models;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Cargohub.ApplyDefaultValues;
-
 namespace Cargohub.DatetimeConverter
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Runtime.Serialization;
+    using Cargohub.Models;
+    using Microsoft.EntityFrameworkCore;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Cargohub.ApplyDefaultValues;
+    using System.Globalization;
+    using System.IO;
 
     public class MultiFormatDateConverter : IsoDateTimeConverter
     {
@@ -26,7 +27,9 @@ namespace Cargohub.DatetimeConverter
 
             var dateStr = reader.Value.ToString();
             if (DateTime.TryParseExact(dateStr, "yyyy-MM-dd HH:mm:ss", null, DateTimeStyles.AssumeUniversal, out var dt) ||
-                DateTime.TryParseExact(dateStr, "yyyy-MM-ddTHH:mm:ssZ", null, DateTimeStyles.AssumeUniversal, out dt))
+                DateTime.TryParseExact(dateStr, "yyyy-MM-ddTHH:mm:ssZ", null, DateTimeStyles.AssumeUniversal, out dt)||
+                DateTime.TryParseExact(dateStr, "MM/dd/yyyy hh:mm:ss tt", null, DateTimeStyles.AssumeUniversal, out dt)||
+                DateTime.TryParseExact(dateStr, "MM/dd/yyyy hh:mm:ss TT", null, DateTimeStyles.AssumeUniversal, out dt))
             {
                 return DateTime.SpecifyKind(dt, DateTimeKind.Utc);
             }
@@ -94,7 +97,7 @@ namespace Cargohub.DatetimeConverter
             context.Inventories.AddRange(inventories);
             context.SaveChanges();
 
-            // Import Suppliers
+            //Import Suppliers
             var suppliers = LoadDataFromFile<Supplier>("data/suppliers.json");
             foreach (var supplier in suppliers)
             {
@@ -106,57 +109,57 @@ namespace Cargohub.DatetimeConverter
             context.Supplier.AddRange(suppliers);
             context.SaveChanges();
 
-            // // Import Item Groups before Items
-            // var itemGroups = LoadDataFromFile<ItemGroup>("data/item_groups.json");
-            // foreach (var itemGroup in itemGroups)
-            // {
-            //     itemGroup.ApplyDefaultValuesItemGroups();
-            //     itemGroup.created_at = ToUtc(itemGroup.created_at);
-            //     itemGroup.updated_at = ToUtc(itemGroup.updated_at);
-            //     itemGroup.id = 0; // Resetting the Id to 0
-            // }
-            // context.ItemGroups.AddRange(itemGroups);
-            // context.SaveChanges(); // Ensure Item Groups are saved first
+            // Import Item Groups before Items
+            var itemGroups = LoadDataFromFile<ItemGroup>("data/item_groups.json");
+            foreach (var itemGroup in itemGroups)
+            {
+                itemGroup.ApplyDefaultValuesItemGroups();
+                itemGroup.created_at = ToUtc(itemGroup.created_at);
+                itemGroup.updated_at = ToUtc(itemGroup.updated_at);
+                itemGroup.id = 0; // Resetting the Id to 0
+            }
+            context.ItemGroups.AddRange(itemGroups);
+            context.SaveChanges(); // Ensure Item Groups are saved first
 
-            // // Import Item Lines before Items
-            // var itemLines = LoadDataFromFile<ItemLines>("data/item_lines.json");
-            // foreach (var itemLine in itemLines)
-            // {
-            //     itemLine.ApplyDefaultValuesItemLines();
-            //     itemLine.created_at = ToUtc(itemLine.created_at);
-            //     itemLine.updated_at = ToUtc(itemLine.updated_at);
+            // Import Item Lines before Items
+            var itemLines = LoadDataFromFile<ItemLines>("data/item_lines.json");
+            foreach (var itemLine in itemLines)
+            {
+                itemLine.ApplyDefaultValuesItemLines();
+                itemLine.created_at = ToUtc(itemLine.created_at);
+                itemLine.updated_at = ToUtc(itemLine.updated_at);
 
-            //     itemLine.id = 0; // Resetting the Id to 0
-            // }
-            // context.Item_lines.AddRange(itemLines);
-            // context.SaveChanges(); // Ensure Item Lines are saved first
+                itemLine.id = 0; // Resetting the Id to 0
+            }
+            context.Item_lines.AddRange(itemLines);
+            context.SaveChanges(); // Ensure Item Lines are saved first
 
-            // // Import Item Types before Items
-            // var itemTypes = LoadDataFromFile<ItemType>("data/item_types.json");
-            // foreach (var itemType in itemTypes)
-            // {
-            //     itemType.ApplyDefaultValuesITemTypes();
-            //     itemType.created_at = ToUtc(itemType.created_at);
-            //     itemType.updated_at = ToUtc(itemType.updated_at);
-            //     itemType.id = 0; // Resetting the Id to 0
-            // }
-            // context.ItemTypes.AddRange(itemTypes);
-            // context.SaveChanges(); 
-            // Ensure Item Types are saved first
+            // Import Item Types before Items
+            var itemTypes = LoadDataFromFile<ItemType>("data/item_types.json");
+            foreach (var itemType in itemTypes)
+            {
+                itemType.ApplyDefaultValuesITemTypes();
+                itemType.created_at = ToUtc(itemType.created_at);
+                itemType.updated_at = ToUtc(itemType.updated_at);
+                itemType.id = 0; // Resetting the Id to 0
+            }
+            context.ItemTypes.AddRange(itemTypes);
+            context.SaveChanges(); 
+            //Ensure Item Types are saved first
 
-            // // Now Import Items
-            // var items = LoadDataFromFile<Item>("data/items.json");
-            // foreach (var item in items)
-            // {
-            //     item.ApplyDefaultValuesItems();
-            //     item.created_at = ToUtc(item.created_at);
-            //     item.updated_at = ToUtc(item.updated_at);
-            //     item.uid = "0"; // Resetting the Id to 0
-            // }
-            // context.Items.AddRange(items);
-            // context.SaveChanges();
+            //Import Items
+            var items = LoadDataFromFile<Item>("data/items.json");
+            foreach (var item in items)
+            {
+                item.ApplyDefaultValuesItems();
+                item.created_at = ToUtc(item.created_at);
+                item.updated_at = ToUtc(item.updated_at);
+                item.uid = "0"; // Resetting the Id to 0
+            }
+            context.Items.AddRange(items);
+            context.SaveChanges();
 
-            // Import Warehouses
+            //Import Warehouses
             var warehouses = LoadDataFromFile<Warehouse>("data/warehouses.json");
             foreach (var warehouse in warehouses)
             {
@@ -169,18 +172,18 @@ namespace Cargohub.DatetimeConverter
             context.SaveChanges();
 
             // Import Orders Werkt nog niet!!!!!!!!!! ik moet ff kijken waarom maar snap het zelf niet
-            // var orders = LoadDataFromFile<Order>("data/orders.json");
-            // foreach (var order in orders)
-            // {
-            //     order.ApplyDefaultValuesOrders();
-            //     order.created_at = ToUtc(order.created_at);
-            //     order.updated_at = ToUtc(order.updated_at);
-            //     // order.request_date = ToUtc(order.request_date);
-            //     // order.order_date = ToUtc(order.order_date);
-            //     order.id = 0; // Resetting the Id to 0
-            // }
-            // context.Orders.AddRange(orders);
-            // context.SaveChanges();
+            var orders = LoadDataFromFile<Order>("data/orders.json");
+            foreach (var order in orders)
+            {
+                order.ApplyDefaultValuesOrders();
+                order.created_at = ToUtc(order.created_at);
+                order.updated_at = ToUtc(order.updated_at);
+                // order.request_date = ToUtc(order.request_date);
+                // order.order_date = ToUtc(order.order_date);
+                order.id = 0; // Resetting the Id to 0
+            }
+            context.Orders.AddRange(orders);
+            context.SaveChanges();
 
             // //Load Shipments
             var shipments = LoadDataFromFile<Shipment>("data/shipments.json");
@@ -206,6 +209,7 @@ namespace Cargohub.DatetimeConverter
             context.Transfers.AddRange(transfers);
             context.SaveChanges();
 
+            //Load Locations
             var locations = LoadDataFromFile<Location>("data/locations.json");
             foreach (var location in locations)
             {

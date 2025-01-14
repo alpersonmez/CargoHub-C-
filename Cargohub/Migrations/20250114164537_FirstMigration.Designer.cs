@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250114160152_setuppp")]
-    partial class setuppp
+    [Migration("20250114164537_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

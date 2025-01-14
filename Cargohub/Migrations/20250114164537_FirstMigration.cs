@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cargohub.Migrations
 {
     /// <inheritdoc />
-    public partial class IniatilCreation : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -264,123 +264,127 @@ namespace Cargohub.Migrations
                 name: "Items",
                 columns: table => new
                 {
-                    uid = table.Column<string>(type: "TEXT", nullable: false),
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    uid = table.Column<string>(type: "TEXT", nullable: true),
                     code = table.Column<string>(type: "TEXT", nullable: true),
                     description = table.Column<string>(type: "TEXT", nullable: true),
                     short_description = table.Column<string>(type: "TEXT", nullable: true),
                     upc_code = table.Column<string>(type: "TEXT", nullable: true),
                     model_number = table.Column<string>(type: "TEXT", nullable: true),
                     commodity_code = table.Column<string>(type: "TEXT", nullable: true),
-                    ItemLineId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ItemGroupId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ItemTypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    unit_purchase_quantity = table.Column<int>(type: "INTEGER", nullable: true),
-                    unit_order_quantity = table.Column<int>(type: "INTEGER", nullable: true),
-                    pack_order_quantity = table.Column<int>(type: "INTEGER", nullable: true),
-                    supplier_id = table.Column<int>(type: "INTEGER", nullable: true),
+                    ItemLineid = table.Column<int>(type: "INTEGER", nullable: true),
+                    item_line = table.Column<int>(type: "INTEGER", nullable: true),
+                    ItemGroupid = table.Column<int>(type: "INTEGER", nullable: true),
+                    item_group = table.Column<int>(type: "INTEGER", nullable: true),
+                    ItemTypeid = table.Column<int>(type: "INTEGER", nullable: true),
+                    item_type = table.Column<int>(type: "INTEGER", nullable: true),
+                    unit_purchase_quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    unit_order_quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    pack_order_quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    supplierid = table.Column<int>(type: "INTEGER", nullable: true),
+                    supplier_id = table.Column<int>(type: "INTEGER", nullable: false),
                     supplier_code = table.Column<string>(type: "TEXT", nullable: true),
                     supplier_part_number = table.Column<string>(type: "TEXT", nullable: true),
                     created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
                     updated_at = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    isdeleted = table.Column<bool>(type: "INTEGER", nullable: true)
+                    isdeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.uid);
+                    table.PrimaryKey("PK_Items", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Items_ItemGroups_ItemGroupId",
-                        column: x => x.ItemGroupId,
+                        name: "FK_Items_ItemGroups_ItemGroupid",
+                        column: x => x.ItemGroupid,
                         principalTable: "ItemGroups",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Items_ItemTypes_ItemTypeId",
-                        column: x => x.ItemTypeId,
+                        name: "FK_Items_ItemTypes_ItemTypeid",
+                        column: x => x.ItemTypeid,
                         principalTable: "ItemTypes",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Items_Item_lines_ItemLineId",
-                        column: x => x.ItemLineId,
+                        name: "FK_Items_Item_lines_ItemLineid",
+                        column: x => x.ItemLineid,
                         principalTable: "Item_lines",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Items_Supplier_supplierid",
+                        column: x => x.supplierid,
+                        principalTable: "Supplier",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "orderItem",
+                name: "Stocks",
                 columns: table => new
                 {
-                    Orderid = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    item_id = table.Column<string>(type: "TEXT", nullable: false),
-                    amount = table.Column<int>(type: "INTEGER", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ItemId = table.Column<string>(type: "TEXT", nullable: true),
+                    amount = table.Column<int>(type: "INTEGER", nullable: false),
+                    StockType = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ShipmentId = table.Column<int>(type: "INTEGER", nullable: true),
+                    TransferId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orderItem", x => new { x.Orderid, x.Id });
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orderItem_Orders_Orderid",
-                        column: x => x.Orderid,
+                        name: "FK_Stocks_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "itemShipment",
-                columns: table => new
-                {
-                    Shipmentid = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    item_id = table.Column<string>(type: "TEXT", nullable: false),
-                    amount = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_itemShipment", x => new { x.Shipmentid, x.Id });
                     table.ForeignKey(
-                        name: "FK_itemShipment_Shipments_Shipmentid",
-                        column: x => x.Shipmentid,
+                        name: "FK_Stocks_Shipments_ShipmentId",
+                        column: x => x.ShipmentId,
                         principalTable: "Shipments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "itemTransfers",
-                columns: table => new
-                {
-                    Transferid = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    item_id = table.Column<string>(type: "TEXT", nullable: false),
-                    amount = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_itemTransfers", x => new { x.Transferid, x.Id });
                     table.ForeignKey(
-                        name: "FK_itemTransfers_Transfers_Transferid",
-                        column: x => x.Transferid,
+                        name: "FK_Stocks_Transfers_TransferId",
+                        column: x => x.TransferId,
                         principalTable: "Transfers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ItemGroupId",
+                name: "IX_Items_ItemGroupid",
                 table: "Items",
-                column: "ItemGroupId");
+                column: "ItemGroupid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ItemLineId",
+                name: "IX_Items_ItemLineid",
                 table: "Items",
-                column: "ItemLineId");
+                column: "ItemLineid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ItemTypeId",
+                name: "IX_Items_ItemTypeid",
                 table: "Items",
-                column: "ItemTypeId");
+                column: "ItemTypeid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_supplierid",
+                table: "Items",
+                column: "supplierid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stocks_OrderId",
+                table: "Stocks",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stocks_ShipmentId",
+                table: "Stocks",
+                column: "ShipmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stocks_TransferId",
+                table: "Stocks",
+                column: "TransferId");
         }
 
         /// <inheritdoc />
@@ -396,19 +400,10 @@ namespace Cargohub.Migrations
                 name: "Items");
 
             migrationBuilder.DropTable(
-                name: "itemShipment");
-
-            migrationBuilder.DropTable(
-                name: "itemTransfers");
-
-            migrationBuilder.DropTable(
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "orderItem");
-
-            migrationBuilder.DropTable(
-                name: "Supplier");
+                name: "Stocks");
 
             migrationBuilder.DropTable(
                 name: "Warehouses");
@@ -423,13 +418,16 @@ namespace Cargohub.Migrations
                 name: "Item_lines");
 
             migrationBuilder.DropTable(
+                name: "Supplier");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "Shipments");
 
             migrationBuilder.DropTable(
                 name: "Transfers");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
         }
     }
 }

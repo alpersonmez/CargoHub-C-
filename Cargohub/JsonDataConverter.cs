@@ -39,6 +39,19 @@ namespace Cargohub.DatetimeConverter
             {
                 Console.WriteLine("Starting data import...");
 
+                 // Import suppliers
+                var suppliers = LoadDataFromFile<Supplier>("data/suppliers.json");
+                foreach (var supplier in suppliers)
+                {
+                    supplier.created_at = ToUtc(supplier.created_at);
+                    supplier.updated_at = ToUtc(supplier.updated_at);
+                    supplier.id = 0; // Reset ID
+                }
+                context.Supplier.AddRange(suppliers);
+                context.SaveChanges();
+                Console.WriteLine($"Imported {suppliers.Count} clients.");
+                
+                
                 // Import Clients
                 var clients = LoadDataFromFile<Client>("data/clients.json");
                 foreach (var client in clients)

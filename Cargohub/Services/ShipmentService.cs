@@ -14,12 +14,19 @@ namespace Cargohub.Services
 
         public async Task<List<Shipment>> GetAllShipments(int amount = 100)
         {
-            return await _context.Shipments.Take(amount).ToListAsync();
+            // Using Include to load related items
+            return await _context.Shipments
+                //.Include(s => s.items) // Include the associated items
+                .Take(amount)
+                .ToListAsync();
         }
 
         public async Task<Shipment> GetShipmentById(int id)
         {
-            return await _context.Shipments.FindAsync(id);
+            // Fetch a shipment by its id and include the related items
+            return await _context.Shipments
+                //.Include(s => s.items) // Include the associated items
+                .FirstOrDefaultAsync(s => s.id == id);
         }
 
         public async Task<Shipment> AddShipment(Shipment newShipment)
@@ -44,7 +51,6 @@ namespace Cargohub.Services
                 created_at = DateTime.UtcNow,
                 updated_at = DateTime.UtcNow
             };
-
 
             _context.Shipments.Add(shipment);
             await _context.SaveChangesAsync();
@@ -75,7 +81,6 @@ namespace Cargohub.Services
             existingShipment.total_package_count = shipment.total_package_count;
             existingShipment.total_package_weight = shipment.total_package_weight;
             existingShipment.updated_at = DateTime.UtcNow;
-
 
             _context.Shipments.Update(existingShipment);
             await _context.SaveChangesAsync();

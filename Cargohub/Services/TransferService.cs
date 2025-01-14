@@ -51,7 +51,7 @@ namespace Cargohub.Services
             existingTransfer.transfer_from = transfer.transfer_from;
             existingTransfer.transfer_to = transfer.transfer_to;
             existingTransfer.transfer_status = transfer.transfer_status;
-            existingTransfer.items = transfer.items;
+            //existingTransfer.items = transfer.items;
             existingTransfer.isdeleted = transfer.isdeleted;
             existingTransfer.updated_at = DateTime.UtcNow;
 

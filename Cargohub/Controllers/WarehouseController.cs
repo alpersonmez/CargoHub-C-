@@ -74,7 +74,6 @@ public class WarehouseController : ControllerBase
         if (!deleted)
         {
             return NotFound();
-
         }
         return NoContent();
     }

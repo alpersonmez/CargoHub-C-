@@ -71,12 +71,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteWarehouse(int id)
         {
             var warehouse = await _context.Warehouses.FindAsync(id);
-            if (warehouse == null)
+            if (warehouse?.isdeleted == true || warehouse == null)
             {
                 return false;
             }
 
-            _context.Warehouses.Remove(warehouse);
+            warehouse.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -74,7 +74,6 @@ namespace Cargohub.Services
             }
 
             supplier.isdeleted = true;
-            //_context.Supplier.Remove(supplier);
             await _context.SaveChangesAsync();
             return true;
         }

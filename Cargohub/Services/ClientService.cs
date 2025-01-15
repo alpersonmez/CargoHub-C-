@@ -1,54 +1,58 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class ClientService : IClientService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _context;
 
-        public ClientService(AppDbContext dbContext)
+        public ClientService(AppDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        // Get all clients
-        public IEnumerable<Client> GetAllClients()
+        public async Task<List<Client>> GetAllClients(int amount = 100)
         {
-            return _dbContext.Clients.ToList();
+            return await _context.Clients.Take(amount).ToListAsync();
         }
 
-        // Get a client by ID
-        public Client GetClientById(int id)
+        public async Task<Client> GetClientById(int id)
         {
-            return _dbContext.Clients.FirstOrDefault(c => c.id == id);
+            return await _context.Clients.FindAsync(id);
         }
 
-        // Create a new client
-        public Client CreateClient(Client client)
+        public async Task<Client> AddClient(Client newClient)
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            Client client = new Client
+            {
+                name = newClient.name,
+                address = newClient.address,
+                city = newClient.city,
+                zip_code = newClient.zip_code,
+                province = newClient.province,
+                country = newClient.country,
+                contact_name = newClient.contact_name,
+                contact_phone = newClient.contact_phone,
+                contact_email = newClient.contact_email,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
+            };
 
-            client.created_at = DateTime.UtcNow;
-            client.updated_at = DateTime.UtcNow;
-
-            _dbContext.Clients.Add(client);
-            _dbContext.SaveChanges();
-
+            _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
             return client;
         }
 
-        // Update an existing client
-        public Client UpdateClient(Client client)
+        public async Task<bool> UpdateClient(Client client)
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            Client existingClient = await _context.Clients.FindAsync(client.id);
 
-            var existingClient = _dbContext.Clients.FirstOrDefault(c => c.id == client.id);
-            if (existingClient == null) return null;
+            if (existingClient == null)
+            {
+                return false;
+            }
 
-            // Update fields
             existingClient.name = client.name;
             existingClient.address = client.address;
             existingClient.city = client.city;
@@ -60,20 +64,21 @@ namespace Cargohub.Services
             existingClient.contact_email = client.contact_email;
             existingClient.updated_at = DateTime.UtcNow;
 
-            _dbContext.SaveChanges();
-
-            return existingClient;
+            _context.Clients.Update(existingClient);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        // Delete a client
-        public bool DeleteClient(int id)
+        public async Task<bool> DeleteClient(int id)
         {
-            var client = _dbContext.Clients.FirstOrDefault(c => c.id == id);
-            if (client == null) return false;
+            var client = await _context.Clients.FindAsync(id);
+            if (client?.isdeleted == true || client == null)
+            {
+                return false;
+            }
 
-            _dbContext.Clients.Remove(client);
-            _dbContext.SaveChanges();
-
+            client.isdeleted = true;
+            await _context.SaveChangesAsync();
             return true;
         }
     }

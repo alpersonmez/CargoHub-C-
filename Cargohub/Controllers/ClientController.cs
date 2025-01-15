@@ -17,14 +17,14 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllClients()
+        public async Task<IActionResult> GetAllClients()
         {
             var clients = _clientService.GetAllClients();
             return Ok(clients);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetClientById(int id)
+        public async Task<IActionResult> GetClientById(int id)
         {
             var client = _clientService.GetClientById(id);
             if (client == null)
@@ -34,34 +34,42 @@ namespace Cargohub.Controllers
 
         [AdminFilter]
         [HttpPost]
-        public IActionResult CreateClient([FromBody] Client client)
+        public async Task<IActionResult> CreateClient([FromBody] Client client)
         {
-            if (client == null)
-                return BadRequest("Client is null.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var createdClient = _clientService.CreateClient(client);
+            Client createdClient = await _clientService.AddClient(client);
             return CreatedAtAction(nameof(GetClientById), new { id = createdClient.id }, createdClient);
         }
 
         [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult UpdateClient(int id, [FromBody] Client client)
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] Client client)
         {
-            if (client == null || client.id != id)
-                return BadRequest("Client ID mismatch.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var updatedClient = _clientService.UpdateClient(client);
-            if (updatedClient == null)
-                return NotFound($"Client with ID {id} not found.");
+            if (id != client.id)
+            {
+                return BadRequest($"supplier Id {id} does not match");
+            }
+            
+            var updatedClient = await _clientService.UpdateClient(client);
+            
+            if (!updatedClient)
+            {
+                return NotFound();
+            }
 
             return Ok(updatedClient);
         }
 
         [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult DeleteClient(int id)
+        public async Task<IActionResult> DeleteClient(int id)
         {
-            var deleted = _clientService.DeleteClient(id);
+            var deleted = await _clientService.DeleteClient(id);
             if (!deleted)
                 return NotFound($"Client with ID {id} not found.");
             return NoContent();

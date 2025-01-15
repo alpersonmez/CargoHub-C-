@@ -52,7 +52,7 @@ namespace Cargohub.Controllers
 
             if (id != client.id)
             {
-                return BadRequest($"supplier Id {id} does not match");
+                return BadRequest($"Client Id {id} does not match");
             }
             
             var updatedClient = await _clientService.UpdateClient(client);

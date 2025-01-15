@@ -62,12 +62,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteInventory(int id)
         {
             var inventory = await _context.Inventories.FindAsync(id);
-            if (inventory == null)
+            if (inventory?.isdeleted == true || inventory == null)
             {
                 return false;
             }
 
-            _context.Inventories.Remove(inventory);
+            inventory.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

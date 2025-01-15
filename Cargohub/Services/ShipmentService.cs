@@ -15,18 +15,14 @@ namespace Cargohub.Services
         public async Task<List<Shipment>> GetAllShipments(int amount = 100)
         {
             // Using Include to load related items
-            return await _context.Shipments
-                //.Include(s => s.items) // Include the associated items
-                .Take(amount)
-                .ToListAsync();
+            return await _context.Shipments.Take(amount).ToListAsync();
         }
 
         public async Task<Shipment> GetShipmentById(int id)
         {
             // Fetch a shipment by its id and include the related items
-            return await _context.Shipments
-                //.Include(s => s.items) // Include the associated items
-                .FirstOrDefaultAsync(s => s.id == id);
+            return await _context.Shipments.FindAsync(id);
+
         }
 
         public async Task<Shipment> AddShipment(Shipment newShipment)
@@ -90,12 +86,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteShipment(int id)
         {
             var shipment = await _context.Shipments.FindAsync(id);
-            if (shipment == null)
+            if (shipment?.isdeleted == true || shipment == null)
             {
                 return false;
             }
 
-            _context.Shipments.Remove(shipment);
+            shipment.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

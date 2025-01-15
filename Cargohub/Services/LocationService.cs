@@ -39,7 +39,7 @@ namespace Cargohub.Services
         }
 
 
-        public async Task<bool> UpdateLocation(Location location) // moet checken hoe ik met required fields te werk moet gaan hetzelfde geld bij POST
+        public async Task<bool> UpdateLocation(Location location) 
         {
             Location existingLocation = await _context.Locations.FindAsync(location.id);
 
@@ -61,12 +61,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);
-            if (location == null)
+            if (location?.isdeleted == true || location == null)
             {
                 return false;
             }
 
-            _context.Locations.Remove(location);
+            location.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

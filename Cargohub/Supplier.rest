@@ -20,8 +20,6 @@ Content-Type: application/json
     "phone_number": "363.541.7282x36825",
     "reference": "LPaJ-SUP0001"
 }
-
-
 ####
 
 DELETE  http://localhost:5000/api/supplier/995

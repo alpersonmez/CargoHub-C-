@@ -19,6 +19,8 @@ namespace Cargohub.Models
         public DbSet<Transfer> Transfers { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
+        public DbSet<ImportStatus> ImportStatuses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

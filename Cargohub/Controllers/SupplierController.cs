@@ -75,7 +75,6 @@ public class SupplierController : ControllerBase
         if (!deleted)
         {
             return NotFound();
-
         }
         return NoContent();
     }

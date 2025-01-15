@@ -68,12 +68,13 @@ namespace Cargohub.Services
         public async Task<bool> DeleteSupplier(int id)
         {
             var supplier = await _context.Supplier.FindAsync(id);
-            if (supplier == null)
+            if (supplier?.isdeleted == true || supplier == null)
             {
                 return false;
             }
 
-            _context.Supplier.Remove(supplier);
+            supplier.isdeleted = true;
+            //_context.Supplier.Remove(supplier);
             await _context.SaveChangesAsync();
             return true;
         }

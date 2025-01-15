@@ -86,7 +86,7 @@ public class Transfer
     // public List<ItemTransfer>? items { get; set; }  // This will be serialized as part of Transfer
 
     [JsonProperty("isdeleted")]
-    public bool? isdeleted { get; set; } = false;
+    public bool isdeleted { get; set; } = false;
 }
 
 // public class ItemTransfer

@@ -51,6 +51,6 @@ namespace Cargohub.Models
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
+        public bool isdeleted { get; set; } = false;
     }
 }

@@ -90,12 +90,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteOrder(int id)
         {
             var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            if (order?.isdeleted == true || order == null)
             {
                 return false;
             }
 
-            _context.Orders.Remove(order);
+            order.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

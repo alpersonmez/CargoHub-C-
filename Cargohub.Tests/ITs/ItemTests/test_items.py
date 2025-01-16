@@ -1,130 +1,158 @@
 import pytest
 import requests
-
-API_KEY = 'a1b2c3d4e5'
+from datetime import datetime
 
 
 @pytest.fixture
 def _url():
-    return 'http://localhost:5000/api/v1/'
+    return "http://localhost:5000/api/item"
 
 
-def test_post_item(_url):
-    url = _url + 'items'
-    payload = {
-        "Uid": "P6942069",
-        "Code": "sjQ23408K",
-        "Description": "POST",
-        "ShortDescription": "must",
-        "UpcCode": "6523540947122",
-        "ModelNumber": "63-OFFTq0T",
-        "CommodityCode": "oTo304",
-        "ItemLine": 11,
-        "ItemGroup": 73,
-        "ItemType": 14,
-        "UnitPurchaseQuantity": 47,
-        "UnitOrderQuantity": 13,
-        "PackOrderQuantity": 11,
-        "SupplierId": 34,
-        "SupplierCode": "SUP423",
-        "SupplierPartNumber": "E-86805-uTM"
+headers = {
+    "Accept": "/",
+    "User-Agent": "value",
+    "API_key": "a1b2c3d4",  #  the API key
+}
+
+
+# def test_add_remove_items(_url):
+
+#     new_item = {
+#         "id": 1,
+#         "code": "CODE001",
+#         "description": "POST",
+#         "short_description": "Sample item",
+#         "upc_code": "123456789012",
+#         "model_number": "MODEL001",
+#         "commodity_code": "COMM001",
+#         "item_line": 1,
+#         "item_group": 2,
+#         "item_type": 3,
+#         "unit_purchase_quantity": 10,
+#         "unit_order_quantity": 5,
+#         "pack_order_quantity": 50,
+#         "supplier_id": 123,
+#         "supplier_code": "SUPP123",
+#         "supplier_part_number": "SPN12345",
+#     }
+
+#     post_response = requests.post(_url, json=new_item, headers=headers)
+#     assert post_response.status_code == 201
+
+#     get_response = requests.get(
+#         _url + f"/{post_response.json()['uid']}", headers=headers
+#     )
+
+#     if get_response.content:
+#         response_data = get_response.json()
+#         assert response_data["description"] == "POST"
+#     else:
+#         print("GET request returned 200 but no body")
+
+#     del_response = requests.delete(
+#         _url + f"/{post_response.json()['uid']}", headers=headers
+#     )
+#     assert del_response.status_code == 204
+
+def test_add_remove_items(_url):
+    new_item = {
+        "code": "CODE001",
+        "description": "POST",
+        "short_description": "Sample item",
+        "upc_code": "123456789012",
+        "model_number": "MODEL001",
+        "commodity_code": "COMM001",
+        "item_line": 1,
+        "item_group": 2,
+        "item_type": 3,
+        "unit_purchase_quantity": 10,
+        "unit_order_quantity": 5,
+        "pack_order_quantity": 50,
+        "supplier_id": 123,
+        "supplier_code": "SUPP123",
+        "supplier_part_number": "SPN12345",
     }
 
-    # Send a POST request to the API
-    response = requests.post(url, headers={'API_KEY': API_KEY}, json=payload)
+    post_response = requests.post(_url, json=new_item, headers=headers)
+    assert post_response.status_code == 201
 
-    # Get the status code
-    status_code = response.status_code
+    uid = post_response.json()["uid"]
 
-    # Verify that the status code is 201 (Created)
-    assert status_code == 201
+    get_response = requests.get(f"{_url}/{uid}", headers=headers)
+    assert get_response.status_code == 200
+    assert get_response.json()["description"] == "POST"
 
-
-def test_post_item_with_invalid_dates(_url):
-    url = _url + 'items'
-    payload = {
-        "Uid": "P6942069",
-        "Code": "sjQ23408K",
-        "Description": "POST",
-        "ShortDescription": "must",
-        "UpcCode": "6523540947122",
-        "ModelNumber": "63-OFFTq0T",
-        "CommodityCode": "oTo304",
-        "ItemLine": 11,
-        "ItemGroup": 73,
-        "ItemType": 14,
-        "UnitPurchaseQuantity": 47,
-        "UnitOrderQuantity": 13,
-        "PackOrderQuantity": 11,
-        "SupplierId": 34,
-        "SupplierCode": "SUP423",
-        "SupplierPartNumber": "E-86805-uTM",
-        "created_at": "2024-01-01T00:00:00",  # Invalid field
-        "updated_at": "2024-01-01T00:00:00"   # Invalid field
-    }
-
-    # Send a POST request to the API
-    response = requests.post(url, headers={'API_KEY': API_KEY}, json=payload)
-
-    # Verify that the status code is 400 (Bad Request)
-    assert response.status_code == 400
+    del_response = requests.delete(f"{_url}/{uid}", headers=headers)
+    assert del_response.status_code == 204
 
 
-def test_get_item_by_uid(_url):
-    url = _url + 'items/P6942069'
-
-    # Send a GET request to fetch an item by UID
-    response = requests.get(url, headers={'API_KEY': API_KEY})
-
-    # Verify that the status code is 200 (OK) or 404 (Not Found)
-    assert response.status_code in [200, 404], f"Unexpected status code: {response.status_code}"
-
-    if response.status_code == 200:
-        response_data = response.json()
-        assert response_data['Description'] == 'POST'
-    else:
-        print("Item with description POST not found")
-
-
-def test_put_item(_url):
-    url = _url + 'items/P6942069'
+def test_put_items(_url):
     
-    updated_payload = {
-        "Uid": "P6942069",
-        "Code": "sjQ23408K",
-        "Description": "UPDATED",
-        "ShortDescription": "must",
-        "UpcCode": "6523540947122",
-        "ModelNumber": "63-OFFTq0T",
-        "CommodityCode": "oTo304",
-        "ItemLine": 11,
-        "ItemGroup": 73,
-        "ItemType": 14,
-        "UnitPurchaseQuantity": 47,
-        "UnitOrderQuantity": 13,
-        "PackOrderQuantity": 11,
-        "SupplierId": 34,
-        "SupplierCode": "SUP423",
-        "SupplierPartNumber": "E-86805-uTM"
+    new_item = {
+        "id": 1,
+        "code": "CODE001",
+        "description": "POST",
+        "short_description": "Sample item",
+        "upc_code": "123456789012",
+        "model_number": "MODEL001",
+        "commodity_code": "COMM001",
+        "item_line": 1,
+        "item_group": 2,
+        "item_type": 3,
+        "unit_purchase_quantity": 10,
+        "unit_order_quantity": 5,
+        "pack_order_quantity": 50,
+        "supplier_id": 123,
+        "supplier_code": "SUPP123",
+        "supplier_part_number": "SPN12345",
     }
+    post_response = requests.post(_url, json=new_item, headers=headers)
+    uid = post_response.json()["uid"]
 
-    # Send a PUT request to update the specific item
-    response = requests.put(url, json=updated_payload, headers={'API_KEY': API_KEY})
+    updated_item = {
+        "id": 1,
+        "uid" : uid,
+        "code": "CODE001",
+        "description": "POST",
+        "short_description": "Sample item",
+        "upc_code": "123456789012",
+        "model_number": "MODEL001",
+        "commodity_code": "COMM001",
+        "item_line": 1,
+        "item_group": 2,
+        "item_type": 3,
+        "unit_purchase_quantity": 10,
+        "unit_order_quantity": 5,
+        "pack_order_quantity": 50,
+        "supplier_id": 123,
+        "supplier_code": "SUPP123",
+        "supplier_part_number": "SPN12345",
+    }
+    put_response = requests.put(f"{_url}/{id}", json=updated_item, headers=headers)
+    assert put_response.status_code == 200
 
-    # Verify that the status code is 200 (OK), 404 (Not Found), or 500 (Server Error)
-    assert response.status_code in [200, 404, 500], f"Unexpected status code: {response.status_code}"
+    if put_response.content:
+        response_data = put_response.json()  # Parse JSON response if body is not empty
+        assert response_data["description"] == "POST"
+    else:
+        print("PUT request returned 200 but no response body.")
+
+    requests.delete(f"{_url}/{uid}", headers=headers)
 
 
-def test_delete_item(_url):
-    url = _url + 'items/P6942069'
-
-    # Send a DELETE request to delete a specific item by UID
-    response = requests.delete(url, headers={'API_KEY': API_KEY})
-
-    # Verify that the status code is 204
-    assert response.status_code in [204], f"Unexpected status code: {response.status_code}"
+def test_url_items(_url):
+    get_response = requests.get(_url + "/url_part2" + "/url_part3", headers=headers)
+    assert get_response.status_code == 404
 
 
+def test_input_items(_url):
+    get_response = requests.get(_url + "/seven", headers=headers)
+    assert get_response.status_code == 404
 
-if __name__ == "__main__":
-    pytest.main()
+
+def test_url_specification_items(_url):
+    get_response = requests.get(
+        _url + "/1" + "/utems", headers=headers
+    )  # a misspelling for items
+    assert get_response.status_code == 404
+

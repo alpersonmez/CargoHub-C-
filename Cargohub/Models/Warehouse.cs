@@ -42,7 +42,7 @@ namespace Cargohub.Models
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
+        public bool isdeleted { get; set; } = false;
 
         // Inner Contact class remains nested within Warehouse
         public class Contact

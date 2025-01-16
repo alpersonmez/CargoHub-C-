@@ -70,7 +70,7 @@ public class Shipment
     // public List<ItemShipment>? items { get; set; }  // Embedded collection
 
     [JsonProperty("isdeleted")]
-    public bool? isdeleted { get; set; } = false;
+    public bool isdeleted { get; set; } = false;
 }
 
 // public class ItemShipment

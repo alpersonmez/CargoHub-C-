@@ -16,8 +16,8 @@ public class ItemController : ControllerBase
         _itemService = itemService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int amount)
+    [HttpGet("amount/{amount}")]
+    public async Task<IActionResult> GetAll(int amount)
     {
         var items = await _itemService.GetAllItems(amount);
         return Ok(items);
@@ -29,7 +29,51 @@ public class ItemController : ControllerBase
         var item = await _itemService.GetItemByUid(uid);
         if (item == null)
         {
-            return NotFound(new { Message = "Item not found" });
+            return NotFound();
+        }
+        return Ok(item);
+    }
+
+    [HttpGet("item-line/{itemLineId}")]
+    public async Task<IActionResult> GetByItemLine(int itemLineId)
+    {
+        var item = await _itemService.GetItemsByItemLineAsync(itemLineId);
+        if (item == null)
+        {
+            return NotFound(new { Message = "Item line not found" });
+        }
+        return Ok(item);
+    }
+
+    [HttpGet("item-group/{itemGroupId}")]
+    public async Task<IActionResult> GetByItemGroup(int itemGroupId)
+    {
+        var item = await _itemService.GetItemsByItemGroupAsync(itemGroupId);
+        if (item == null)
+        {
+            return NotFound(new { Message = "Item group not found" });
+        }
+        return Ok(item);
+    }
+
+    [HttpGet("item-type/{itemTypeId}")]
+    public async Task<IActionResult> GetByItemType(int itemTypeId)
+    {
+        var item = await _itemService.GetItemsByItemTypeAsync(itemTypeId);
+        if (item == null)
+        {
+            return NotFound(new { Message = "Item type not found" });
+        }
+        return Ok(item);
+    }
+
+    [HttpGet("supplier/{supplierId}")]
+    public async Task<IActionResult> GetBySupplier(int supplierId)
+    {
+        var item = await _itemService.GetItemsBySupplierAsync(supplierId);
+        if (item == null)
+        {
+            return NotFound(new { Message = "Supplier not found" });
         }
         return Ok(item);
     }
@@ -71,12 +115,11 @@ public class ItemController : ControllerBase
     [HttpDelete("{uid}")]
     public async Task<IActionResult> Delete(string uid)
     {
-        var success = await _itemService.RemoveItemAsync(uid);
-        if (!success)
+        bool deleted = await _itemService.RemoveItemAsync(uid);
+        if (!deleted)
         {
-            return NotFound(new { Message = "Item not found or could not be deleted" });
+            return NotFound();
         }
-
         return NoContent();
     }
 }

@@ -17,8 +17,8 @@ headers = {
 def test_client_post_get_delete(_url):
 
     new_client = {
-    "name": "John Doe",
-    "address": "Witte de Withstraat 50",
+    "name": "POST",
+    "address": "POST",
     "city": "Rotterdam",
     "zip_code": "3012 BT",
     "province": "South Holland",
@@ -37,7 +37,7 @@ def test_client_post_get_delete(_url):
 
     if get_response.content:
         response_data = get_response.json()
-        assert response_data["city"] == "Rotterdam"
+        assert response_data["country"] == "Netherlands"
     else:
         print("GET request returned 200 but no body")
 

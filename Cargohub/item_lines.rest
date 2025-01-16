@@ -1,8 +1,8 @@
 ### Get all itemLines
-GET http://localhost:5000/api/item_lines
+GET http://localhost:5000/api/itemlines
 
 ### Get a specific itemLines by ID
-GET http://localhost:5000/api/item_lines/5
+GET http://localhost:5000/api/itemlines/2
 Content-Type: application/json
 
 ### Update an existing itemLines

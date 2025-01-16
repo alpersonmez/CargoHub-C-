@@ -6,42 +6,39 @@ namespace Cargohub.Services
     public class TransferService : ITransferService
     {
 
-        private AppDbContext data;
+        private AppDbContext _context;
 
-        public TransferService(AppDbContext _data)
+        public TransferService(AppDbContext context)
         {
-            data = _data;
+            _context = context;
         }
 
         public async Task<List<Transfer>> GetTransfers(int amount = 100)
         {
-            return await data.Transfers.Take(amount).ToListAsync();
+            return await _context.Transfers.Take(amount).ToListAsync();
         }
 
         public async Task<Transfer> GetTransfer(int id)
         {
-            return await data.Transfers.FindAsync(id);
+            return await _context.Transfers.FindAsync(id);
         }
 
-        // public List<Item>? GetItems(int id)
-        // {
-        //     if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return null;
-        //     return data.Transfers.Where(x => x.id == id).Single().items.ToList();
-        // }
-
-        public async Task<Transfer> AddTransfer(Transfer transfer)
+        public async Task<Transfer> AddTransfer(Transfer NewTransfer)
         {
-            transfer.id = data.Transfers.Count() + 1;
-            transfer.created_at = DateTime.UtcNow;
-            transfer.updated_at = DateTime.UtcNow;
-
-            data.Transfers.Add(transfer);
-            await data.SaveChangesAsync();
+            Transfer transfer = new Transfer
+            {
+                reference = NewTransfer.reference,
+                transfer_from = NewTransfer.transfer_from,
+                transfer_to = NewTransfer.transfer_to,
+                transfer_status = NewTransfer.transfer_status,
+            };
+            _context.Transfers.Add(transfer);
+            await _context.SaveChangesAsync();
             return transfer;
-        }
+        } 
         public async Task<bool> UpdateTransfer(Transfer transfer)
         {
-            Transfer existingTransfer = await data.Transfers.FindAsync(transfer.id);
+            Transfer existingTransfer = await _context.Transfers.FindAsync(transfer.id);
             if (existingTransfer == null)
             {
                 return false;
@@ -51,25 +48,24 @@ namespace Cargohub.Services
             existingTransfer.transfer_from = transfer.transfer_from;
             existingTransfer.transfer_to = transfer.transfer_to;
             existingTransfer.transfer_status = transfer.transfer_status;
-            //existingTransfer.items = transfer.items;
             existingTransfer.isdeleted = transfer.isdeleted;
             existingTransfer.updated_at = DateTime.UtcNow;
 
 
-            data.Transfers.Update(existingTransfer);
-            await data.SaveChangesAsync();
+            _context.Transfers.Update(existingTransfer);
+            await _context.SaveChangesAsync();
             return true;
         }
         public async Task<bool> DeleteTransfer(int id)
         {
-            var transfer = await data.Transfers.FindAsync(id);
-            if (transfer == null)
+            var transfer = await _context.Transfers.FindAsync(id);
+            if (transfer?.isdeleted == true || transfer == null)
             {
                 return false;
             }
 
-            data.Transfers.Remove(transfer);
-            await data.SaveChangesAsync();
+            transfer.isdeleted = true;
+            await _context.SaveChangesAsync();
             return true;
         }
     }

@@ -2,11 +2,9 @@ using Cargohub.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Cargohub.Models;
 
 namespace Cargohub.Services
 {
-
     public class ItemGroupService : IItemGroupService
     {
         private readonly AppDbContext _context;
@@ -16,17 +14,13 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<ItemGroup>>? GetAllItem_Groups()
+        public async Task<List<ItemGroup>> GetAllItemGroups(int amount = 100)
         {
-            return await _context.ItemGroups.Take(100).ToListAsync();
+            return await _context.ItemGroups.Take(amount).ToListAsync();
         }
 
-        public async Task<ItemGroup>? GetItem_GroupById(int id)
+        public async Task<ItemGroup>? GetItemGroupById(int id)
         {
-            //ItemGroup? doesExist = await _context.ItemGroups.FindAsync(id);
-
-
-
             return await _context.ItemGroups.FindAsync(id);
         }
 
@@ -47,14 +41,13 @@ namespace Cargohub.Services
 
         public async Task<bool> DeleteItem_Groups(int id)
         {
-
-            var item = await _context.ItemGroups.FindAsync(id);
-            if (item == null)
+            var itemgroup = await _context.ItemGroups.FindAsync(id);
+            if (itemgroup?.isdeleted == true || itemgroup == null)
             {
                 return false;
             }
 
-            _context.ItemGroups.Remove(item);
+            itemgroup.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

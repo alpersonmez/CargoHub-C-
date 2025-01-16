@@ -44,7 +44,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -76,7 +76,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("item_id")
@@ -211,7 +211,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -237,7 +237,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -263,7 +263,7 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -289,7 +289,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -318,7 +318,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
@@ -392,7 +392,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("notes")
@@ -495,7 +495,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -530,7 +530,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("reference")
@@ -574,7 +574,7 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("name")
@@ -592,6 +592,20 @@ namespace Cargohub.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Warehouses");
+                });
+
+            modelBuilder.Entity("ImportStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("DataImported")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImportStatuses");
                 });
 
             modelBuilder.Entity("Cargohub.Models.OrderStock", b =>

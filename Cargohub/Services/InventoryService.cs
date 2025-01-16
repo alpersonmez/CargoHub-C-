@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Inventory>> GetAllInventories()
+        public async Task<List<Inventory>> GetAllInventories(int amount = 100)
         {
-            return await _context.Inventories.Take(100).ToListAsync(); 
+            return await _context.Inventories.Take(amount).ToListAsync(); 
         }
          public async Task<Inventory> GetInventoryById(int id)
         {
@@ -62,12 +62,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteInventory(int id)
         {
             var inventory = await _context.Inventories.FindAsync(id);
-            if (inventory == null)
+            if (inventory?.isdeleted == true || inventory == null)
             {
                 return false;
             }
 
-            _context.Inventories.Remove(inventory);
+            inventory.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

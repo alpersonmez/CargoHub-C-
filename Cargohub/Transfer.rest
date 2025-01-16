@@ -6,7 +6,7 @@ GET http://localhost:5000/api/transfer
 ########
 
 
-GET http://localhost:5000/api/transfer/715443
+GET http://localhost:5000/api/transfer/6
 ########
 
 

@@ -37,20 +37,24 @@ namespace Cargohub.Controllers
 
         [AdminFilter]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ItemLines updatedItemLine)
+        public async Task<IActionResult> Update(int id, [FromBody] ItemLines itemline)
         {
-            if (id != updatedItemLine.id)
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (id != itemline.id)
             {
-                return BadRequest("ItemLine ID mismatch");
+                return BadRequest($"ItemLine Id {id} does not match");
+            }
+            
+            var updatedItemLine = await _itemLinesService.UpdateItemLine(itemline);
+            
+            if (!updatedItemLine)
+            {
+                return NotFound();
             }
 
-            var updated = await _itemLinesService.UpdateItemLine(id, updatedItemLine);
-            if (updated == null)
-            {
-                return NotFound("ItemLine not found");
-            }
-
-            return Ok(updated);
+            return Ok(updatedItemLine);
         }
 
         [AdminFilter]

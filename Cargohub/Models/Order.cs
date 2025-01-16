@@ -75,7 +75,7 @@ namespace Cargohub.Models
     // public List<OrderItem>? items { get; set; }  // Embedded collection
 
     [JsonProperty("isdeleted")]
-    public bool? isdeleted { get; set; } = false;
+    public bool isdeleted { get; set; } = false;
 }
 
 // public class OrderItem

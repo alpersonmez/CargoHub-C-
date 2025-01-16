@@ -1,0 +1,26 @@
+GET http://localhost:5000/api/inventory
+####
+
+GET http://localhost:5000/api/inventory/2
+####
+
+POST http://localhost:5000/api/supplier
+Content-Type: application/json
+
+{
+    "code": "SUP0001",
+    "name": "testsupplier",
+    "address": "unknown",
+    "address_extra": "Apt. 420",
+    "city": "Port Anitaburgh",
+    "zip_code": "91688",
+    "province": "Illinois",
+    "country": "Czech Republic",
+    "contact_name": "Toni Barnett",
+    "phone_number": "363.541.7282x36825",
+    "reference": "LPaJ-SUP0001"
+}
+####
+
+DELETE  http://localhost:5000/api/supplier/995
+########

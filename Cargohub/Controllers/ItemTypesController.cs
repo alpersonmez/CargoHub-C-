@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Cargohub.Models;
 using Cargohub.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
@@ -17,42 +18,55 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var itemTypes = _itemTypeService.GetAllItemTypes();
-            return Ok(itemTypes);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var itemType = _itemTypeService.GetItemTypeById(id);
-            if (itemType == null) return NotFound("ItemType not found");
+            var itemType = await _itemTypeService.GetAllItemTypes();
             return Ok(itemType);
         }
 
-        [HttpPost]
-        public IActionResult Create([FromBody] ItemType itemType)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            if (itemType == null) return BadRequest("Invalid data");
-            var createdItemType = _itemTypeService.CreateItemType(itemType);
-            return CreatedAtAction(nameof(GetById), new { id = createdItemType.id }, createdItemType);
+            ItemType itemType = await _itemTypeService.GetItemTypeById(id);
+            if (itemType == null)
+            {
+                return NotFound();
+            }
+            return Ok(itemType);
         }
 
+        [AdminFilter]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ItemType updatedItemType)
+        public async Task<IActionResult> Update(int id, [FromBody] ItemType itemType)
         {
-            var updated = _itemTypeService.UpdateItemType(id, updatedItemType);
-            if (updated == null) return NotFound("ItemType not found");
-            return Ok(updated);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+
+            if (id != itemType.id)
+            {
+                return BadRequest($"itemType Id {id} does not match");
+            }
+
+            var updated = await _itemTypeService.UpdateItemType(itemType);
+
+            if (!updated)
+            {
+                return NotFound();
+            }
+
+            return Ok(itemType);
         }
 
+        [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleted = _itemTypeService.DeleteItemType(id);
-            if (!deleted) return NotFound("ItemType not found");
-            return Ok("ItemType deleted successfully");
+            bool deleted = await _itemTypeService.DeleteItemType(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

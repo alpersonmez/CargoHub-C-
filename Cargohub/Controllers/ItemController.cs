@@ -16,10 +16,10 @@ public class ItemController : ControllerBase
         _itemService = itemService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("amount/{amount}")]
+    public async Task<IActionResult> GetAll(int amount)
     {
-        var items = await _itemService.GetAllItems();
+        var items = await _itemService.GetAllItems(amount);
         return Ok(items);
     }
 

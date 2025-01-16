@@ -1,13 +1,3 @@
-GET http://localhost:5000/api/item
-###
-
-GET http://localhost:5000/api/item/P000001
-###
-
-
-GET http://localhost:5000/api/item/
-###
-
 
 GET http://localhost:5000/api/item/P000001
 ###
@@ -16,6 +6,7 @@ GET http://localhost:5000/api/item/P000001
 GET http://localhost:5000/api/item/P000001
 ###
 
+GET http://localhost:5000/api/item/item-line/3
+###
 
-GET http://localhost:5000/api/item_groups
-####
+//moet nog item dingen maken zoals dat je kan zoeken op itemline etc

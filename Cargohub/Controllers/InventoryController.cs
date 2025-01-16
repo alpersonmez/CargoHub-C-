@@ -11,11 +11,11 @@ namespace Cargohub.Controllers
     public class InventoryController : ControllerBase
     {
 
-        private readonly InventoryService _inventoryService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryController(InventoryService InventoryService)
+        public InventoryController(IInventoryService inventoryService)
         {
-            _inventoryService = InventoryService;
+            _inventoryService = inventoryService;
         }
 
         [HttpGet]

@@ -5,7 +5,7 @@ namespace Cargohub.Services
 {
     public interface IInventoryService
     {
-        Task<List<Inventory>> GetAllInventories();
+        Task<List<Inventory>> GetAllInventories(int amount = 100);
         Task<Inventory> GetInventoryById(int id);
         Task<Inventory> AddInventory(Inventory inventory);
         Task<bool> UpdateInventory(Inventory inventory);

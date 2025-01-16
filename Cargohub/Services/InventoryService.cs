@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Inventory>> GetAllInventories()
+        public async Task<List<Inventory>> GetAllInventories(int amount = 100)
         {
-            return await _context.Inventories.Take(100).ToListAsync(); 
+            return await _context.Inventories.Take(amount).ToListAsync(); 
         }
          public async Task<Inventory> GetInventoryById(int id)
         {

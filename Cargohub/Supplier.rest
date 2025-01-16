@@ -1,7 +1,7 @@
 GET http://localhost:5000/api/supplier
 ####
 
-GET http://localhost:5000/api/supplier/995
+GET http://localhost:5000/api/supplier/1
 ####
 
 POST http://localhost:5000/api/supplier

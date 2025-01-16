@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 using Cargohub.DataConverters;
+using System;
+
 
 namespace Cargohub.Models
 {

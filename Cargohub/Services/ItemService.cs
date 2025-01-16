@@ -19,8 +19,8 @@ namespace Cargohub.Services
                 .Include(i => i.ItemLine)
                 .Include(i => i.ItemGroup)
                 .Include(i => i.ItemGroup)
-                .Include(i => i.supplier) //werkt nog niet
-                .OrderBy(i => i.uid) // Order by Id in ascending order
+                .Include(i => i.supplier) 
+                //.OrderBy(i => i.uid) // Order by Id in ascending order
                 .Take(amount)
                 .ToListAsync();
             
@@ -76,19 +76,6 @@ namespace Cargohub.Services
                 .Include(i => i.supplier)
                 .FirstOrDefaultAsync(i => i.supplier.id == supplierId);
         }
-
-        // public async Task<Item> AddItem(Item NewItem)
-        // {
-        //     // Automatically set createdAt and updatedAt
-        // Item item = new Item
-        // { 
-        //     created_at = DateTime.UtcNow,
-        //     updated_at = DateTime.UtcNow
-        // };
-        //     _context.Items.Add(item);
-        //     await _context.SaveChangesAsync();
-        //     return item;
-        // }
 
         public async Task<Item> AddItemAsync(Item newItem)
         {
@@ -157,13 +144,12 @@ namespace Cargohub.Services
         public async Task<bool> RemoveItemAsync(string uid)
         {
             var item = await _context.Items.FindAsync(uid);
-
-            if (item == null)
+            if (item?.isdeleted == true || item == null)
             {
                 return false;
             }
 
-            _context.Items.Remove(item);
+            item.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

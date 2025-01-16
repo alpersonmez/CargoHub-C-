@@ -17,9 +17,9 @@ public class ItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int amount)
+    public async Task<IActionResult> GetAll()
     {
-        var items = await _itemService.GetAllItems(amount);
+        var items = await _itemService.GetAllItems();
         return Ok(items);
     }
 
@@ -29,7 +29,7 @@ public class ItemController : ControllerBase
         var item = await _itemService.GetItemByUid(uid);
         if (item == null)
         {
-            return NotFound(new { Message = "Item not found" });
+            return NotFound();
         }
         return Ok(item);
     }
@@ -71,12 +71,11 @@ public class ItemController : ControllerBase
     [HttpDelete("{uid}")]
     public async Task<IActionResult> Delete(string uid)
     {
-        var success = await _itemService.RemoveItemAsync(uid);
-        if (!success)
+        bool deleted = await _itemService.RemoveItemAsync(uid);
+        if (!deleted)
         {
-            return NotFound(new { Message = "Item not found or could not be deleted" });
+            return NotFound();
         }
-
         return NoContent();
     }
 }

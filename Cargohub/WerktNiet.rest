@@ -1,11 +1,21 @@
-GET http://localhost:5000/api/inventory
-####
-
-GET http://localhost:5000/api/inventory/2
-####
-
 GET http://localhost:5000/api/item
 ###
+
+GET http://localhost:5000/api/item/P000001
+###
+
+
+GET http://localhost:5000/api/item/
+###
+
+
+GET http://localhost:5000/api/item/P000001
+###
+
+
+GET http://localhost:5000/api/item/P000001
+###
+
 
 GET http://localhost:5000/api/item_groups
 ####

@@ -6,7 +6,6 @@ using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
- 
     [ApiController]
     [Route("api/[controller]")]
     public class InventoryController : ControllerBase

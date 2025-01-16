@@ -2,12 +2,13 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
+
 
 namespace Cargohub.Controllers
 {
-
     [ApiController]
-    [Route("api/v1/item_groups")]
+    [Route("api/[controller]")]
     public class Item_GroupsController : ControllerBase
     {
 
@@ -19,15 +20,16 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllItem_groups()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var supplier = await _IitemGroupsService.GetAllItemGroups();
+            return Ok(supplier);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int Id)
+        public async Task<IActionResult> Get(int id)
         {
-            ItemGroup itemGroup = await _IitemGroupsService.GetItem_GroupById(Id);
+            ItemGroup itemGroup = await _IitemGroupsService.GetItemGroupById(id);
             if (itemGroup == null)
             {
                 return NotFound();
@@ -35,6 +37,7 @@ namespace Cargohub.Controllers
             return Ok(itemGroup);
         }
 
+        [AdminFilter]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ItemGroup itemGroup)
         {

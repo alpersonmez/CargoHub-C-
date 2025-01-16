@@ -6,36 +6,45 @@ import requests
 
 @pytest.fixture
 def _url():
-    return 'http://localhost:5000/api/v1/'
+    return "http://localhost:5000/api/client"
 
 headers = {
     "Accept": "/",
     "User-Agent": "value",
-    "API_key": "a1b2c3d4e5",  #  the API key
+    "API_key": "a1b2c3d4",  #  the API key
 }
         
-def test_client_post(_url):
-    url = _url + 'clients'
+def test_client_post_get_delete(_url):
 
     new_client = {
-    "Name": "John Doe",
-    "Address": "Witte de Withstraat 50",
-    "City": "Rotterdam",
-    "ZipCode": "3012 BT",
-    "Province": "South Holland",
-    "Country": "Netherlands",
-    "ContactName": "john",
-    "ContactPhone": "0625169278",
-    "ContactEmail": "johndoe@example.com"
+    "name": "John Doe",
+    "address": "Witte de Withstraat 50",
+    "city": "Rotterdam",
+    "zip_code": "3012 BT",
+    "province": "South Holland",
+    "country": "Netherlands",
+    "contact_name": "john",
+    "contact_phone": "0625169278",
+    "contact_email": "johndoe@example.com"
     }
 
-    response = requests.post(url, json=new_client, headers=headers)
+    post_response = requests.post(_url, json=new_client, headers=headers)
+    assert post_response.status_code == 201
     
-    print(f"Response status: {response.status_code}")
-    print(f"Response body: {response.text}")
-    
-    # Check if the status code is 201 (Created)
-    assert response.status_code == 201 
+    get_response = requests.get(
+        _url + f"/{post_response.json()['id']}", headers=headers
+    )
+
+    if get_response.content:
+        response_data = get_response.json()
+        assert response_data["city"] == "Rotterdam"
+    else:
+        print("GET request returned 200 but no body")
+
+    del_response = requests.delete(
+        _url + f"/{post_response.json()['id']}", headers=headers
+    )
+    assert del_response.status_code == 204
     
 def test_fetch_client(_url):
     url = _url + 'clients'
@@ -54,10 +63,30 @@ def test_fetch_nonexistent_client(_url):
 
 # Try to give invalid data, expect 400 error.
 def test_update_client_invalid_data(_url):
-    url = _url + 'clients/1' 
-    invalid_data = {'contact_email': 'invalid-email'}  
-    response = requests.put(url, json=invalid_data, headers=headers)
-    assert response.status_code == 400, f"Expected 400 for invalid email, got: {response.status_code}"
+    
+    new_client = {
+    "name": "John Doe",
+    "address": "Witte de Withstraat 50",
+    "city": "Rotterdam",
+    "zip_code": "3012 BT",
+    "province": "South Holland",
+    "country": "Netherlands",
+    "contact_name": "john",
+    "contact_phone": "0625169278",
+    "contact_email": "johndoe@example.com"
+    }
+    post_response = requests.post(_url, json=new_client, headers=headers)
+    id = post_response.json()["id"]
+
+    updated_client_with_missing_data = {
+    "missingData1": "John Doe",
+    "missingData2": "Witte de Withstraat 50",
+    "missingData3": "Rotterdam",
+    }
+    put_response = requests.put(f"{_url}/{id}", json=updated_client_with_missing_data, headers=headers)
+    assert put_response.status_code == 400
+
+    requests.delete(f"{_url}/{id}", headers=headers)
 
 # Trying to delete not existing client, expect 404
 def test_delete_nonexistent_client(_url):
@@ -77,15 +106,15 @@ def test_fetch_client_by_email(_url):
     # Step 1: Create a client to test with
     url = _url + 'clients'
     new_client = {
-    "Name": "John Doe",
-    "Address": "Witte de Withstraat 50",
-    "City": "Rotterdam",
-    "ZipCode": "3012 BT",
-    "Province": "South Holland",
-    "Country": "Netherlands",
-    "ContactName": "john",
-    "ContactPhone": "0625169278",
-    "ContactEmail": "johndoe@example.com"
+    "name": "John Doe",
+    "address": "Witte de Withstraat 50",
+    "city": "Rotterdam",
+    "zip_code": "3012 BT",
+    "province": "South Holland",
+    "country": "Netherlands",
+    "contact_name": "john",
+    "contact_phone": "0625169278",
+    "contact_email": "johndoe@example.com"
     }
     response = requests.post(url, json=new_client, headers=headers)
     client_id = response.json()['id']
@@ -115,27 +144,27 @@ def test_create_multiple_clients_and_fetch(_url):
     # Step 1: Create multiple clients
     
     client1 = {
-    "Name": "Alice Smith",
-    "Address": "Nieuwe Binnenweg 123",
-    "City": "Rotterdam",
-    "ZipCode": "3014 GG",
-    "Province": "South Holland",
-    "Country": "Netherlands",
-    "ContactName": "Alice",
-    "ContactPhone": "0612345678",
-    "ContactEmail": "alice.smith@example.com"
+    "name": "John Doe",
+    "address": "Witte de Withstraat 50",
+    "city": "Rotterdam",
+    "zip_code": "3012 BT",
+    "province": "South Holland",
+    "country": "Netherlands",
+    "contact_name": "john",
+    "contact_phone": "0625169278",
+    "contact_email": "johndoe@example.com"
     }
 
     client2 = {
-        "Name": "Bob Johnson",
-        "Address": "Blaak 40",
-        "City": "Rotterdam",
-        "ZipCode": "3011 TA",
-        "Province": "South Holland",
-        "Country": "Netherlands",
-        "ContactName": "Bob",
-        "ContactPhone": "0687654321",
-        "ContactEmail": "bob.johnson@example.com"
+    "name": "John Doe",
+    "address": "Witte de Withstraat 50",
+    "city": "Rotterdam",
+    "zip_code": "3012 BT",
+    "province": "South Holland",
+    "country": "Netherlands",
+    "contact_name": "john",
+    "contact_phone": "0625169278",
+    "contact_email": "johndoe@example.com"
     }
 
     requests.post(url, json=client1, headers=headers)

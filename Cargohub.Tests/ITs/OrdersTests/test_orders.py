@@ -18,24 +18,24 @@ headers = {
 # Test adding and removing shipment
 def test_add_remove_order(base_url):
     new_order = {
-        "SourceId": 33,
-        "OrderDate": "2019-04-03T11:33:15Z",
-        "RequestDate": "2019-04-07T11:33:15Z",
-        "Reference": "UPDATED",
-        "ReferenceExtra": "Bedreven arm straffen bureau.",
-        "OrderStatus": "Delivered",
-        "Notes": "Voedsel vijf vork heel.",
-        "ShippingNotes": "Buurman betalen plaats bewolkt.",
-        "PickingNotes": "Ademen fijn volgorde scherp aardappel op leren.",
-        "WarehouseId": 18,
-        "ShipmentId": 1,
-        "TotalAmount": 9905.13,
-        "TotalDiscount": 150.77,
-        "TotalTax": 372.72,
-        "TotalSurcharge": 77.6,
-        "ShipTo": "123 Main St, Springfield",
-        "BillTo": "456 Elm St, Shelbyville",
-        "Items": [
+        "source_id": 33,
+        "order_date": "2019-04-03T11:33:15Z",
+        "request_date": "2019-04-07T11:33:15Z",
+        "reference": "UPDATED",
+        "reference_extra": "Bedreven arm straffen bureau.",
+        "order_status": "Delivered",
+        "notes": "Voedsel vijf vork heel.",
+        "shipping_notes": "Buurman betalen plaats bewolkt.",
+        "picking_notes": "Ademen fijn volgorde scherp aardappel op leren.",
+        "warehouse_id": 18,
+        "ship_to": "123 Main St, Springfield",
+        "bill_to": "456 Elm St, Shelbyville",
+        "shipment_id": 1,
+        "total_amount": 9905.13,
+        "total_discount": 150.77,
+        "total_tax": 372.72,
+        "total_surcharge": 77.6,
+        "items": [
             {"ItemId": "P007435", "Amount": 23},
             {"ItemId": "P009557", "Amount": 1}
         ]
@@ -64,29 +64,28 @@ def test_add_remove_order(base_url):
 # Test updating a shipment
 def test_update_order(base_url):
     new_order = {
-        "SourceId": 33,
-        "OrderDate": "2019-04-03T11:33:15Z",
-        "RequestDate": "2019-04-07T11:33:15Z",
-        "Reference": "POST",
-        "ReferenceExtra": "Bedreven arm straffen bureau.",
-        "OrderStatus": "Delivered",
-        "Notes": "Voedsel vijf vork heel.",
-        "ShippingNotes": "Buurman betalen plaats bewolkt.",
-        "PickingNotes": "Ademen fijn volgorde scherp aardappel op leren.",
-        "WarehouseId": 18,
-        "ShipmentId": 1,
-        "TotalAmount": 9905.13,
-        "TotalDiscount": 150.77,
-        "TotalTax": 372.72,
-        "TotalSurcharge": 77.6,
-        "ShipTo": "123 Main St, Springfield",
-        "BillTo": "456 Elm St, Shelbyville",
-        "Items": [
+        "source_id": 33,
+        "order_date": "2019-04-03T11:33:15Z",
+        "request_date": "2019-04-07T11:33:15Z",
+        "reference": "UPDATED",
+        "reference_extra": "Bedreven arm straffen bureau.",
+        "order_status": "Delivered",
+        "notes": "Voedsel vijf vork heel.",
+        "shipping_notes": "Buurman betalen plaats bewolkt.",
+        "picking_notes": "Ademen fijn volgorde scherp aardappel op leren.",
+        "warehouse_id": 18,
+        "ship_to": "123 Main St, Springfield",
+        "bill_to": "456 Elm St, Shelbyville",
+        "shipment_id": 1,
+        "total_amount": 9905.13,
+        "total_discount": 150.77,
+        "total_tax": 372.72,
+        "total_surcharge": 77.6,
+        "items": [
             {"ItemId": "P007435", "Amount": 23},
             {"ItemId": "P009557", "Amount": 1}
         ]
     }
-
     
     # POST request to add shipment
     post_response = requests.post(base_url, json=new_order, headers=headers)
@@ -94,24 +93,24 @@ def test_update_order(base_url):
 
     updated_order = {
         "Id": order_id,
-        "SourceId": 33,
-        "OrderDate": "2019-04-03T11:33:15Z",
-        "RequestDate": "2019-04-07T11:33:15Z",
-        "Reference": "UPDATED",
-        "ReferenceExtra": "Bedreven arm straffen bureau.",
-        "OrderStatus": "Delivered",
-        "Notes": "Voedsel vijf vork heel.",
-        "ShippingNotes": "Buurman betalen plaats bewolkt.",
-        "PickingNotes": "Ademen fijn volgorde scherp aardappel op leren.",
-        "WarehouseId": 18,
-        "ShipmentId": 1,
-        "TotalAmount": 9905.13,
-        "TotalDiscount": 150.77,
-        "TotalTax": 372.72,
-        "TotalSurcharge": 77.6,
-        "ShipTo": "123 Main St, Springfield",
-        "BillTo": "456 Elm St, Shelbyville",
-        "Items": [
+        "source_id": 33,
+        "order_date": "2019-04-03T11:33:15Z",
+        "request_date": "2019-04-07T11:33:15Z",
+        "reference": "UPDATED",
+        "reference_extra": "Bedreven arm straffen bureau.",
+        "order_status": "Delivered",
+        "notes": "Voedsel vijf vork heel.",
+        "shipping_notes": "Buurman betalen plaats bewolkt.",
+        "picking_notes": "Ademen fijn volgorde scherp aardappel op leren.",
+        "warehouse_id": 18,
+        "ship_to": "123 Main St, Springfield",
+        "bill_to": "456 Elm St, Shelbyville",
+        "shipment_id": 1,
+        "total_amount": 9905.13,
+        "total_discount": 150.77,
+        "total_tax": 372.72,
+        "total_surcharge": 77.6,
+        "items": [
             {"ItemId": "P007435", "Amount": 23},
             {"ItemId": "P009557", "Amount": 1}
         ]
@@ -132,12 +131,13 @@ def test_update_order(base_url):
 
 
 # Test to create an order with missing required fields (invalid creation)
+# je krijgt wel een 201 maar hij voegt hem niet toe 
 def test_create_order_invalid(base_url):
     invalid_order = {
-        # Missing fields like source_id, reference, etc.
-        "order_status": "Delivered"
+    "missingData1": "John Doe",
+    "missingData2": "Witte de Withstraat 50",
+    "missingData3": "Rotterdam",
     }
-
     # Send a POST request with invalid data
     response = requests.post(base_url, json=invalid_order, headers=headers)
 

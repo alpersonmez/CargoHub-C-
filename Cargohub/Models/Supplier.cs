@@ -27,6 +27,9 @@ namespace Cargohub.Models
         [JsonProperty("zip_code")]
         public string? zip_code { get; set; }
 
+        [JsonProperty("province")]
+        public string? province { get; set; }
+
         [JsonProperty("country")]
         public string? country { get; set; }
 
@@ -40,11 +43,11 @@ namespace Cargohub.Models
         public string? reference { get; set; }
 
         [JsonProperty("created_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]

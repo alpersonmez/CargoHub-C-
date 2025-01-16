@@ -113,16 +113,17 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Item", b =>
                 {
-                    b.Property<string>("uid")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ItemGroupId")
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ItemLineId")
+                    b.Property<int?>("ItemGroupid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ItemTypeId")
+                    b.Property<int?>("ItemLineid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ItemTypeid")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("code")
@@ -137,13 +138,22 @@ namespace Cargohub.Migrations
                     b.Property<string>("description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("isdeleted")
+                    b.Property<bool>("isdeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("item_group")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("item_line")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("item_type")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("model_number")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("pack_order_quantity")
+                    b.Property<int>("pack_order_quantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("short_description")
@@ -152,16 +162,22 @@ namespace Cargohub.Migrations
                     b.Property<string>("supplier_code")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("supplier_id")
+                    b.Property<int>("supplier_id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("supplier_part_number")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("unit_order_quantity")
+                    b.Property<int?>("supplierid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("unit_purchase_quantity")
+                    b.Property<string>("uid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("unit_order_quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("unit_purchase_quantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("upc_code")
@@ -170,13 +186,15 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("uid");
+                    b.HasKey("id");
 
-                    b.HasIndex("ItemGroupId");
+                    b.HasIndex("ItemGroupid");
 
-                    b.HasIndex("ItemLineId");
+                    b.HasIndex("ItemLineid");
 
-                    b.HasIndex("ItemTypeId");
+                    b.HasIndex("ItemTypeid");
+
+                    b.HasIndex("supplierid");
 
                     b.ToTable("Items");
                 });
@@ -424,6 +442,32 @@ namespace Cargohub.Migrations
                     b.ToTable("Shipments");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.Stock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StockType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("amount")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stocks", (string)null);
+
+                    b.HasDiscriminator<string>("StockType").HasValue("Stock");
+
+                    b.UseTphMappingStrategy();
+                });
+
             modelBuilder.Entity("Cargohub.Models.Supplier", b =>
                 {
                     b.Property<int>("id")
@@ -458,6 +502,9 @@ namespace Cargohub.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("phone_number")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("province")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("reference")
@@ -547,94 +594,67 @@ namespace Cargohub.Migrations
                     b.ToTable("Warehouses");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.OrderStock", b =>
+                {
+                    b.HasBaseType("Cargohub.Models.Stock");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasDiscriminator().HasValue("Order");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.ShipmentStock", b =>
+                {
+                    b.HasBaseType("Cargohub.Models.Stock");
+
+                    b.Property<int>("ShipmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("ShipmentId");
+
+                    b.HasDiscriminator().HasValue("Shipment");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.TransferStock", b =>
+                {
+                    b.HasBaseType("Cargohub.Models.Stock");
+
+                    b.Property<int>("TransferId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("TransferId");
+
+                    b.HasDiscriminator().HasValue("Transfer");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Item", b =>
                 {
                     b.HasOne("Cargohub.Models.ItemGroup", "ItemGroup")
                         .WithMany()
-                        .HasForeignKey("ItemGroupId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .HasForeignKey("ItemGroupid");
 
                     b.HasOne("Cargohub.Models.ItemLines", "ItemLine")
                         .WithMany()
-                        .HasForeignKey("ItemLineId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .HasForeignKey("ItemLineid");
 
                     b.HasOne("Cargohub.Models.ItemType", "ItemType")
                         .WithMany()
-                        .HasForeignKey("ItemTypeId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .HasForeignKey("ItemTypeid");
+
+                    b.HasOne("Cargohub.Models.Supplier", "supplier")
+                        .WithMany()
+                        .HasForeignKey("supplierid");
 
                     b.Navigation("ItemGroup");
 
                     b.Navigation("ItemLine");
 
                     b.Navigation("ItemType");
-                });
 
-            modelBuilder.Entity("Cargohub.Models.Order", b =>
-                {
-                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.Order+orderItem>", "items", b1 =>
-                        {
-                            b1.Property<int>("Orderid")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("INTEGER");
-
-                            b1.HasKey("Orderid");
-
-                            b1.ToTable("Orders");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Orderid");
-                        });
-
-                    b.Navigation("items");
-                });
-
-            modelBuilder.Entity("Cargohub.Models.Shipment", b =>
-                {
-                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.ItemShipment>", "items", b1 =>
-                        {
-                            b1.Property<int>("Shipmentid")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("INTEGER");
-
-                            b1.HasKey("Shipmentid");
-
-                            b1.ToTable("Shipments");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Shipmentid");
-                        });
-
-                    b.Navigation("items");
-                });
-
-            modelBuilder.Entity("Cargohub.Models.Transfer", b =>
-                {
-                    b.OwnsOne("System.Collections.Generic.List<Cargohub.Models.Transfer+ItemTransfers>", "items", b1 =>
-                        {
-                            b1.Property<int>("Transferid")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("INTEGER");
-
-                            b1.HasKey("Transferid");
-
-                            b1.ToTable("Transfers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Transferid");
-                        });
-
-                    b.Navigation("items");
+                    b.Navigation("supplier");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
@@ -645,13 +665,16 @@ namespace Cargohub.Migrations
                                 .HasColumnType("INTEGER");
 
                             b1.Property<string>("email")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("TEXT")
+                                .HasColumnName("contact_email");
 
                             b1.Property<string>("name")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("TEXT")
+                                .HasColumnName("contact_name");
 
                             b1.Property<string>("phone")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("TEXT")
+                                .HasColumnName("contact_phone");
 
                             b1.HasKey("Warehouseid");
 
@@ -661,7 +684,41 @@ namespace Cargohub.Migrations
                                 .HasForeignKey("Warehouseid");
                         });
 
-                    b.Navigation("contact");
+                    b.Navigation("contact")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Cargohub.Models.OrderStock", b =>
+                {
+                    b.HasOne("Cargohub.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.ShipmentStock", b =>
+                {
+                    b.HasOne("Cargohub.Models.Shipment", "Shipment")
+                        .WithMany()
+                        .HasForeignKey("ShipmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Shipment");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.TransferStock", b =>
+                {
+                    b.HasOne("Cargohub.Models.Transfer", "Transfer")
+                        .WithMany()
+                        .HasForeignKey("TransferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transfer");
                 });
 #pragma warning restore 612, 618
         }

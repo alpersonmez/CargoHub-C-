@@ -54,7 +54,7 @@ public class SupplierController : ControllerBase
 
         if (id != supplier.id)
         {
-            return BadRequest($"Location Id {id} does not match");
+            return BadRequest($"supplier Id {id} does not match");
         }
 
         var updated = await _SupplierService.UpdateSupplier(supplier);

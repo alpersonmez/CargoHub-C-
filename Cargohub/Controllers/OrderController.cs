@@ -3,6 +3,7 @@ using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Cargohub.Filters;
+
 namespace Cargohub.Controllers
 {
     [ApiController]
@@ -54,7 +55,7 @@ namespace Cargohub.Controllers
 
             if (id != order.id)
             {
-                return BadRequest($"Shipment Id {id} does not match");
+                return BadRequest($"order Id {id} does not match");
             }
 
             var updated = await _orderService.UpdateOrder(order);

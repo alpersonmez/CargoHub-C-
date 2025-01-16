@@ -24,7 +24,7 @@ def test_add_remove_shipment(base_url):
         "RequestDate": "2024-12-11T09:00:00",
         "ShipmentDate": "2024-12-12T15:00:00",
         "ShipmentType": "Express",
-        "ShipmentStatus": "Shipped",
+        "shipment_status": "Shipped",
         "Notes": "Handle with care. Fragile items.",
         "CarrierCode": "DHL123",
         "CarrierDescription": "DHL Express",
@@ -45,7 +45,7 @@ def test_add_remove_shipment(base_url):
 
     if get_response.content:
         response_data = get_response.json()
-        assert response_data["shipmentStatus"] == "Shipped"
+        assert response_data["shipment_status"] == "Shipped"
     else:
         print("GET request returned 200 but no body")
 

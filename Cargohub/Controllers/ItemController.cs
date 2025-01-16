@@ -2,6 +2,7 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cargohub.Filters;
 
 [ApiController]
@@ -16,68 +17,66 @@ public class ItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int amount)
     {
-        var item = await _itemService.GetAllItems();
-        return Ok(item);
+        var items = await _itemService.GetAllItems(amount);
+        return Ok(items);
     }
 
     [HttpGet("{uid}")]
     public async Task<IActionResult> Get(string uid)
     {
-        Item item = await _itemService.GetItemByUid(uid);
+        var item = await _itemService.GetItemByUid(uid);
         if (item == null)
         {
-            return NotFound();
+            return NotFound(new { Message = "Item not found" });
         }
         return Ok(item);
     }
 
     [AdminFilter]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Item New)
+    public async Task<IActionResult> Create([FromBody] Item newItem)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        Item CreatedItem = await _itemService.AddItem(New);
-        return CreatedAtAction(nameof(Get), new { uid = CreatedItem.uid }, CreatedItem);
+        var createdItem = await _itemService.AddItemAsync(newItem);
+        return CreatedAtAction(nameof(Get), new { uid = createdItem.uid }, createdItem);
     }
-
-
 
     [AdminFilter]
     [HttpPut("{uid}")]
-    public async Task<IActionResult> Update(string uid, [FromBody] Item item)
+    public async Task<IActionResult> Update(string uid, [FromBody] Item updatedItem)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+            return BadRequest(ModelState);
 
-        if (uid != item.uid)
+        if (uid != updatedItem.uid)
         {
-            return BadRequest($"Location Id {uid} does not match");
+            return BadRequest(new { Message = $"Provided UID ({uid}) does not match item UID" });
         }
 
-        var updated = await _itemService.UpdateItem(item);
+        var success = await _itemService.UpdateItemAsync(uid, updatedItem);
 
-        if (!updated)
+        if (!success)
         {
-            return NotFound();
+            return NotFound(new { Message = "Item not found or could not be updated" });
         }
 
-        return Ok(item);
+        return Ok(updatedItem);
     }
 
     [AdminFilter]
     [HttpDelete("{uid}")]
     public async Task<IActionResult> Delete(string uid)
     {
-        bool deleted = await _itemService.DeleteItem(uid);
-        if (!deleted)
+        var success = await _itemService.RemoveItemAsync(uid);
+        if (!success)
         {
-            return NotFound();
-
+            return NotFound(new { Message = "Item not found or could not be deleted" });
         }
+
         return NoContent();
     }
 }

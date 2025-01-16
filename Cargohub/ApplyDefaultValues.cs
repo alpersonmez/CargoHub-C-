@@ -89,27 +89,27 @@ namespace Cargohub.ApplyDefaultValues{
                 inventory.locations = new List<int> { -1 };
             }
 
-            if (inventory.total_on_hand <= 0)
+            if (inventory.total_on_hand < 0)
             {
                 inventory.total_on_hand = -1;
             }
 
-            if (inventory.total_expected <= 0)
+            if (inventory.total_expected < 0)
             {
                 inventory.total_expected = -1;
             }
 
-            if (inventory.total_ordered <= 0)
+            if (inventory.total_ordered < 0)
             {
                 inventory.total_ordered = -1;
             }
 
-            if (inventory.total_allocated <= 0)
+            if (inventory.total_allocated < 0)
             {
                 inventory.total_allocated = -1;
             }
 
-            if (inventory.total_available <= 0)
+            if (inventory.total_available < 0)
             {
                 inventory.total_available = -1;
             }
@@ -169,19 +169,49 @@ namespace Cargohub.ApplyDefaultValues{
                 item.commodity_code = "Unknown commodity code";
             }
 
-            if (item.ItemLineId <= 0)
+            if (item.item_line < 0)
             {
-                item.ItemLineId = -1;
+                item.item_line = -1;
             }
 
-            if (item.ItemGroupId <= 0)
+            if (item.item_group < 0)
             {
-                item.ItemGroupId = -1;
+                item.item_group = -1;
             }
 
-            if (item.ItemTypeId <= 0)
+            if (item.item_type < 0)
             {
-                item.ItemTypeId = -1;
+                item.item_type = -1;
+            }
+
+            if (item.unit_purchase_quantity < 0)
+            {
+                item.unit_purchase_quantity = -1;
+            }
+
+            if (item.unit_order_quantity < 0)
+            {
+                item.unit_order_quantity = -1;
+            }
+
+            if (item.pack_order_quantity < 0)
+            {
+                item.pack_order_quantity = -1;
+            }
+
+            if (item.supplier_id < 0)
+            {
+                item.supplier_id = -1;
+            }
+
+            if (string.IsNullOrEmpty(item.supplier_code))
+            {
+                item.supplier_code = "Unknown supplier code";
+            }
+
+            if (string.IsNullOrEmpty(item.supplier_part_number))
+            {
+                item.supplier_part_number = "Unknown supplier part number";
             }
 
             if (item.created_at == default)
@@ -314,7 +344,7 @@ namespace Cargohub.ApplyDefaultValues{
 
         public static void ApplyDefaultValuesOrders(this Order order)
         {
-            if (order.source_id == null)
+            if (order.source_id < 0)
             {
                 order.source_id = -1;
             }
@@ -349,7 +379,7 @@ namespace Cargohub.ApplyDefaultValues{
                 order.picking_notes = "Unknown picking notes";
             }
 
-            if (order.warehouse_id <= 0)
+            if (order.warehouse_id < 0)
             {
                 order.warehouse_id = -1;
             }
@@ -364,27 +394,27 @@ namespace Cargohub.ApplyDefaultValues{
                 order.bill_to = "Unknown bill to";
             }
 
-            if (order.shipment_id <= 0)
+            if (order.shipment_id < 0)
             {
                 order.shipment_id = -1;
             }
 
-            if (order.total_amount <= 0.0)
+            if (order.total_amount < 0.0)
             {
                 order.total_amount = -1.0;
             }
 
-            if (order.total_discount <= 0.0)
+            if (order.total_discount < 0.0)
             {
                 order.total_discount = -1.0;
             }
 
-            if (order.total_tax <= 0.0)
+            if (order.total_tax < 0.0)
             {
                 order.total_tax = -1.0;
             }
 
-            if (order.total_surcharge <= 0.0)
+            if (order.total_surcharge < 0.0)
             {
                 order.total_surcharge = -1.0;
             }
@@ -417,12 +447,12 @@ namespace Cargohub.ApplyDefaultValues{
 
         public static void ApplyDefaultValuesShipment(this Shipment shipment)
         {
-            if (shipment.order_id <= 0)
+            if (shipment.order_id < 0)
             {
                 shipment.order_id = -1;
             }
 
-            if (shipment.source_id <= 0)
+            if (shipment.source_id < 0)
             {
                 shipment.source_id = -1;
             }
@@ -467,12 +497,12 @@ namespace Cargohub.ApplyDefaultValues{
                 shipment.transfer_mode = "Unknown transfer mode";
             }
 
-            if (shipment.total_package_count <= 0)
+            if (shipment.total_package_count < 0)
             {
                 shipment.total_package_count = -1;
             }
 
-            if (shipment.total_package_weight <= 0.0)
+            if (shipment.total_package_weight < 0.0)
             {
                 shipment.total_package_weight = -1.0;
             }                            
@@ -545,6 +575,11 @@ namespace Cargohub.ApplyDefaultValues{
                 supplier.zip_code = "Unknown zip code";
             }
 
+            if (string.IsNullOrEmpty(supplier.province))
+            {
+                supplier.province = "Unknown province";
+            }
+
             if (string.IsNullOrEmpty(supplier.country))
             {
                 supplier.country = "Unknown country";
@@ -588,12 +623,12 @@ namespace Cargohub.ApplyDefaultValues{
                 transfer.reference = "Unknown transfer reference";
             }
 
-            if (transfer.transfer_from == null)
+            if (transfer.transfer_from < 0)
             {
                 transfer.transfer_from = -1;
             }
 
-            if (transfer.transfer_to == null)
+            if (transfer.transfer_to < 0)
             {
                 transfer.transfer_to = -1;
             }

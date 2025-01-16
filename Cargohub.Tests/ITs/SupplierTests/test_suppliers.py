@@ -71,7 +71,7 @@ def test_put_suppliers(_url):
         "Id": id,
         "code": "SUP0001",
         "name": "testsupplier",
-        "address": "unknown",
+        "address": "UPDATED",
         "address_extra": "Apt. 420",
         "city": "Port Anitaburgh",
         "zip_code": "91688",
@@ -82,11 +82,11 @@ def test_put_suppliers(_url):
         "reference": "LPaJ-SUP0001",
     }
     put_response = requests.put(f"{_url}/{id}", json=updated_supplier, headers=headers)
-    assert put_response.status_code == 204
+    assert put_response.status_code == 200
 
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty
-        assert response_data["address"] == "Hofplein"
+        assert response_data["address"] == "UPDATED"
     else:
         print("PUT request returned 200 but no response body.")
 

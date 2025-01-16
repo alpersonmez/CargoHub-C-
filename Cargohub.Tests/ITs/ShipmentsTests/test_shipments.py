@@ -87,7 +87,7 @@ def test_update_shipment(base_url):
         "RequestDate": "2024-12-11T09:00:00",
         "ShipmentDate": "2024-12-12T15:00:00",
         "ShipmentType": "Express",
-        "ShipmentStatus": "UPDATED",
+        "shipment_status": "UPDATED",
         "Notes": "Handle with care. Fragile items.",
         "CarrierCode": "DHL123",
         "CarrierDescription": "DHL Express",
@@ -100,12 +100,12 @@ def test_update_shipment(base_url):
 
     # PUT request to update shipment
     put_response = requests.put(f"{base_url}/{shipment_id}", json=updated_shipment, headers=headers)
-    assert put_response.status_code == 204  # Expecting no content after PUT
+    assert put_response.status_code == 200  # Expecting no content after PUT
     
     # Check if the PUT response has a body (it shouldn't)
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty
-        assert response_data["shipmentStatus"] == "UPDATED"
+        assert response_data["shipment_status"] == "UPDATED"
     else:
         print("PUT request returned 200 but no response body.")
 

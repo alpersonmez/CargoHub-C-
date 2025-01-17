@@ -78,5 +78,48 @@ namespace Cargohub.Controllers
             }
             return NoContent();
         }
+        
+        [HttpPost("{shipmentId}/orders")]
+        public async Task<IActionResult> AddOrdersToShipment(int shipmentId, [FromBody] List<int> orderIds)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await _shipmentService.AddOrdersToShipment(shipmentId, orderIds);
+                if (result)
+                {
+                    return Ok(new { message = "Orders successfully added to shipment." });
+                }
+
+                return BadRequest(new { error = "Failed to add orders to shipment." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("release-order/{orderId}")]
+        public async Task<IActionResult> ReleaseOrderFromShipment(int orderId)
+        {
+            try
+            {
+                var result = await _shipmentService.ReleaseOrderFromShipment(orderId);
+                if (result)
+                {
+                    return Ok(new { message = $"Order {orderId} has been successfully released from the shipment." });
+                }
+
+                return BadRequest(new { error = "Failed to release the order from the shipment." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

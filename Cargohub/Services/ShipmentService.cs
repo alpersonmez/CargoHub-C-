@@ -95,5 +95,57 @@ namespace Cargohub.Services
             await _context.SaveChangesAsync();
             return true;
         }
+    
+        public async Task<bool> AddOrdersToShipment(int shipmentId, List<int> orderIds)
+        {
+            // Check if the shipment exists
+            var shipment = await _context.Shipments.FirstOrDefaultAsync(s => s.id == shipmentId);
+            if (shipment == null)
+            {
+                throw new Exception("Shipment not found.");
+            }
+
+            // Retrieve the orders to link
+            var orders = await _context.Orders.Where(o => orderIds.Contains(o.id)).ToListAsync();
+            if (orders.Count != orderIds.Count)
+            {
+                throw new Exception("Some orders were not found.");
+            }
+
+            // Update the orders to link them to the shipment
+            foreach (var order in orders)
+            {
+                if (order.shipment_id != null)
+                {
+                    throw new Exception($"Order {order.id} is already associated with another shipment.");
+                }
+                order.shipment_id = shipmentId; // Link the order to the shipment
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ReleaseOrderFromShipment(int orderId)
+        {
+            // Find the order by ID
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.id == orderId);
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            // Check if the order is already not linked to a shipment
+            if (order.shipment_id == null)
+            {
+                throw new Exception("Order is not associated with any shipment.");
+            }
+
+            // Release the order from the shipment
+            order.shipment_id = null;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

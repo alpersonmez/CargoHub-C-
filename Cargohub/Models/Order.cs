@@ -51,6 +51,9 @@ namespace Cargohub.Models
     [JsonProperty("shipment_id")]
     public int? shipment_id { get; set; }
 
+    [JsonIgnore] // To avoid circular references during JSON serialization
+    public Shipment? Shipment { get; set; } // Navigation property to Shipment
+
     [JsonProperty("total_amount")]
     public double? total_amount { get; set; }
 

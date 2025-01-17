@@ -24,8 +24,13 @@ namespace Cargohub.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Shipment)  // Use the navigation property in Order
+                .WithMany(s => s.Orders)  // Use the navigation property in Shipment
+                .HasForeignKey(o => o.shipment_id);  // Foreign key in Order
+
             // Configure Stock hierarchy with discriminator
-                    modelBuilder.Entity<Warehouse>()
+            modelBuilder.Entity<Warehouse>()
                 .OwnsOne(w => w.contact, contact =>
                 {
                     contact.Property(c => c.name).HasColumnName("contact_name");

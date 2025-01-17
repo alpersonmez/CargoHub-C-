@@ -58,6 +58,9 @@ public class Shipment
     [JsonProperty("total_package_weight")]
     public double? total_package_weight { get; set; }
 
+    [JsonProperty("orders")]
+    public List<Order> Orders { get; set; } = new List<Order>(); // Navigation property
+
     [JsonProperty("created_at")]
     [JsonConverter(typeof(DateTimeConverters))]
     public DateTime created_at { get; set; }

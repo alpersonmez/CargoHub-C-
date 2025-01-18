@@ -19,10 +19,10 @@ namespace Cargohub.Controllers
             _orderShipmentService = orderShipmentService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("amount/{amount}")]
+        public async Task<IActionResult> GetAll(int amount)
         {
-            var orders = await _orderService.GetAllOrders();
+            var orders = await _orderService.GetAllOrders(amount);
             return Ok(orders);
         }
 

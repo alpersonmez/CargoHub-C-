@@ -16,10 +16,10 @@ namespace Cargohub.Controllers
             _clientService = clientService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllClients()
+        [HttpGet("amount/{amount}")]
+        public async Task<IActionResult> GetAllClients(int amount)
         {
-            var clients = await _clientService.GetAllClients();
+            var clients = await _clientService.GetAllClients(amount);
             return Ok(clients);
         }
 

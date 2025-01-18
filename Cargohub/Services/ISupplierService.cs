@@ -4,7 +4,7 @@ namespace Cargohub.Services
 {
     public interface ISupplierService
     {
-        Task<List<Supplier>> GetAllSuppliers(int amount = 100);
+        Task<List<Supplier>> GetAllSuppliers(int amount);
         Task<Supplier> GetSupplierById(int id);
         Task<Supplier> AddSupplier(Supplier supplier);
         Task<bool> UpdateSupplier(Supplier supplier);

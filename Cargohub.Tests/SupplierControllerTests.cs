@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -22,26 +23,53 @@ namespace Cargohub.Tests
             _controller = new SupplierController(_mockSupplierService.Object);
         }
 
-        // Test GetAllSuppliers
         [TestMethod]
         public async Task GetAllSuppliers_ReturnsOkResult_WithListOfSuppliers()
         {
             // Arrange
             var suppliers = new List<Supplier>
             {
-                new Supplier{
+                new Supplier
+                {
                     id = 1,
-                    name = "John Doe"
+                    code = "SUP001",
+                    name = "John Doe",
+                    address = "123 Main St",
+                    address_extra = "Apt 4B",
+                    city = "Springfield",
+                    zip_code = "12345",
+                    province = "State",
+                    country = "USA",
+                    contact_name = "Jane Smith",
+                    phone_number = "555-1234",
+                    reference = "REF001",
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow.AddDays(-5),
+                    isdeleted = false
                 },
-                new Supplier{
+                new Supplier
+                {
                     id = 2,
-                    name = "Harrie"
+                    code = "SUP002",
+                    name = "Harrie",
+                    address = "456 Elm St",
+                    address_extra = null,
+                    city = "Shelbyville",
+                    zip_code = "54321",
+                    province = "Province",
+                    country = "Canada",
+                    contact_name = "John Smith",
+                    phone_number = "555-5678",
+                    reference = "REF002",
+                    created_at = DateTime.UtcNow.AddDays(-20),
+                    updated_at = DateTime.UtcNow.AddDays(-15),
+                    isdeleted = false
                 }
             };
-            _mockSupplierService.Setup(service => service.GetAllSuppliers(100)).ReturnsAsync(suppliers);
+            _mockSupplierService.Setup(service => service.GetAllSuppliers(It.IsAny<int>())).ReturnsAsync(suppliers);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetAll(100);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -50,7 +78,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(suppliers, okResult.Value);
         }
 
-        // Test GetSupplierById - Success
         [TestMethod]
         public async Task GetSupplierById_ReturnsOkResult_WithSupplier()
         {
@@ -58,7 +85,20 @@ namespace Cargohub.Tests
             var supplier = new Supplier
             {
                 id = 1,
-                name = "John Doe"
+                code = "SUP001",
+                name = "John Doe",
+                address = "123 Main St",
+                address_extra = "Apt 4B",
+                city = "Springfield",
+                zip_code = "12345",
+                province = "State",
+                country = "USA",
+                contact_name = "Jane Smith",
+                phone_number = "555-1234",
+                reference = "REF001",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockSupplierService.Setup(service => service.GetSupplierById(1)).ReturnsAsync(supplier);
 
@@ -72,7 +112,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(supplier, okResult.Value);
         }
 
-        // Test GetSupplierById - Not Found
         [TestMethod]
         public async Task GetSupplierById_ReturnsNotFound_WhenSupplierDoesNotExist()
         {
@@ -86,7 +125,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test CreateSupplier - Success
         [TestMethod]
         public async Task CreateSupplier_ReturnsCreatedAtActionResult_WithCreatedSupplier()
         {
@@ -94,7 +132,20 @@ namespace Cargohub.Tests
             var supplier = new Supplier
             {
                 id = 1,
-                name = "John Doe"
+                code = "SUP001",
+                name = "John Doe",
+                address = "123 Main St",
+                address_extra = "Apt 4B",
+                city = "Springfield",
+                zip_code = "12345",
+                province = "State",
+                country = "USA",
+                contact_name = "Jane Smith",
+                phone_number = "555-1234",
+                reference = "REF001",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockSupplierService.Setup(service => service.AddSupplier(supplier)).ReturnsAsync(supplier);
 
@@ -108,7 +159,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(supplier, createdResult.Value);
         }
 
-        // Test UpdateSupplier - Success
         [TestMethod]
         public async Task UpdateSupplier_ReturnsOkResult_WithUpdatedSupplier()
         {
@@ -116,7 +166,20 @@ namespace Cargohub.Tests
             var supplier = new Supplier
             {
                 id = 1,
-                name = "John Doe"
+                code = "SUP001",
+                name = "John Doe",
+                address = "123 Main St",
+                address_extra = "Apt 4B",
+                city = "Springfield",
+                zip_code = "12345",
+                province = "State",
+                country = "USA",
+                contact_name = "Jane Smith",
+                phone_number = "555-1234",
+                reference = "REF001",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockSupplierService.Setup(service => service.UpdateSupplier(supplier)).ReturnsAsync(true);
 
@@ -130,7 +193,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(supplier, okResult.Value);
         }
 
-        // Test UpdateSupplier - Not Found
         [TestMethod]
         public async Task UpdateSupplier_ReturnsNotFound_WhenSupplierDoesNotExist()
         {
@@ -138,7 +200,19 @@ namespace Cargohub.Tests
             var supplier = new Supplier
             {
                 id = 1,
-                name = "John Doe"
+                code = "SUP001",
+                name = "John Doe",
+                address = "123 Main St",
+                address_extra = "Apt 4B",
+                city = "Springfield",
+                zip_code = "12345",
+                province = "State",
+                country = "USA",
+                contact_name = "Jane Smith",
+                phone_number = "555-1234",
+                reference = "REF001",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
             };
             _mockSupplierService.Setup(service => service.UpdateSupplier(supplier)).ReturnsAsync(false);
 
@@ -149,7 +223,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteSupplier - Success
         [TestMethod]
         public async Task DeleteSupplier_ReturnsNoContentResult_WhenSupplierIsDeleted()
         {
@@ -163,7 +236,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteSupplier - Not Found
         [TestMethod]
         public async Task DeleteSupplier_ReturnsNotFound_WhenSupplierDoesNotExist()
         {

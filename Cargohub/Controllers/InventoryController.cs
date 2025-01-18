@@ -18,7 +18,7 @@ namespace Cargohub.Controllers
             _inventoryService = inventoryService;
         }
 
-        [HttpGet]
+        [HttpGet("amount/{amount}")]
         public async Task<IActionResult> GetAll(int amount)
         {
             var inventory = await _inventoryService.GetAllInventories(amount);

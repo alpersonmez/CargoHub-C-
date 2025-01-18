@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -21,70 +23,132 @@ namespace Cargohub.Tests
             _controller = new ClientController(_mockClientService.Object);
         }
 
-        // Test GetAllClients
         [TestMethod]
-        public void GetAllClients_ReturnsOkResult_WithListOfClients()
+        public async Task TestGetAllClients()
         {
             // Arrange
             var clients = new List<Client>
             {
-                new Client { id = 1, name = "Client A" },
-                new Client { id = 2, name = "Client B" }
+                new Client
+                {
+                    id = 1,
+                    name = "Client A",
+                    address = "123 Street",
+                    city = "City A",
+                    zip_code = "12345",
+                    province = "Province A",
+                    country = "Country A",
+                    contact_name = "John Doe",
+                    contact_phone = "1234567890",
+                    contact_email = "john.doe@example.com",
+                    created_at = DateTime.UtcNow.AddDays(-5),
+                    updated_at = DateTime.UtcNow,
+                    isdeleted = false
+
+                },
+                new Client
+                {
+                    id = 2,
+                    name = "Client B",
+                    address = "456 Avenue",
+                    city = "City B",
+                    zip_code = "67890",
+                    province = "Province B",
+                    country = "Country B",
+                    contact_name = "Jane Smith",
+                    contact_phone = "0987654321",
+                    contact_email = "jane.smith@example.com",
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow,
+                    isdeleted = false
+                }
             };
-            _mockClientService.Setup(service => service.GetAllClients()).Returns(clients);
+            _mockClientService.Setup(service => service.GetAllClients(It.IsAny<int>())).ReturnsAsync(clients);
 
             // Act
-            var result = _controller.GetAllClients();
+            var result = await _controller.GetAllClients();
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(clients, okResult.Value);
+
+            var returnedClients = okResult.Value as List<Client>;
+            Assert.IsNotNull(returnedClients);
+            Assert.AreEqual(2, returnedClients.Count);
+            Assert.AreEqual("Client A", returnedClients[0].name);
+            Assert.AreEqual("Client B", returnedClients[1].name);
         }
 
-        // Test GetClientById - Success
         [TestMethod]
-        public void GetClientById_ReturnsOkResult_WithClient()
+        public async Task TestGetClientById()
         {
             // Arrange
-            var client = new Client { id = 1, name = "Client A" };
-            _mockClientService.Setup(service => service.GetClientById(1)).Returns(client);
+            var client = new Client
+            {
+                id = 1,
+                name = "Client A",
+                address = "123 Street",
+                city = "City A",
+                zip_code = "12345",
+                province = "Province A",
+                country = "Country A",
+                contact_name = "John Doe",
+                contact_phone = "1234567890",
+                contact_email = "john.doe@example.com",
+                created_at = DateTime.UtcNow.AddDays(-5),
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
+            };
+            _mockClientService.Setup(service => service.GetClientById(1)).ReturnsAsync(client);
 
             // Act
-            var result = _controller.GetClientById(1);
+            var result = await _controller.GetClientById(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(client, okResult.Value);
+
+            var returnedClient = okResult.Value as Client;
+            Assert.IsNotNull(returnedClient);
+            Assert.AreEqual(client.id, returnedClient.id);
+            Assert.AreEqual(client.name, returnedClient.name);
         }
 
-        // Test GetClientById - Not Found
         [TestMethod]
-        public void GetClientById_ReturnsNotFound_WhenClientDoesNotExist()
+        public async Task TestGetClientByIdNotFound()
         {
             // Arrange
-            _mockClientService.Setup(service => service.GetClientById(It.IsAny<int>())).Returns((Client)null);
+            _mockClientService.Setup(service => service.GetClientById(It.IsAny<int>())).ReturnsAsync((Client)null);
 
             // Act
-            var result = _controller.GetClientById(1);
+            var result = await _controller.GetClientById(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
 
-        // Test CreateClient - Success
         [TestMethod]
-        public void CreateClient_ReturnsCreatedAtActionResult_WithCreatedClient()
+        public async Task TestCreateClient()
         {
             // Arrange
-            var client = new Client { id = 1, name = "Client A" };
-            _mockClientService.Setup(service => service.CreateClient(client)).Returns(client);
+            var client = new Client
+            {
+                name = "Client A",
+                address = "123 Street",
+                city = "City",
+                zip_code = "12345",
+                province = "Province",
+                country = "Country",
+                contact_name = "John Doe",
+                contact_phone = "1234567890",
+                contact_email = "john.doe@example.com"
+            };
+            _mockClientService.Setup(service => service.AddClient(client)).ReturnsAsync(client);
 
             // Act
-            var result = _controller.CreateClient(client);
+            var result = await _controller.CreateClient(client);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
@@ -93,67 +157,95 @@ namespace Cargohub.Tests
             Assert.AreEqual(client, createdResult.Value);
         }
 
-        // Test UpdateClient - Success
         [TestMethod]
-        public void UpdateClient_ReturnsOkResult_WithUpdatedClient()
+        public async Task TestCreateClientInvalidModel()
         {
             // Arrange
-            var client = new Client { id = 1, name = "Updated Client" };
-            _mockClientService.Setup(service => service.UpdateClient(client)).Returns(client);
+            _controller.ModelState.AddModelError("name", "Name is required");
 
             // Act
-            var result = _controller.UpdateClient(1, client);
+            var result = await _controller.CreateClient(new Client());
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
+        public async Task TestUpdateClient()
+        {
+            // Arrange
+            var client = new Client
+            {
+                id = 1,
+                name = "Updated Client",
+                address = "456 Avenue",
+                city = "Updated City",
+                zip_code = "67890",
+                province = "Updated Province",
+                country = "Updated Country",
+                contact_name = "Jane Doe",
+                contact_phone = "0987654321",
+                contact_email = "jane.doe@example.com",
+            };
+            _mockClientService.Setup(service => service.UpdateClient(client)).ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.UpdateClient(1, client);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-            var okResult = result as OkObjectResult;
-            Assert.IsNotNull(okResult);
-            Assert.AreEqual(client, okResult.Value);
         }
 
-        // Test UpdateClient - Not Found
         [TestMethod]
-        public void UpdateClient_ReturnsNotFound_WhenClientDoesNotExist()
+        public async Task TestUpdateClientNotFound()
         {
             // Arrange
-            var client = new Client { id = 1, name = "Updated Client" };
-            _mockClientService.Setup(service => service.UpdateClient(client)).Returns((Client)null);
+            var client = new Client
+            {
+                id = 1,
+                name = "Updated Client",
+                address = "456 Avenue",
+                city = "Updated City",
+                zip_code = "67890",
+                province = "Updated Province",
+                country = "Updated Country",
+                contact_name = "Jane Doe",
+                contact_phone = "0987654321",
+                contact_email = "jane.doe@example.com",
+            };
+            _mockClientService.Setup(service => service.UpdateClient(client)).ReturnsAsync(false);
 
             // Act
-            var result = _controller.UpdateClient(1, client);
+            var result = await _controller.UpdateClient(1, client);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteClient - Success
         [TestMethod]
-        public void DeleteClient_ReturnsNoContentResult_WhenClientIsDeleted()
+        public async Task TestDeleteClient()
         {
             // Arrange
-            _mockClientService.Setup(service => service.DeleteClient(1)).Returns(true);
+            _mockClientService.Setup(service => service.DeleteClient(1)).ReturnsAsync(true);
 
             // Act
-            var result = _controller.DeleteClient(1);
+            var result = await _controller.DeleteClient(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteClient - Not Found
         [TestMethod]
-        public void DeleteClient_ReturnsNotFound_WhenClientDoesNotExist()
+        public async Task TestDeleteClientNotFound()
         {
             // Arrange
-            _mockClientService.Setup(service => service.DeleteClient(1)).Returns(false);
+            _mockClientService.Setup(service => service.DeleteClient(1)).ReturnsAsync(false);
 
             // Act
-            var result = _controller.DeleteClient(1);
+            var result = await _controller.DeleteClient(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
     }
 }
-
-

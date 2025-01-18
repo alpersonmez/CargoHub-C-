@@ -19,14 +19,14 @@ namespace Cargohub.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllClients()
         {
-            var clients = _clientService.GetAllClients();
+            var clients = await _clientService.GetAllClients();
             return Ok(clients);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientById(int id)
         {
-            var client = _clientService.GetClientById(id);
+            var client = await _clientService.GetClientById(id);
             if (client == null)
                 return NotFound($"Client with ID {id} not found.");
             return Ok(client);

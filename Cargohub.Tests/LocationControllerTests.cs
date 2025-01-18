@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -22,23 +23,37 @@ namespace Cargohub.Tests
             _controller = new LocationController(_mockLocationService.Object);
         }
 
-        // Test GetAllLocations
+        // Updated Test GetAllLocations
         [TestMethod]
         public async Task GetAllLocations_ReturnsOkResult_WithListOfLocations()
         {
             // Arrange
             var locations = new List<Location>
             {
-                new Location{
+                new Location
+                {
                     id = 1,
-                    name = "36C"
+                    warehouse_id = 101,
+                    code = "LOC-001",
+                    name = "36C",
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow,
+                    isdeleted = false
                 },
-                new Location{
+                new Location
+                {
                     id = 2,
-                    name = "bovensteplank"
+                    warehouse_id = 102,
+                    code = "LOC-002",
+                    name = "Top Shelf",
+                    created_at = DateTime.UtcNow.AddDays(-5),
+                    updated_at = DateTime.UtcNow,
+                    isdeleted = false
                 }
             };
-            _mockLocationService.Setup(service => service.GetAllLocations(100)).ReturnsAsync(locations);
+
+            // Adjusted Setup
+            _mockLocationService.Setup(service => service.GetAllLocations(It.IsAny<int>())).ReturnsAsync(locations);
 
             // Act
             var result = await _controller.GetAll();
@@ -47,8 +62,14 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(locations, okResult.Value);
+
+            var returnedLocations = okResult.Value as List<Location>;
+            Assert.IsNotNull(returnedLocations);
+            Assert.AreEqual(2, returnedLocations.Count);
+            Assert.AreEqual("36C", returnedLocations[0].name);
+            Assert.AreEqual("Top Shelf", returnedLocations[1].name);
         }
+
 
         // Test GetLocationById - Success
         [TestMethod]
@@ -58,7 +79,12 @@ namespace Cargohub.Tests
             var location = new Location
             {
                 id = 1,
-                name = "36C"
+                warehouse_id = 101,
+                code = "LOC-001",
+                name = "36C",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
             };
             _mockLocationService.Setup(service => service.GetLocationById(1)).ReturnsAsync(location);
 
@@ -94,7 +120,12 @@ namespace Cargohub.Tests
             var location = new Location
             {
                 id = 1,
-                name = "36C"
+                warehouse_id = 101,
+                code = "LOC-001",
+                name = "36C",
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
             };
             _mockLocationService.Setup(service => service.AddLocation(location)).ReturnsAsync(location);
 
@@ -116,7 +147,12 @@ namespace Cargohub.Tests
             var location = new Location
             {
                 id = 1,
-                name = "36C"
+                warehouse_id = 101,
+                code = "LOC-001",
+                name = "Updated Location",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
             };
             _mockLocationService.Setup(service => service.UpdateLocation(location)).ReturnsAsync(true);
 
@@ -138,7 +174,12 @@ namespace Cargohub.Tests
             var location = new Location
             {
                 id = 1,
-                name = "36C"
+                warehouse_id = 101,
+                code = "LOC-001",
+                name = "Nonexistent Location",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
             };
             _mockLocationService.Setup(service => service.UpdateLocation(location)).ReturnsAsync(false);
 

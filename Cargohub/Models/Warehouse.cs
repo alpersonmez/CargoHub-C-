@@ -59,5 +59,7 @@ namespace Cargohub.Models
         [JsonProperty("gevarenclassificatie")]
         public int? gevarenclassificatie { get; set; } // Nullable int
 
+        [JsonProperty("docks")]
+        public List<Dock> docks { get; set; } = new List<Dock>();
     }
 }

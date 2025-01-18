@@ -13,7 +13,7 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Transfer>> GetTransfers(int amount = 100)
+        public async Task<List<Transfer>> GetTransfers(int amount)
         {
             return await _context.Transfers.Take(amount).ToListAsync();
         }

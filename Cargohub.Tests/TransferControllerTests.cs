@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -22,26 +23,39 @@ namespace Cargohub.Tests
             _controller = new TransferController(_mockTransferService.Object);
         }
 
-        // Test GetAllTransfers
         [TestMethod]
         public async Task GetAllTransfers_ReturnsOkResult_WithListOfTransfers()
         {
             // Arrange
             var transfers = new List<Transfer>
             {
-                new Transfer{
+                new Transfer
+                {
                     id = 1,
-                    transfer_status = "complete"
+                    reference = "TR001",
+                    transfer_from = 100,
+                    transfer_to = 200,
+                    transfer_status = "Complete",
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow.AddDays(-5),
+                    isdeleted = false
                 },
-                new Transfer{
+                new Transfer
+                {
                     id = 2,
-                    transfer_status = "complete"
+                    reference = "TR002",
+                    transfer_from = 300,
+                    transfer_to = 400,
+                    transfer_status = "Pending",
+                    created_at = DateTime.UtcNow.AddDays(-20),
+                    updated_at = DateTime.UtcNow.AddDays(-15),
+                    isdeleted = false
                 }
             };
-            _mockTransferService.Setup(service => service.GetTransfers(100)).ReturnsAsync(transfers);
+            _mockTransferService.Setup(service => service.GetTransfers(It.IsAny<int>())).ReturnsAsync(transfers);
 
             // Act
-            var result = await _controller.GetTransfers();
+            var result = await _controller.GetTransfers(100);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -50,7 +64,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(transfers, okResult.Value);
         }
 
-        // Test GetTransferById - Success
         [TestMethod]
         public async Task GetTransferById_ReturnsOkResult_WithTransfer()
         {
@@ -58,7 +71,13 @@ namespace Cargohub.Tests
             var transfer = new Transfer
             {
                 id = 1,
-                transfer_status = "complete"
+                reference = "TR001",
+                transfer_from = 100,
+                transfer_to = 200,
+                transfer_status = "Complete",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockTransferService.Setup(service => service.GetTransfer(1)).ReturnsAsync(transfer);
 
@@ -72,7 +91,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(transfer, okResult.Value);
         }
 
-        // Test GetTransferById - Not Found
         [TestMethod]
         public async Task GetTransferById_ReturnsNotFound_WhenTransferDoesNotExist()
         {
@@ -86,7 +104,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
 
-        // Test CreateTransfer - Success
         [TestMethod]
         public async Task CreateTransfer_ReturnsCreatedAtActionResult_WithCreatedTransfer()
         {
@@ -94,7 +111,13 @@ namespace Cargohub.Tests
             var transfer = new Transfer
             {
                 id = 1,
-                transfer_status = "complete"
+                reference = "TR001",
+                transfer_from = 100,
+                transfer_to = 200,
+                transfer_status = "Complete",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockTransferService.Setup(service => service.AddTransfer(transfer)).ReturnsAsync(transfer);
 
@@ -108,7 +131,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(transfer, createdResult.Value);
         }
 
-        // Test UpdateTransfer - Success
         [TestMethod]
         public async Task UpdateTransfer_ReturnsOkResult_WithUpdatedTransfer()
         {
@@ -116,7 +138,13 @@ namespace Cargohub.Tests
             var transfer = new Transfer
             {
                 id = 1,
-                transfer_status = "complete"
+                reference = "TR001",
+                transfer_from = 100,
+                transfer_to = 200,
+                transfer_status = "Complete",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(true);
 
@@ -130,7 +158,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(transfer, okResult.Value);
         }
 
-        // Test UpdateTransfer - Not Found
         [TestMethod]
         public async Task UpdateTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
         {
@@ -138,7 +165,13 @@ namespace Cargohub.Tests
             var transfer = new Transfer
             {
                 id = 1,
-                transfer_status = "complete"
+                reference = "TR001",
+                transfer_from = 100,
+                transfer_to = 200,
+                transfer_status = "Complete",
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockTransferService.Setup(service => service.UpdateTransfer(transfer)).ReturnsAsync(false);
 
@@ -149,7 +182,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteTransfer - Success
         [TestMethod]
         public async Task DeleteTransfer_ReturnsNoContentResult_WhenTransferIsDeleted()
         {
@@ -163,7 +195,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteTransfer - Not Found
         [TestMethod]
         public async Task DeleteTransfer_ReturnsNotFound_WhenTransferDoesNotExist()
         {

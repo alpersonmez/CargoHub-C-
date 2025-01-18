@@ -16,10 +16,10 @@ namespace Cargohub.Controllers
             transferService = _transferService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTransfers()
+        [HttpGet("amount/{amount}")]
+        public async Task<IActionResult> GetTransfers(int amount)
         {
-            var transfers = await transferService.GetTransfers();
+            var transfers = await transferService.GetTransfers(amount);
             return Ok(transfers);
         }
 

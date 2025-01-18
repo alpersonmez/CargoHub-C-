@@ -31,19 +31,20 @@ namespace Cargohub.Models
         public string? country { get; set; }
 
         [JsonProperty("contact")]
-        public Contact? contact { get; set; }
+        public Contact contact { get; set; } = new Contact(); // Ensure initialization to avoid null references
 
         [JsonProperty("created_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
+        public bool isdeleted { get; set; } = false;
 
+        // Inner Contact class remains nested within Warehouse
         public class Contact
         {
             [JsonProperty("name")]

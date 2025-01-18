@@ -14,12 +14,12 @@ namespace Cargohub.Models
         public int? source_id { get; set; }
 
         [JsonProperty("order_date")]
-        [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? order_date { get; set; }
+        [JsonConverter(typeof(DateTimeConverters))]
+        public DateTime order_date { get; set; }
 
         [JsonProperty("request_date")]
-        [JsonConverter(typeof(DateTimeConverter))]
-        public DateTime? request_date { get; set; }
+        [JsonConverter(typeof(DateTimeConverters))]
+        public DateTime request_date { get; set; }
 
         [JsonProperty("reference")]
         public string? reference { get; set; }
@@ -48,9 +48,6 @@ namespace Cargohub.Models
         [JsonProperty("bill_to")]
         public string? bill_to { get; set; }
 
-        [JsonProperty("shipment_id")]
-        public int? shipment_id { get; set; }
-
         [JsonProperty("total_amount")]
         public double? total_amount { get; set; }
 
@@ -64,27 +61,18 @@ namespace Cargohub.Models
         public double? total_surcharge { get; set; }
 
         [JsonProperty("created_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime updated_at { get; set; }
 
-        [JsonProperty("items")]
-        public List<orderItem>? items { get; set; }
-
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
+        public bool isdeleted { get; set; } = false;
 
-        public class orderItem
-    {
-        [JsonProperty("item_id")]
-        public string? item_id { get; set; }
-
-        [JsonProperty("amount")]
-        public int? amount { get; set; }
+        // Navigation property for many-to-many relationship
+        [JsonIgnore] // To avoid circular references during JSON serialization
+        public List<OrderShipment> OrderShipments { get; set; } = new List<OrderShipment>();
     }
-    }
-
 }

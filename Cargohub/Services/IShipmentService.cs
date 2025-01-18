@@ -6,10 +6,11 @@ namespace Cargohub.Services
 {
     public interface IShipmentService
     {
-        Task<List<Shipment>> GetAllShipments();
+        Task<List<Shipment>> GetAllShipments(int amount = 100);
         Task<Shipment> GetShipmentById(int id);
         Task<Shipment> AddShipment(Shipment shipment);
         Task<bool> UpdateShipment(Shipment shipment);
         Task<bool> DeleteShipment(int id);
+        Task<bool> DisconnectOrdersFromShipment(int shipmentId, List<int> orderIds);
     }
 }

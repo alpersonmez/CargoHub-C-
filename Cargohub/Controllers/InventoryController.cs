@@ -2,33 +2,34 @@ using Cargohub.Models;
 using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Cargohub.Filters;
 
 namespace Cargohub.Controllers
 {
-
     [ApiController]
-    [Route("api/v1/inventory")]
+    [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
 
-        private readonly InventoryService _inventoryService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryController(InventoryService InventoryService)
+        public InventoryController(IInventoryService inventoryService)
         {
-            _inventoryService = InventoryService;
+            _inventoryService = inventoryService;
         }
 
         [HttpGet]
-        public ActionResult<List<Item>> GetAllInventories()
+        public async Task<IActionResult> GetAll()
         {
-            List<Inventory>? allInventories = _inventoryService.GetAllInventories();
-            return Ok(allInventories.ToList());
+            var inventory = await _inventoryService.GetAllInventories();
+            return Ok(inventory);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int Id)
+        public async Task<IActionResult> Get(int id)
+
         {
-            Inventory inventory = _inventoryService.GetInventoryById(Id);
+            Inventory inventory = await _inventoryService.GetInventoryById(id);
             if (inventory == null)
             {
                 return NotFound();
@@ -36,31 +37,51 @@ namespace Cargohub.Controllers
             return Ok(inventory);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Inventory inventory)
+
+        [AdminFilter]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Inventory New)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Inventory createdinventory = await _inventoryService.AddInventory(New);
+            return CreatedAtAction(nameof(Get), new { id = createdinventory.id }, createdinventory);
+        }
+
+        [AdminFilter]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Inventory inventory)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); //modelstate is om te kijken of de fields kloppen
+            
             if (id != inventory.id)
             {
-                return BadRequest($"Location Id {id} does not match");
+                return BadRequest($"supplier Id {id} does not match");
             }
-            bool updated = _inventoryService.UpdateInventory(inventory);
+            
+            var updated = await _inventoryService.UpdateInventory(inventory);
+
             if (!updated)
             {
                 return NotFound();
             }
-            return Ok(updated.ToString());
+
+            return NoContent();
         }
 
+        [AdminFilter]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            bool deleted = _inventoryService.DeleteInventory(id);
+            bool deleted = await _inventoryService.DeleteInventory(id);
             if (!deleted)
             {
                 return NotFound();
 
-            }
-            return Ok(deleted.ToString());
+            } 
+            return NoContent();
         }
 
     }

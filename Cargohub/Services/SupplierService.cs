@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class SupplierService : ISupplierService
-    {   
+    {
         private readonly AppDbContext _context;
 
         public SupplierService(AppDbContext context)
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Supplier>> GetAllSupplier()
+        public async Task<List<Supplier>> GetAllSuppliers(int amount = 100)
         {
-            return await _context.Supplier.Take(100).ToListAsync(); 
+            return await _context.Supplier.Take(amount).ToListAsync();
         }
 
         public async Task<Supplier> GetSupplierById(int id)
@@ -32,6 +32,7 @@ namespace Cargohub.Services
                 address_extra = Newsupplier.address_extra,
                 city = Newsupplier.city,
                 zip_code = Newsupplier.zip_code,
+                province = Newsupplier.province,
                 country = Newsupplier.country,
                 contact_name = Newsupplier.contact_name,
                 phone_number = Newsupplier.phone_number,
@@ -46,10 +47,10 @@ namespace Cargohub.Services
         }
 
 
-        public async Task<bool> UpdateSupplier(Supplier supplier) 
+        public async Task<bool> UpdateSupplier(Supplier supplier)
         {
             Supplier ExistingSupplier = await _context.Supplier.FindAsync(supplier.id);
-            
+
             if (ExistingSupplier == null)
             {
                 return false;
@@ -67,12 +68,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteSupplier(int id)
         {
             var supplier = await _context.Supplier.FindAsync(id);
-            if (supplier == null)
+            if (supplier?.isdeleted == true || supplier == null)
             {
                 return false;
             }
-            
-            _context.Supplier.Remove(supplier);
+
+            supplier.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -1,10 +1,10 @@
-GET http://localhost:5000/api/v1/Warehouses
+GET http://localhost:5000/api/warehouse
 ####
 
-GET http://localhost:5000/api/v1/Warehouses/2
+GET http://localhost:5000/api/warehouse/1
 ####
 
-POST http://localhost:5000/api/v1/Warehouses/new
+POST http://localhost:5000/api/warehouse
 Content-Type: application/json
 
 {
@@ -26,24 +26,7 @@ Content-Type: application/json
 ####
 
 
-GET http://localhost:5000/api/Supplier/99999999
-
+GET http://localhost:5000/api/warehouse
 
 #######
-POST http://localhost:5000/api/Supplier
-Content-Type: application/json
 
-{
-        "Id": 99999999,
-        "Code": "SUP0001",
-        "Name": "testsupplier",
-        "Address": "unknown",
-        "AddressExtra": "Apt. 420",
-        "City": "Port Anitaburgh",
-        "ZipCode": "91688",
-        "Province": "Illinois",
-        "Country": "Czech Republic",
-        "ContactName": "Toni Barnett",
-        "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001"
-}

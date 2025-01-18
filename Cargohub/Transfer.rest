@@ -6,7 +6,7 @@ GET http://localhost:5000/api/transfer
 ########
 
 
-GET http://localhost:5000/api/transfer/1
+GET http://localhost:5000/api/transfer/6
 ########
 
 
@@ -32,12 +32,12 @@ Content-Type: application/json
 ########
 
 
-PUT http://localhost:5000/api/transfer/1
+PUT http://localhost:5000/api/transfer/715443
 API_key: a1b2c3d4
 Content-Type: application/json
 
 {
-    "id": 1,
+    "id": 715443,
     "reference": "TR00001",
     "transfer_from": null,
     "transfer_to": 9229,
@@ -58,10 +58,10 @@ Content-Type: application/json
 ########
 
 
-DELETE  http://localhost:5000/api/transfer/1
+DELETE  http://localhost:5000/api/transfer/715443
 ########
 
-DELETE  http://localhost:5000/api/transfer/1
+DELETE  http://localhost:5000/api/transfer/715443
 API_key: a1b2c3d4
 ########
 

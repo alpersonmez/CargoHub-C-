@@ -1,5 +1,5 @@
+using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
-using System.Collections.Generic;
 
 namespace Cargohub.Services
 {
@@ -12,48 +12,63 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public List<Inventory> GetTotalOfInventories()
+        public async Task<List<Inventory>> GetAllInventories(int amount = 100)
         {
-            return _context.Inventories.Take(100).ToList();
+            return await _context.Inventories.Take(amount).ToListAsync(); 
         }
-        public List<Inventory> GetAllInventories()
+         public async Task<Inventory> GetInventoryById(int id)
         {
-            return _context.Inventories.Take(100).ToList();
-            //return await _context.Inventories.Take(100).ToListAsync();
+            return await _context.Inventories.FindAsync(id);
         }
-        public Inventory GetInventoryById(int id)
+        public async Task<Inventory> AddInventory(Inventory NewInventory)
         {
-            return _context.Inventories.Find(id);
+            Inventory inventory = new Inventory
+            {
+                item_id = NewInventory.item_id,
+                description = NewInventory.description,
+                item_reference = NewInventory.item_reference,
+                total_on_hand = NewInventory.total_on_hand,
+                total_expected = NewInventory.total_expected,
+                total_ordered = NewInventory.total_ordered,
+                total_allocated = NewInventory.total_allocated,
+                total_available = NewInventory.total_available,
+                created_at = DateTime.UtcNow,
+                updated_at = DateTime.UtcNow
+            };
+
+            _context.Inventories.Add(inventory);
+            await _context.SaveChangesAsync();
+            return inventory;
         }
-        public bool UpdateInventory(Inventory inventory)
+        public async Task<bool> UpdateInventory(Inventory inventory)
         {
-            Inventory? existing = _context.Inventories.Find(inventory.id);
+            Inventory Existinginventory = await _context.Inventories.FindAsync(inventory.id);
 
-            if (existing == null) return false;
+            if (Existinginventory == null) return false;
 
-            existing.description = inventory.description;
-            existing.locations = inventory.locations;
-            existing.total_on_hand = inventory.total_on_hand;
-            existing.total_expected = inventory.total_expected;
-            existing.total_ordered = inventory.total_ordered;
-            existing.total_allocated = inventory.total_allocated;
-            existing.total_available = inventory.total_available;
-            existing.updated_at = DateTime.UtcNow;
+            Existinginventory.description = inventory.description;
+            Existinginventory.locations = inventory.locations;
+            Existinginventory.total_on_hand = inventory.total_on_hand;
+            Existinginventory.total_expected = inventory.total_expected;
+            Existinginventory.total_ordered = inventory.total_ordered;
+            Existinginventory.total_allocated = inventory.total_allocated;
+            Existinginventory.total_available = inventory.total_available;
+            Existinginventory.updated_at = DateTime.UtcNow;
 
-            _context.Inventories.Update(existing);
+            _context.Inventories.Update(Existinginventory);
             _context.SaveChanges();
             return true;
         }
-        public bool DeleteInventory(int id)
+        public async Task<bool> DeleteInventory(int id)
         {
-            var inventory = _context.Inventories.Find(id);
-            if (inventory == null)
+            var inventory = await _context.Inventories.FindAsync(id);
+            if (inventory?.isdeleted == true || inventory == null)
             {
                 return false;
             }
 
-            _context.Inventories.Remove(inventory);
-            _context.SaveChanges();
+            inventory.isdeleted = true;
+            await _context.SaveChangesAsync();
             return true;
         }
     }

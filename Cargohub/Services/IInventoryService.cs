@@ -5,10 +5,10 @@ namespace Cargohub.Services
 {
     public interface IInventoryService
     {
-        List<Inventory> GetTotalOfInventories();
-        List<Inventory> GetAllInventories();
-        Inventory GetInventoryById(int id);
-        bool UpdateInventory(Inventory inventory);
-        bool DeleteInventory(int id);
+        Task<List<Inventory>> GetAllInventories(int amount = 100);
+        Task<Inventory> GetInventoryById(int id);
+        Task<Inventory> AddInventory(Inventory inventory);
+        Task<bool> UpdateInventory(Inventory inventory);
+        Task<bool> DeleteInventory(int id);
     }
 }

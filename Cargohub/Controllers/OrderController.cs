@@ -3,6 +3,7 @@ using Cargohub.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Cargohub.Filters;
+
 namespace Cargohub.Controllers
 {
     [ApiController]
@@ -10,10 +11,12 @@ namespace Cargohub.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IOrderShipmentService _orderShipmentService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IOrderShipmentService orderShipmentService)
         {
             _orderService = orderService;
+            _orderShipmentService = orderShipmentService;
         }
 
         [HttpGet]
@@ -41,8 +44,8 @@ namespace Cargohub.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Order CreatedOrder = await _orderService.AddOrder(newOrder);
-            return CreatedAtAction(nameof(Get), new { id = CreatedOrder.id }, CreatedOrder);
+            Order createdOrder = await _orderService.AddOrder(newOrder);
+            return CreatedAtAction(nameof(Get), new { id = createdOrder.id }, createdOrder);
         }
 
         [AdminFilter]
@@ -54,7 +57,7 @@ namespace Cargohub.Controllers
 
             if (id != order.id)
             {
-                return BadRequest($"Shipment Id {id} does not match");
+                return BadRequest($"Order ID {id} does not match.");
             }
 
             var updated = await _orderService.UpdateOrder(order);
@@ -64,7 +67,7 @@ namespace Cargohub.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(order);
         }
 
         [AdminFilter]
@@ -78,5 +81,53 @@ namespace Cargohub.Controllers
             }
             return NoContent();
         }
+
+        // Link multiple shipments to an order
+        [HttpPost("{orderId}/link-shipments")]
+        public async Task<IActionResult> LinkShipmentsToOrder(int orderId, [FromBody] LinkShipmentsToOrderDto dto)
+        {
+            try
+            {
+                var result = await _orderShipmentService.LinkShipmentsToOrder(orderId, dto.ShipmentIds);
+                if (result)
+                {
+                    return Ok(new { message = "Shipments successfully linked to order." });
+                }
+
+                return BadRequest(new { error = "Failed to link shipments to order." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // Get all shipments for an order
+        [HttpGet("{orderId}/shipments")]
+        public async Task<IActionResult> GetShipmentsForOrder(int orderId)
+        {
+            var shipments = await _orderShipmentService.GetShipmentsForOrder(orderId);
+            return Ok(shipments);
+        }
+
+        [HttpPost("{orderId}/disconnect-shipments")]
+        public async Task<IActionResult> DisconnectShipmentsFromOrder(int orderId, [FromBody] DisconnectShipmentsDto dto)
+        {
+            try
+            {
+                var result = await _orderService.DisconnectShipmentsFromOrder(orderId, dto.ShipmentIds);
+                if (result)
+                {
+                    return Ok(new { message = "Shipments successfully disconnected from order." });
+                }
+
+                return BadRequest(new { error = "Failed to disconnect shipments from order." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
     }
 }

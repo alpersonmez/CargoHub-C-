@@ -1,56 +1,71 @@
 using Cargohub.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Services
 {
     public class TransferService : ITransferService
     {
 
-        private AppDbContext data;
+        private AppDbContext _context;
 
-        public TransferService(AppDbContext _data)
+        public TransferService(AppDbContext context)
         {
-            data = _data;
+            _context = context;
         }
 
-        public List<Transfer> GetTransfers()
+        public async Task<List<Transfer>> GetTransfers(int amount = 100)
         {
-            if (data.Transfers.Count() == 0) return new List<Transfer>();
-            return data.Transfers.ToList();
+            return await _context.Transfers.Take(amount).ToListAsync();
         }
 
-        public Transfer? GetTransfer(int id)
+        public async Task<Transfer> GetTransfer(int id)
         {
-            //if(data.Transfer.SingleOrDefault(x => x.id == id) == null) return new Transfer()
-            return data.Transfers.SingleOrDefault(x => x.id == id);
+            return await _context.Transfers.FindAsync(id);
         }
 
-        // public List<Item>? GetItems(int id)
-        // {
-        //     if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return null;
-        //     return data.Transfers.Where(x => x.id == id).Single().items.ToList();
-        // }
-
-        public bool AddTransfer(Transfer transfer)
+        public async Task<Transfer> AddTransfer(Transfer NewTransfer)
         {
-            if (transfer is null || data.Transfers.Contains(transfer)) return false;
-            data.Transfers.Add(transfer);
-            data.SaveChanges();
+            Transfer transfer = new Transfer
+            {
+                reference = NewTransfer.reference,
+                transfer_from = NewTransfer.transfer_from,
+                transfer_to = NewTransfer.transfer_to,
+                transfer_status = NewTransfer.transfer_status,
+            };
+            _context.Transfers.Add(transfer);
+            await _context.SaveChangesAsync();
+            return transfer;
+        } 
+        public async Task<bool> UpdateTransfer(Transfer transfer)
+        {
+            Transfer existingTransfer = await _context.Transfers.FindAsync(transfer.id);
+            if (existingTransfer == null)
+            {
+                return false;
+            }
+
+            existingTransfer.reference = transfer.reference;
+            existingTransfer.transfer_from = transfer.transfer_from;
+            existingTransfer.transfer_to = transfer.transfer_to;
+            existingTransfer.transfer_status = transfer.transfer_status;
+            existingTransfer.isdeleted = transfer.isdeleted;
+            existingTransfer.updated_at = DateTime.UtcNow;
+
+
+            _context.Transfers.Update(existingTransfer);
+            await _context.SaveChangesAsync();
             return true;
         }
-        public bool UpdateTransfer(int id, Transfer transfer)
+        public async Task<bool> DeleteTransfer(int id)
         {
-            if (transfer is null || id != transfer.id) return false;
-            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
-            data.Transfers.Add(transfer);
-            data.SaveChanges();
-            return true;
-        }
-        public bool DeleteTransfer(int id)
-        {
-            if (data.Transfers.SingleOrDefault(x => x.id == id) is null) return false;
-            data.Transfers.Remove(data.Transfers.Where(x => x.id == id).Single());
-            data.SaveChanges();
+            var transfer = await _context.Transfers.FindAsync(id);
+            if (transfer?.isdeleted == true || transfer == null)
+            {
+                return false;
+            }
+
+            transfer.isdeleted = true;
+            await _context.SaveChangesAsync();
             return true;
         }
     }

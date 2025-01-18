@@ -1,58 +1,54 @@
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class ItemTypeService : IItemTypeService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _context;
 
-        public ItemTypeService(AppDbContext dbContext)
+        public ItemTypeService(AppDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public List<ItemType> GetAllItemTypes()
+        public async Task<List<ItemType>> GetAllItemTypes(int amount = 100)
         {
-            return _dbContext.ItemTypes.ToList();
+            return await _context.ItemTypes.Take(amount).ToListAsync();
         }
 
-        public ItemType GetItemTypeById(int id)
+        public async Task<ItemType> GetItemTypeById(int id)
         {
-            return _dbContext.ItemTypes.FirstOrDefault(itemType => itemType.id == id);
+            return await _context.ItemTypes.FindAsync(id);
+        }
+        public async Task<bool> UpdateItemType(ItemType ItemType)
+        {
+            ItemType ExistingItemType = await _context.ItemTypes.FindAsync(ItemType.id);
+
+            if (ExistingItemType == null)
+            {
+                return false;
+            }
+
+            ExistingItemType.description = ItemType.description;
+            ExistingItemType.name = ItemType.name;
+            ExistingItemType.updated_at = DateTime.UtcNow;
+
+            _context.ItemTypes.Update(ExistingItemType);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public ItemType CreateItemType(ItemType itemType)
+        public async Task<bool> DeleteItemType(int id)
         {
-            itemType.created_at = DateTime.UtcNow;
-            itemType.updated_at = DateTime.UtcNow;
+            var itemType = await _context.ItemTypes.FindAsync(id);
+            if (itemType?.isdeleted == true || itemType == null)
+            {
+                return false;
+            }
 
-            _dbContext.ItemTypes.Add(itemType);
-            _dbContext.SaveChanges();
-            return itemType;
-        }
-
-        public ItemType UpdateItemType(int id, ItemType updatedItemType)
-        {
-            var existingItemType = _dbContext.ItemTypes.SingleOrDefault(itemType => itemType.id == id);
-            if (existingItemType == null) return null;
-
-            existingItemType.name = updatedItemType.name;
-            existingItemType.description = updatedItemType.description;
-            existingItemType.updated_at = DateTime.UtcNow;
-
-            _dbContext.SaveChanges();
-            return existingItemType;
-        }
-
-        public bool DeleteItemType(int id)
-        {
-            var itemType = GetItemTypeById(id);
-            if (itemType == null) return false;
-
-            _dbContext.ItemTypes.Remove(itemType);
-            _dbContext.SaveChanges();
+            itemType.isdeleted = true;
+            await _context.SaveChangesAsync();
             return true;
         }
     }

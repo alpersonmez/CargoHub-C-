@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using  Cargohub.Models;
+using Cargohub.Models;
 
 namespace Cargohub.Services
 {
     public class LocationService : ILocationService
-    {   
+    {
         private readonly AppDbContext _context;
 
         public LocationService(AppDbContext context)
@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Location>> GetAllLocations()
+        public async Task<List<Location>> GetAllLocations(int amount = 100)
         {
-            return await _context.Locations.Take(100).ToListAsync(); // Take(100) is that the limit is 100 locations
+            return await _context.Locations.Take(amount).ToListAsync(); // Take(100) is that the limit is 100 locations
         }
 
         public async Task<Location> GetLocationById(int id)
@@ -39,10 +39,10 @@ namespace Cargohub.Services
         }
 
 
-        public async Task<bool> UpdateLocation(Location location) // moet checken hoe ik met required fields te werk moet gaan hetzelfde geld bij POST
+        public async Task<bool> UpdateLocation(Location location) 
         {
             Location existingLocation = await _context.Locations.FindAsync(location.id);
-            
+
             if (existingLocation == null)
             {
                 return false;
@@ -61,12 +61,12 @@ namespace Cargohub.Services
         public async Task<bool> DeleteLocation(int id)
         {
             var location = await _context.Locations.FindAsync(id);
-            if (location == null)
+            if (location?.isdeleted == true || location == null)
             {
                 return false;
             }
-            
-            _context.Locations.Remove(location);
+
+            location.isdeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }

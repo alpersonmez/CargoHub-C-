@@ -18,17 +18,17 @@ headers = {
 def test_add_remove_suppliers(_url):
 
     new_supplier = {
-        "Code": "SUP0001",
-        "Name": "testsupplier",
-        "Address": "unknown",
-        "AddressExtra": "Apt. 420",
-        "City": "Port Anitaburgh",
-        "ZipCode": "91688",
-        "Province": "Illinois",
-        "Country": "Czech Republic",
-        "ContactName": "Toni Barnett",
-        "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001",
+        "code": "SUP0001",
+        "name": "testsupplier",
+        "address": "unknown",
+        "address_extra": "Apt. 420",
+        "city": "Port Anitaburgh",
+        "zip_code": "91688",
+        "province": "Illinois",
+        "country": "Czech Republic",
+        "contact_name": "Toni Barnett",
+        "phone_number": "363.541.7282x36825",
+        "reference": "LPaJ-SUP0001",
     }
 
     post_response = requests.post(_url, json=new_supplier, headers=headers)
@@ -52,41 +52,41 @@ def test_add_remove_suppliers(_url):
 
 def test_put_suppliers(_url):
     new_supplier = {
-        "Code": "SUP0001",
-        "Name": "testsupplier",
-        "Address": "unknown",
-        "AddressExtra": "Apt. 420",
-        "City": "Port Anitaburgh",
-        "ZipCode": "91688",
-        "Province": "Illinois",
-        "Country": "Czech Republic",
-        "ContactName": "Toni Barnett",
-        "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001"
+        "code": "SUP0001",
+        "name": "testsupplier",
+        "address": "unknown",
+        "address_extra": "Apt. 420",
+        "city": "Port Anitaburgh",
+        "zip_code": "91688",
+        "province": "Illinois",
+        "country": "Czech Republic",
+        "contact_name": "Toni Barnett",
+        "phone_number": "363.541.7282x36825",
+        "reference": "LPaJ-SUP0001",
     }
     post_response = requests.post(_url, json=new_supplier, headers=headers)
     id = post_response.json()["id"]
 
     updated_supplier = {
         "Id": id,
-        "Code": "SUP0001",
-        "Name": "UPDATED",
-        "Address": "Hofplein",
-        "AddressExtra": "Apt. 420",
-        "City": "Port Anitaburgh",
-        "ZipCode": "91688",
-        "Province": "Illinois",
-        "Country": "Czech Republic",
-        "ContactName": "Toni Barnett",
-        "PhoneNumber": "363.541.7282x36825",
-        "Reference": "LPaJ-SUP0001"
+        "code": "SUP0001",
+        "name": "testsupplier",
+        "address": "UPDATED",
+        "address_extra": "Apt. 420",
+        "city": "Port Anitaburgh",
+        "zip_code": "91688",
+        "province": "Illinois",
+        "country": "Czech Republic",
+        "contact_name": "Toni Barnett",
+        "phone_number": "363.541.7282x36825",
+        "reference": "LPaJ-SUP0001",
     }
     put_response = requests.put(f"{_url}/{id}", json=updated_supplier, headers=headers)
-    assert put_response.status_code == 204
+    assert put_response.status_code == 200
 
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty
-        assert response_data["address"] == "Hofplein"
+        assert response_data["address"] == "UPDATED"
     else:
         print("PUT request returned 200 but no response body.")
 

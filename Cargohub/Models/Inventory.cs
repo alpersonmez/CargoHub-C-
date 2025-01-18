@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 using Cargohub.DataConverters;
+using System;
+
 
 namespace Cargohub.Models
 {
@@ -36,14 +38,14 @@ namespace Cargohub.Models
         public int? total_available { get; set; }
 
         [JsonProperty("created_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime updated_at { get; set; }
 
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
+        public bool isdeleted { get; set; } = false;
     }
 }

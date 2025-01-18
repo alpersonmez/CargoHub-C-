@@ -10,22 +10,19 @@ namespace Cargohub.Models
         [JsonProperty("id")]
         public int id { get; set; }
 
-        [JsonProperty("order_id")]
-        public int? order_id { get; set; }
-
         [JsonProperty("source_id")]
         public int? source_id { get; set; }
 
         [JsonProperty("order_date")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime? order_date { get; set; }
 
         [JsonProperty("request_date")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime? request_date { get; set; }
 
         [JsonProperty("shipment_date")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime? shipment_date { get; set; }
 
         [JsonProperty("shipment_type")]
@@ -59,27 +56,18 @@ namespace Cargohub.Models
         public double? total_package_weight { get; set; }
 
         [JsonProperty("created_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime created_at { get; set; }
 
         [JsonProperty("updated_at")]
-        [JsonConverter(typeof(DateTimeConverter))]
+        [JsonConverter(typeof(DateTimeConverters))]
         public DateTime updated_at { get; set; }
 
-        // Change from single ItemShipment to List<ItemShipment>
-        [JsonProperty("items")]
-        public List<ItemShipment>? items { get; set; }
-
         [JsonProperty("isdeleted")]
-        public bool? isdeleted { get; set; } = false;
-    }
+        public bool isdeleted { get; set; } = false;
 
-    public class ItemShipment
-    {
-        [JsonProperty("item_id")]
-        public string? item_id { get; set; }
-
-        [JsonProperty("amount")]
-        public int? amount { get; set; }
+        // Navigation property for many-to-many relationship
+        [JsonIgnore] // To avoid circular references during JSON serialization
+        public List<OrderShipment> OrderShipments { get; set; } = new List<OrderShipment>();
     }
 }

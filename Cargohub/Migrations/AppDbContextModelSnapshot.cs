@@ -64,6 +64,44 @@ namespace Cargohub.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.Dock", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("code")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("warehouse_id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("code")
+                        .IsUnique();
+
+                    b.HasIndex("warehouse_id");
+
+                    b.ToTable("Docks");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Inventory", b =>
                 {
                     b.Property<int>("id")
@@ -665,6 +703,17 @@ namespace Cargohub.Migrations
                     b.HasDiscriminator().HasValue("Transfer");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.Dock", b =>
+                {
+                    b.HasOne("Cargohub.Models.Warehouse", "warehouse")
+                        .WithMany("docks")
+                        .HasForeignKey("warehouse_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("warehouse");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Item", b =>
                 {
                     b.HasOne("Cargohub.Models.ItemGroup", "ItemGroup")
@@ -783,6 +832,11 @@ namespace Cargohub.Migrations
             modelBuilder.Entity("Cargohub.Models.Shipment", b =>
                 {
                     b.Navigation("OrderShipments");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
+                {
+                    b.Navigation("docks");
                 });
 #pragma warning restore 612, 618
         }

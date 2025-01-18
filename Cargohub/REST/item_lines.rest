@@ -7,6 +7,7 @@ Content-Type: application/json
 
 ### Update an existing itemLines
 PUT http://localhost:5000/api/item_lines/5 
+API_key: a1b2c3d4
 Content-Type: application/json
 // je moet in de body de id ook meegeven 
 {

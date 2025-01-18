@@ -10,6 +10,7 @@ namespace Cargohub.Services
         public Task<Order> AddOrder(Order newOrder);
         public Task<bool> UpdateOrder(Order order);
         public Task<bool> DeleteOrder(int id);
+        public Task<bool> DisconnectShipmentsFromOrder(int orderId, List<int> shipmentIds);
     }
 }
 

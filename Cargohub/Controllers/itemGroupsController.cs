@@ -20,9 +20,9 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int amount)
         {
-            var supplier = await _IitemGroupsService.GetAllItemGroups();
+            var supplier = await _IitemGroupsService.GetAllItemGroups(amount);
             return Ok(supplier);
         }
 

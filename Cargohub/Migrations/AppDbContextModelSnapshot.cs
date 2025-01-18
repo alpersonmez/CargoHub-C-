@@ -345,9 +345,6 @@ namespace Cargohub.Migrations
                     b.Property<string>("ship_to")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("shipment_id")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("shipping_notes")
                         .HasColumnType("TEXT");
 
@@ -377,6 +374,30 @@ namespace Cargohub.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.OrderShipment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("order_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("shipment_id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("order_id");
+
+                    b.HasIndex("shipment_id");
+
+                    b.ToTable("OrderShipments");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Shipment", b =>
                 {
                     b.Property<int>("id")
@@ -400,9 +421,6 @@ namespace Cargohub.Migrations
 
                     b.Property<DateTime?>("order_date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("order_id")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("payment_type")
                         .HasColumnType("TEXT");
@@ -671,6 +689,25 @@ namespace Cargohub.Migrations
                     b.Navigation("supplier");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.OrderShipment", b =>
+                {
+                    b.HasOne("Cargohub.Models.Order", "Order")
+                        .WithMany("OrderShipments")
+                        .HasForeignKey("order_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cargohub.Models.Shipment", "Shipment")
+                        .WithMany("OrderShipments")
+                        .HasForeignKey("shipment_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Shipment");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
                 {
                     b.OwnsOne("Cargohub.Models.Warehouse+Contact", "contact", b1 =>
@@ -733,6 +770,16 @@ namespace Cargohub.Migrations
                         .IsRequired();
 
                     b.Navigation("Transfer");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Order", b =>
+                {
+                    b.Navigation("OrderShipments");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Shipment", b =>
+                {
+                    b.Navigation("OrderShipments");
                 });
 #pragma warning restore 612, 618
         }

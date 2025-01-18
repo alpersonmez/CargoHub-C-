@@ -14,54 +14,39 @@ namespace Cargohub.Services
 
         public async Task<List<Shipment>> GetAllShipments(int amount = 100)
         {
-            // Using Include to load related items
-            return await _context.Shipments.Take(amount).ToListAsync();
+            return await _context.Shipments
+                .Include(s => s.OrderShipments)
+                .ThenInclude(os => os.Order)
+                .Take(amount)
+                .ToListAsync();
         }
 
         public async Task<Shipment> GetShipmentById(int id)
         {
-            // Fetch a shipment by its id and include the related items
-            return await _context.Shipments.FindAsync(id);
-
+            return await _context.Shipments
+                .Include(s => s.OrderShipments)
+                .ThenInclude(os => os.Order)
+                .FirstOrDefaultAsync(s => s.id == id);
         }
 
         public async Task<Shipment> AddShipment(Shipment newShipment)
         {
-            Shipment shipment = new Shipment
-            {
-                order_id = newShipment.order_id,
-                source_id = newShipment.source_id,
-                order_date = newShipment.order_date,
-                request_date = newShipment.request_date,
-                shipment_date = newShipment.shipment_date,
-                shipment_type = newShipment.shipment_type,
-                shipment_status = newShipment.shipment_status,
-                notes = newShipment.notes,
-                carrier_code = newShipment.carrier_code,
-                carrier_description = newShipment.carrier_description,
-                service_code = newShipment.service_code,
-                payment_type = newShipment.payment_type,
-                transfer_mode = newShipment.transfer_mode,
-                total_package_count = newShipment.total_package_count,
-                total_package_weight = newShipment.total_package_weight,
-                created_at = DateTime.UtcNow,
-                updated_at = DateTime.UtcNow
-            };
+            newShipment.created_at = DateTime.UtcNow;
+            newShipment.updated_at = DateTime.UtcNow;
 
-            _context.Shipments.Add(shipment);
+            _context.Shipments.Add(newShipment);
             await _context.SaveChangesAsync();
-            return shipment;
+            return newShipment;
         }
 
         public async Task<bool> UpdateShipment(Shipment shipment)
         {
-            Shipment existingShipment = await _context.Shipments.FindAsync(shipment.id);
+            var existingShipment = await _context.Shipments.FindAsync(shipment.id);
             if (existingShipment == null)
             {
                 return false;
             }
 
-            existingShipment.order_id = shipment.order_id;
             existingShipment.source_id = shipment.source_id;
             existingShipment.order_date = shipment.order_date;
             existingShipment.request_date = shipment.request_date;
@@ -86,12 +71,38 @@ namespace Cargohub.Services
         public async Task<bool> DeleteShipment(int id)
         {
             var shipment = await _context.Shipments.FindAsync(id);
-            if (shipment?.isdeleted == true || shipment == null)
+            if (shipment == null || shipment.isdeleted)
             {
                 return false;
             }
 
             shipment.isdeleted = true;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DisconnectOrdersFromShipment(int shipmentId, List<int> orderIds)
+        {
+            // Validate the shipment exists
+            var shipment = await _context.Shipments
+                .Include(s => s.OrderShipments)
+                .FirstOrDefaultAsync(s => s.id == shipmentId);
+
+            if (shipment == null)
+            {
+                throw new Exception("Shipment not found.");
+            }
+
+            // Remove the specific links
+            var linksToRemove = shipment.OrderShipments
+                .Where(os => orderIds.Contains(os.order_id))
+                .ToList();
+
+            if (!linksToRemove.Any())
+            {
+                throw new Exception("No matching orders found for the shipment.");
+            }
+
+            _context.OrderShipments.RemoveRange(linksToRemove);
             await _context.SaveChangesAsync();
             return true;
         }

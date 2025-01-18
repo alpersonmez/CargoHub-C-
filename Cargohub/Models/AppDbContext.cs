@@ -20,12 +20,23 @@ namespace Cargohub.Models
         public DbSet<Client> Clients { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<ImportStatus> ImportStatuses { get; set; }
+        public DbSet<OrderShipment> OrderShipments { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OrderShipment>()
+                    .HasOne(os => os.Order)
+                    .WithMany(o => o.OrderShipments)
+                    .HasForeignKey(os => os.order_id);
+
+                modelBuilder.Entity<OrderShipment>()
+                    .HasOne(os => os.Shipment)
+                    .WithMany(s => s.OrderShipments)
+                    .HasForeignKey(os => os.shipment_id);
+
             // Configure Stock hierarchy with discriminator
-                    modelBuilder.Entity<Warehouse>()
+            modelBuilder.Entity<Warehouse>()
                 .OwnsOne(w => w.contact, contact =>
                 {
                     contact.Property(c => c.name).HasColumnName("contact_name");

@@ -11,5 +11,6 @@ namespace Cargohub.Services
         Task<Shipment> AddShipment(Shipment shipment);
         Task<bool> UpdateShipment(Shipment shipment);
         Task<bool> DeleteShipment(int id);
+        Task<bool> DisconnectOrdersFromShipment(int shipmentId, List<int> orderIds);
     }
 }

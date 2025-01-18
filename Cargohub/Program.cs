@@ -23,6 +23,7 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IItemLinesService, ItemLinesService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IOrderShipmentService, OrderShipmentService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

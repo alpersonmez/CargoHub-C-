@@ -6,7 +6,7 @@ namespace Cargohub.Services
 {
     public interface IShipmentService
     {
-        Task<List<Shipment>> GetAllShipments(int amount = 100);
+        Task<List<Shipment>> GetAllShipments(int amount);
         Task<Shipment> GetShipmentById(int id);
         Task<Shipment> AddShipment(Shipment shipment);
         Task<bool> UpdateShipment(Shipment shipment);

@@ -16,17 +16,17 @@ namespace Cargohub.Controllers
             _clientService = clientService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllClients()
+        [HttpGet("amount/{amount}")]
+        public async Task<IActionResult> GetAllClients(int amount)
         {
-            var clients = _clientService.GetAllClients();
+            var clients = await _clientService.GetAllClients(amount);
             return Ok(clients);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientById(int id)
         {
-            var client = _clientService.GetClientById(id);
+            var client = await _clientService.GetClientById(id);
             if (client == null)
                 return NotFound($"Client with ID {id} not found.");
             return Ok(client);

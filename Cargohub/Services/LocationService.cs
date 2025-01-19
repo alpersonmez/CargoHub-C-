@@ -12,9 +12,9 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Location>> GetAllLocations(int amount = 100)
+        public async Task<List<Location>> GetAllLocations(int amount)
         {
-            return await _context.Locations.Take(amount).ToListAsync(); // Take(100) is that the limit is 100 locations
+            return await _context.Locations.Take(amount).ToListAsync();
         }
 
         public async Task<Location> GetLocationById(int id)

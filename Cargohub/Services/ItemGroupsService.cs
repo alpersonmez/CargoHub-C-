@@ -14,7 +14,7 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<ItemGroup>> GetAllItemGroups(int amount = 100)
+        public async Task<List<ItemGroup>> GetAllItemGroups(int amount)
         {
             return await _context.ItemGroups.Take(amount).ToListAsync();
         }

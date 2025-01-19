@@ -4,7 +4,7 @@ namespace Cargohub.Services
 {
     public interface ITransferService
     {
-        public Task<List<Transfer>> GetTransfers(int amount = 100);
+        public Task<List<Transfer>> GetTransfers(int amount);
         public Task<Transfer> GetTransfer(int id);
         //public List<Item> GetItems(int id);
         public Task<Transfer> AddTransfer(Transfer transfer);

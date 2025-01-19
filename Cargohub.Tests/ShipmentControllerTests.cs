@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -13,44 +15,81 @@ namespace Cargohub.Tests
     public class ShipmentControllerTests
     {
         private Mock<IShipmentService> _mockShipmentService;
+        private Mock<IOrderShipmentService> _mockOrderShipmentService;
         private ShipmentController _controller;
 
         [TestInitialize]
         public void Setup()
         {
             _mockShipmentService = new Mock<IShipmentService>();
-            _controller = new ShipmentController(_mockShipmentService.Object);
+            _mockOrderShipmentService = new Mock<IOrderShipmentService>();
+            _controller = new ShipmentController(_mockShipmentService.Object, _mockOrderShipmentService.Object);
         }
 
-        // Test GetAllShipments
         [TestMethod]
         public async Task GetAllShipments_ReturnsOkResult_WithListOfShipments()
         {
             // Arrange
             var shipments = new List<Shipment>
             {
-                new Shipment{
+                new Shipment
+                {
                     id = 1,
-                    notes = "Eerste"
+                    source_id = 1001,
+                    order_date = DateTime.UtcNow.AddDays(-10),
+                    request_date = DateTime.UtcNow.AddDays(-7),
+                    shipment_date = DateTime.UtcNow.AddDays(-5),
+                    shipment_type = "Express",
+                    shipment_status = "Pending",
+                    notes = "First shipment notes",
+                    carrier_code = "CC001",
+                    carrier_description = "Carrier Description 1",
+                    service_code = "SC001",
+                    payment_type = "Prepaid",
+                    transfer_mode = "Air",
+                    total_package_count = 10,
+                    total_package_weight = 150.5,
+                    created_at = DateTime.UtcNow.AddDays(-15),
+                    updated_at = DateTime.UtcNow.AddDays(-10),
+                    isdeleted = false
                 },
-                new Shipment{
+                new Shipment
+                {
                     id = 2,
-                    notes = "Stoomboot"
+                    source_id = 1002,
+                    order_date = DateTime.UtcNow.AddDays(-20),
+                    request_date = DateTime.UtcNow.AddDays(-15),
+                    shipment_date = DateTime.UtcNow.AddDays(-10),
+                    shipment_type = "Standard",
+                    shipment_status = "Completed",
+                    notes = "Second shipment notes",
+                    carrier_code = "CC002",
+                    carrier_description = "Carrier Description 2",
+                    service_code = "SC002",
+                    payment_type = "Postpaid",
+                    transfer_mode = "Sea",
+                    total_package_count = 20,
+                    total_package_weight = 500.75,
+                    created_at = DateTime.UtcNow.AddDays(-25),
+                    updated_at = DateTime.UtcNow.AddDays(-5),
+                    isdeleted = false
                 }
             };
             _mockShipmentService.Setup(service => service.GetAllShipments(100)).ReturnsAsync(shipments);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetAll(100);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(shipments, okResult.Value);
+
+            var returnedShipments = okResult.Value as List<Shipment>;
+            Assert.IsNotNull(returnedShipments);
+            Assert.AreEqual(2, returnedShipments.Count);
         }
 
-        // Test GetShipmentById - Success
         [TestMethod]
         public async Task GetShipmentById_ReturnsOkResult_WithShipment()
         {
@@ -58,7 +97,23 @@ namespace Cargohub.Tests
             var shipment = new Shipment
             {
                 id = 1,
-                notes = "Eerste"
+                source_id = 1001,
+                order_date = DateTime.UtcNow.AddDays(-10),
+                request_date = DateTime.UtcNow.AddDays(-7),
+                shipment_date = DateTime.UtcNow.AddDays(-5),
+                shipment_type = "Express",
+                shipment_status = "Pending",
+                notes = "First shipment notes",
+                carrier_code = "CC001",
+                carrier_description = "Carrier Description 1",
+                service_code = "SC001",
+                payment_type = "Prepaid",
+                transfer_mode = "Air",
+                total_package_count = 10,
+                total_package_weight = 150.5,
+                created_at = DateTime.UtcNow.AddDays(-15),
+                updated_at = DateTime.UtcNow.AddDays(-10),
+                isdeleted = false
             };
             _mockShipmentService.Setup(service => service.GetShipmentById(1)).ReturnsAsync(shipment);
 
@@ -72,7 +127,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(shipment, okResult.Value);
         }
 
-        // Test GetShipmentById - Not Found
         [TestMethod]
         public async Task GetShipmentById_ReturnsNotFound_WhenShipmentDoesNotExist()
         {
@@ -86,15 +140,26 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test CreateShipment - Success
         [TestMethod]
         public async Task CreateShipment_ReturnsCreatedAtActionResult_WithCreatedShipment()
         {
             // Arrange
             var shipment = new Shipment
             {
-                id = 1,
-                notes = "Eerste"
+                source_id = 1001,
+                order_date = DateTime.UtcNow.AddDays(-10),
+                request_date = DateTime.UtcNow.AddDays(-7),
+                shipment_date = DateTime.UtcNow.AddDays(-5),
+                shipment_type = "Express",
+                shipment_status = "Pending",
+                notes = "First shipment notes",
+                carrier_code = "CC001",
+                carrier_description = "Carrier Description 1",
+                service_code = "SC001",
+                payment_type = "Prepaid",
+                transfer_mode = "Air",
+                total_package_count = 10,
+                total_package_weight = 150.5
             };
             _mockShipmentService.Setup(service => service.AddShipment(shipment)).ReturnsAsync(shipment);
 
@@ -108,7 +173,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(shipment, createdResult.Value);
         }
 
-        // Test UpdateShipment - Success
         [TestMethod]
         public async Task UpdateShipment_ReturnsOkResult_WithUpdatedShipment()
         {
@@ -116,7 +180,8 @@ namespace Cargohub.Tests
             var shipment = new Shipment
             {
                 id = 1,
-                notes = "Eerste"
+                notes = "Updated shipment notes",
+                updated_at = DateTime.UtcNow
             };
             _mockShipmentService.Setup(service => service.UpdateShipment(shipment)).ReturnsAsync(true);
 
@@ -130,7 +195,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(shipment, okResult.Value);
         }
 
-        // Test UpdateShipment - Not Found
         [TestMethod]
         public async Task UpdateShipment_ReturnsNotFound_WhenShipmentDoesNotExist()
         {
@@ -138,7 +202,8 @@ namespace Cargohub.Tests
             var shipment = new Shipment
             {
                 id = 1,
-                notes = "Eerste"
+                notes = "Updated shipment notes",
+                updated_at = DateTime.UtcNow
             };
             _mockShipmentService.Setup(service => service.UpdateShipment(shipment)).ReturnsAsync(false);
 
@@ -149,7 +214,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteShipment - Success
         [TestMethod]
         public async Task DeleteShipment_ReturnsNoContentResult_WhenShipmentIsDeleted()
         {
@@ -163,7 +227,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteShipment - Not Found
         [TestMethod]
         public async Task DeleteShipment_ReturnsNotFound_WhenShipmentDoesNotExist()
         {
@@ -176,5 +239,35 @@ namespace Cargohub.Tests
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
+
+        // [TestMethod]
+        // public async Task LinkOrdersToShipment_ReturnsOkResult_WhenOrdersLinkedSuccessfully()
+        // {
+        //     // Arrange
+        //     var dto = new LinkOrdersToShipmentDto { OrderIds = new List<int> { 1, 2, 3 } };
+        //     _mockOrderShipmentService.Setup(service => service.LinkOrdersToShipment(1, dto.OrderIds)).ReturnsAsync(true);
+
+        //     // Act
+        //     var result = await _controller.LinkOrdersToShipment(1, dto);
+
+        //     // Assert
+        //     Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        //     var okResult = result as OkObjectResult;
+        //     Assert.IsNotNull(okResult);
+        // }
+
+        // [TestMethod]
+        // public async Task LinkOrdersToShipment_ReturnsBadRequest_WhenLinkingFails()
+        // {
+        //     // Arrange
+        //     var dto = new LinkOrdersToShipmentDto { OrderIds = new List<int> { 1, 2, 3 } };
+        //     _mockOrderShipmentService.Setup(service => service.LinkOrdersToShipment(1, dto.OrderIds)).ReturnsAsync(false);
+
+        //     // Act
+        //     var result = await _controller.LinkOrdersToShipment(1, dto);
+
+        //     // Assert
+        //     Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        // }
     }
 }

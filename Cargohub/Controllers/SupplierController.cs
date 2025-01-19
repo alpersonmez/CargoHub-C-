@@ -15,10 +15,10 @@ public class SupplierController : ControllerBase
         _SupplierService = SupplierService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("amount/{amount}")]
+    public async Task<IActionResult> GetAll(int amount)
     {
-        var supplier = await _SupplierService.GetAllSuppliers();
+        var supplier = await _SupplierService.GetAllSuppliers(amount);
         return Ok(supplier);
     }
 

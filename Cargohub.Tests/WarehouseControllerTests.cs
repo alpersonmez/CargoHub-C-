@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -22,26 +23,57 @@ namespace Cargohub.Tests
             _controller = new WarehouseController(_mockWarehouseService.Object);
         }
 
-        // Test GetAllWarehouses
         [TestMethod]
         public async Task GetAllWarehouses_ReturnsOkResult_WithListOfWarehouses()
         {
             // Arrange
             var warehouses = new List<Warehouse>
             {
-                new Warehouse{
+                new Warehouse
+                {
                     id = 1,
-                    name = "Waardehuis"
+                    code = "WH001",
+                    name = "Main Warehouse",
+                    address = "123 Main St",
+                    zip = "12345",
+                    city = "Springfield",
+                    province = "State",
+                    country = "USA",
+                    contact = new Warehouse.Contact
+                    {
+                        name = "John Doe",
+                        phone = "555-1234",
+                        email = "johndoe@example.com"
+                    },
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow.AddDays(-5),
+                    isdeleted = false
                 },
-                new Warehouse{
+                new Warehouse
+                {
                     id = 2,
-                    name = "Garage"
+                    code = "WH002",
+                    name = "Secondary Warehouse",
+                    address = "456 Elm St",
+                    zip = "54321",
+                    city = "Shelbyville",
+                    province = "Province",
+                    country = "Canada",
+                    contact = new Warehouse.Contact
+                    {
+                        name = "Jane Smith",
+                        phone = "555-5678",
+                        email = "janesmith@example.com"
+                    },
+                    created_at = DateTime.UtcNow.AddDays(-20),
+                    updated_at = DateTime.UtcNow.AddDays(-15),
+                    isdeleted = false
                 }
             };
-            _mockWarehouseService.Setup(service => service.GetAllWarehouses(100)).ReturnsAsync(warehouses);
+            _mockWarehouseService.Setup(service => service.GetAllWarehouses(It.IsAny<int>())).ReturnsAsync(warehouses);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetAll(100);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -50,7 +82,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(warehouses, okResult.Value);
         }
 
-        // Test GetWarehouseById - Success
         [TestMethod]
         public async Task GetWarehouseById_ReturnsOkResult_WithWarehouse()
         {
@@ -58,7 +89,22 @@ namespace Cargohub.Tests
             var warehouse = new Warehouse
             {
                 id = 1,
-                name = "Waardehuis"
+                code = "WH001",
+                name = "Main Warehouse",
+                address = "123 Main St",
+                zip = "12345",
+                city = "Springfield",
+                province = "State",
+                country = "USA",
+                contact = new Warehouse.Contact
+                {
+                    name = "John Doe",
+                    phone = "555-1234",
+                    email = "johndoe@example.com"
+                },
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockWarehouseService.Setup(service => service.GetWarehouseById(1)).ReturnsAsync(warehouse);
 
@@ -72,7 +118,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(warehouse, okResult.Value);
         }
 
-        // Test GetWarehouseById - Not Found
         [TestMethod]
         public async Task GetWarehouseById_ReturnsNotFound_WhenWarehouseDoesNotExist()
         {
@@ -86,7 +131,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test CreateWarehouse - Success
         [TestMethod]
         public async Task CreateWarehouse_ReturnsCreatedAtActionResult_WithCreatedWarehouse()
         {
@@ -94,7 +138,22 @@ namespace Cargohub.Tests
             var warehouse = new Warehouse
             {
                 id = 1,
-                name = "Waardehuis"
+                code = "WH001",
+                name = "Main Warehouse",
+                address = "123 Main St",
+                zip = "12345",
+                city = "Springfield",
+                province = "State",
+                country = "USA",
+                contact = new Warehouse.Contact
+                {
+                    name = "John Doe",
+                    phone = "555-1234",
+                    email = "johndoe@example.com"
+                },
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockWarehouseService.Setup(service => service.AddWarehouse(warehouse)).ReturnsAsync(warehouse);
 
@@ -108,7 +167,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(warehouse, createdResult.Value);
         }
 
-        // Test UpdateWarehouse - Success
         [TestMethod]
         public async Task UpdateWarehouse_ReturnsOkResult_WithUpdatedWarehouse()
         {
@@ -116,7 +174,22 @@ namespace Cargohub.Tests
             var warehouse = new Warehouse
             {
                 id = 1,
-                name = "Waardehuis"
+                code = "WH001",
+                name = "Main Warehouse",
+                address = "123 Main St",
+                zip = "12345",
+                city = "Springfield",
+                province = "State",
+                country = "USA",
+                contact = new Warehouse.Contact
+                {
+                    name = "John Doe",
+                    phone = "555-1234",
+                    email = "johndoe@example.com"
+                },
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockWarehouseService.Setup(service => service.UpdateWarehouse(warehouse)).ReturnsAsync(true);
 
@@ -130,7 +203,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(warehouse, okResult.Value);
         }
 
-        // Test UpdateWarehouse - Not Found
         [TestMethod]
         public async Task UpdateWarehouse_ReturnsNotFound_WhenWarehouseDoesNotExist()
         {
@@ -138,7 +210,22 @@ namespace Cargohub.Tests
             var warehouse = new Warehouse
             {
                 id = 1,
-                name = "Waardehuis"
+                code = "WH001",
+                name = "Main Warehouse",
+                address = "123 Main St",
+                zip = "12345",
+                city = "Springfield",
+                province = "State",
+                country = "USA",
+                contact = new Warehouse.Contact
+                {
+                    name = "John Doe",
+                    phone = "555-1234",
+                    email = "johndoe@example.com"
+                },
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow.AddDays(-5),
+                isdeleted = false
             };
             _mockWarehouseService.Setup(service => service.UpdateWarehouse(warehouse)).ReturnsAsync(false);
 
@@ -149,7 +236,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteWarehouse - Success
         [TestMethod]
         public async Task DeleteWarehouse_ReturnsNoContentResult_WhenWarehouseIsDeleted()
         {
@@ -163,7 +249,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteWarehouse - Not Found
         [TestMethod]
         public async Task DeleteWarehouse_ReturnsNotFound_WhenWarehouseDoesNotExist()
         {

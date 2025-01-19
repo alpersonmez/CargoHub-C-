@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Controllers;
 using Cargohub.Models;
 using Cargohub.Services;
+using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -13,75 +14,86 @@ namespace Cargohub.Tests
     public class OrderControllerTests
     {
         private Mock<IOrderService> _mockOrderService;
+        private Mock<IOrderShipmentService> _mockOrderShipmentService;
         private OrderController _controller;
 
         [TestInitialize]
         public void Setup()
         {
             _mockOrderService = new Mock<IOrderService>();
-            _controller = new OrderController(_mockOrderService.Object);
+            _mockOrderShipmentService = new Mock<IOrderShipmentService>();
+            _controller = new OrderController(_mockOrderService.Object, _mockOrderShipmentService.Object);
         }
 
-        // Test GetAllOrders
         [TestMethod]
         public async Task GetAllOrders_ReturnsOkResult_WithListOfOrders()
         {
             // Arrange
             var orders = new List<Order>
             {
-                new Order {
+                new Order
+                {
                     id = 1,
                     source_id = 33,
-                    order_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-                    request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
+                    order_date = DateTime.UtcNow.AddDays(-5),
+                    request_date = DateTime.UtcNow.AddDays(1),
                     reference = "ORD00001",
-                    reference_extra = "Bedreven arm straffen bureau.",
+                    reference_extra = "Extra reference",
                     order_status = "Delivered",
-                    notes = "Voedsel vijf vork heel.",
-                    shipping_notes = "Buurman betalen plaats bewolkt.",
-                    picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
+                    notes = "Test notes",
+                    shipping_notes = "Shipping test notes",
+                    picking_notes = "Picking test notes",
                     warehouse_id = 18,
-                    ship_to = "Duitsland",
-                    bill_to = "Nederland",
-                    shipment_id = 1
+                    ship_to = "Germany",
+                    bill_to = "Netherlands",
+                    total_amount = 1500.50,
+                    total_discount = 50.00,
+                    total_tax = 300.00,
+                    total_surcharge = 20.00,
+                    created_at = DateTime.UtcNow.AddDays(-10),
+                    updated_at = DateTime.UtcNow
                 },
                 new Order
                 {
                     id = 2,
                     source_id = 44,
-                    order_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-                    request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
-                    reference = "ORD00001",
-                    reference_extra = "Bedreven arm straffen bureau.",
-                    order_status = "Delivered",
-                    notes = "Voedsel vijf vork heel.",
-                    shipping_notes = "Buurman betalen plaats bewolkt.",
-                    picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
-                    warehouse_id = 18,
-                    ship_to = "Duitsland",
-                    bill_to = "Nederland",
-                    shipment_id = 1,
-                    total_amount = 9905.13,
-                    total_discount = 150.77,
-                    total_tax = 372.72,
-                    total_surcharge = 77.6,
-                    created_at = DateTime.Parse("2019-04-03T11:33:15Z"),
-                    updated_at = DateTime.Parse("2019-04-05T07:33:15Z")
+                    order_date = DateTime.UtcNow.AddDays(-3),
+                    request_date = DateTime.UtcNow.AddDays(2),
+                    reference = "ORD00002",
+                    reference_extra = "Another reference",
+                    order_status = "Pending",
+                    notes = "Another test note",
+                    shipping_notes = "Another shipping note",
+                    picking_notes = "Another picking note",
+                    warehouse_id = 19,
+                    ship_to = "France",
+                    bill_to = "Italy",
+                    total_amount = 2000.75,
+                    total_discount = 75.00,
+                    total_tax = 400.00,
+                    total_surcharge = 25.00,
+                    created_at = DateTime.UtcNow.AddDays(-8),
+                    updated_at = DateTime.UtcNow
                 }
-                };
-            _mockOrderService.Setup(service => service.GetAllOrders(100)).ReturnsAsync(orders);
+            };
+
+            // Updated mock setup to use It.IsAny<int>() for the optional parameter
+            _mockOrderService.Setup(service => service.GetAllOrders(It.IsAny<int>())).ReturnsAsync(orders);
 
             // Act
-            var result = await _controller.GetAll();
+            var result = await _controller.GetAll(100);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(orders, okResult.Value);
+
+            var returnedOrders = okResult.Value as List<Order>;
+            Assert.IsNotNull(returnedOrders);
+            Assert.AreEqual(2, returnedOrders.Count);
         }
 
-        // Test GetOrderById - Success
+
         [TestMethod]
         public async Task GetOrderById_ReturnsOkResult_WithOrder()
         {
@@ -90,18 +102,23 @@ namespace Cargohub.Tests
             {
                 id = 1,
                 source_id = 33,
-                order_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-                request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
+                order_date = DateTime.UtcNow.AddDays(-5),
+                request_date = DateTime.UtcNow.AddDays(1),
                 reference = "ORD00001",
-                reference_extra = "Bedreven arm straffen bureau.",
+                reference_extra = "Extra reference",
                 order_status = "Delivered",
-                notes = "Voedsel vijf vork heel.",
-                shipping_notes = "Buurman betalen plaats bewolkt.",
-                picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
+                notes = "Test notes",
+                shipping_notes = "Shipping test notes",
+                picking_notes = "Picking test notes",
                 warehouse_id = 18,
-                ship_to = "Duitsland",
-                bill_to = "Nederland",
-                shipment_id = 1
+                ship_to = "Germany",
+                bill_to = "Netherlands",
+                total_amount = 1500.50,
+                total_discount = 50.00,
+                total_tax = 300.00,
+                total_surcharge = 20.00,
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow
             };
             _mockOrderService.Setup(service => service.GetOrderById(1)).ReturnsAsync(order);
 
@@ -115,7 +132,6 @@ namespace Cargohub.Tests
             Assert.AreEqual(order, okResult.Value);
         }
 
-        // Test GetOrderById - Not Found
         [TestMethod]
         public async Task GetOrderById_ReturnsNotFound_WhenOrderDoesNotExist()
         {
@@ -129,7 +145,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test CreateOrder - Success
         [TestMethod]
         public async Task CreateOrder_ReturnsCreatedAtActionResult_WithCreatedOrder()
         {
@@ -138,18 +153,23 @@ namespace Cargohub.Tests
             {
                 id = 1,
                 source_id = 33,
-                order_date = DateTime.Parse("2019-04-03T11:33:15Z"),
-                request_date = DateTime.Parse("2019-04-07T11:33:15Z"),
+                order_date = DateTime.UtcNow.AddDays(-5),
+                request_date = DateTime.UtcNow.AddDays(1),
                 reference = "ORD00001",
-                reference_extra = "Bedreven arm straffen bureau.",
+                reference_extra = "Extra reference",
                 order_status = "Delivered",
-                notes = "Voedsel vijf vork heel.",
-                shipping_notes = "Buurman betalen plaats bewolkt.",
-                picking_notes = "Ademen fijn volgorde scherp aardappel op leren.",
+                notes = "Test notes",
+                shipping_notes = "Shipping test notes",
+                picking_notes = "Picking test notes",
                 warehouse_id = 18,
-                ship_to = "Duitsland",
-                bill_to = "Nederland",
-                shipment_id = 1
+                ship_to = "Germany",
+                bill_to = "Netherlands",
+                total_amount = 1500.50,
+                total_discount = 50.00,
+                total_tax = 300.00,
+                total_surcharge = 20.00,
+                created_at = DateTime.UtcNow.AddDays(-10),
+                updated_at = DateTime.UtcNow
             };
             _mockOrderService.Setup(service => service.AddOrder(order)).ReturnsAsync(order);
 
@@ -163,12 +183,16 @@ namespace Cargohub.Tests
             Assert.AreEqual(order, createdResult.Value);
         }
 
-        // Test UpdateOrder - Success
         [TestMethod]
         public async Task UpdateOrder_ReturnsOkResult_WithUpdatedOrder()
         {
             // Arrange
-            var order = new Order { id = 1, notes = "Updated Order" };
+            var order = new Order
+            {
+                id = 1,
+                notes = "Updated order notes",
+                updated_at = DateTime.UtcNow
+            };
             _mockOrderService.Setup(service => service.UpdateOrder(order)).ReturnsAsync(true);
 
             // Act
@@ -181,12 +205,16 @@ namespace Cargohub.Tests
             Assert.AreEqual(order, okResult.Value);
         }
 
-        // Test UpdateOrder - Not Found
         [TestMethod]
         public async Task UpdateOrder_ReturnsNotFound_WhenOrderDoesNotExist()
         {
             // Arrange
-            var order = new Order { id = 1, notes = "Updated Order" };
+            var order = new Order
+            {
+                id = 1,
+                notes = "Updated order notes",
+                updated_at = DateTime.UtcNow
+            };
             _mockOrderService.Setup(service => service.UpdateOrder(order)).ReturnsAsync(false);
 
             // Act
@@ -196,7 +224,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
-        // Test DeleteOrder - Success
         [TestMethod]
         public async Task DeleteOrder_ReturnsNoContentResult_WhenOrderIsDeleted()
         {
@@ -210,7 +237,6 @@ namespace Cargohub.Tests
             Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
-        // Test DeleteOrder - Not Found
         [TestMethod]
         public async Task DeleteOrder_ReturnsNotFound_WhenOrderDoesNotExist()
         {

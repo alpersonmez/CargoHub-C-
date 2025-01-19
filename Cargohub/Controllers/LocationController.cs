@@ -16,10 +16,10 @@ public class LocationController : ControllerBase
         _locationService = locationService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("amount/{amount}")]
+    public async Task<IActionResult> GetAll(int amount)
     {
-        var locations = await _locationService.GetAllLocations();
+        var locations = await _locationService.GetAllLocations(amount);
         return Ok(locations);
     }
 

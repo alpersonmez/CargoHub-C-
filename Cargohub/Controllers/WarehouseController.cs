@@ -15,10 +15,10 @@ public class WarehouseController : ControllerBase
         _warehouseService = warehouseService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("amount/{amount}")]
+    public async Task<IActionResult> GetAll(int amount)
     {
-        var warehouse = await _warehouseService.GetAllWarehouses();
+        var warehouse = await _warehouseService.GetAllWarehouses(amount);
         return Ok(warehouse);
     }
 

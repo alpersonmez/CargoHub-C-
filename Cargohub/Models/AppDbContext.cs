@@ -11,6 +11,7 @@ namespace Cargohub.Models
         public DbSet<Item> Items { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<Dock> Docks { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<ItemLines> Item_lines { get; set; }
         public DbSet<ItemGroup> ItemGroups { get; set; }
@@ -51,6 +52,17 @@ namespace Cargohub.Models
                 .HasValue<OrderStock>("Order")
                 .HasValue<ShipmentStock>("Shipment")
                 .HasValue<TransferStock>("Transfer");
+
+            modelBuilder.Entity<Dock>()
+                .HasOne(d => d.warehouse)
+                .WithMany(w => w.docks)
+                .HasForeignKey(d => d.warehouse_id);
+
+            modelBuilder.Entity<Dock>()
+                .HasIndex(d => d.code)
+                .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
 

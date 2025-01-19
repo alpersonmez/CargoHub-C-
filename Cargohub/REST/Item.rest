@@ -1,0 +1,6 @@
+### Get all items
+GET http://localhost:5000/api/item/P000002
+###
+
+GET http://localhost:5000/api/item/amount/5
+########

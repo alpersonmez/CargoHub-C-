@@ -112,7 +112,7 @@ namespace Cargohub.Services
 
         public async Task<bool> UpdateItemAsync(string uid, Item updatedItem)
         {
-            var existingItem = await _context.Items.FindAsync(uid);
+            var existingItem = await _context.Items.FirstOrDefaultAsync(i => i.uid == uid);
 
             if (existingItem == null)
             {
@@ -143,7 +143,7 @@ namespace Cargohub.Services
 
         public async Task<bool> RemoveItemAsync(string uid)
         {
-            var item = await _context.Items.FindAsync(uid);
+            var item = await _context.Items.FirstOrDefaultAsync(i => i.uid == uid);
             if (item?.isdeleted == true || item == null)
             {
                 return false;

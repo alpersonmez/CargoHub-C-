@@ -247,5 +247,53 @@ namespace Cargohub.Tests
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
+
+        [TestMethod]
+        public async Task TestGetClientOrders()
+        {
+            // Arrange
+            var client = new Client
+            {
+                id = 1,
+                name = "Client A",
+                address = "123 Street",
+                city = "City A",
+                zip_code = "12345",
+                province = "Province A",
+                country = "Country A",
+                contact_name = "John Doe",
+                contact_phone = "1234567890",
+                contact_email = "john.doe@example.com",
+                created_at = DateTime.UtcNow.AddDays(-5),
+                updated_at = DateTime.UtcNow,
+                isdeleted = false
+            };
+            var order = new List<Order> {
+            new Order {
+                id = 2,
+                ship_to = "1",
+                bill_to = "Jumko"
+            },
+            new Order {
+                id = 6,
+                ship_to = "Jumko",
+                bill_to = "1"
+            }
+            };
+            _mockClientService.Setup(service => service.GetClientOrders(1)).ReturnsAsync(order);
+
+            // Act
+            var result = await _controller.GetClientOrders(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+
+            var returnedOrders = okResult.Value as List<Order>;
+            Assert.IsNotNull(returnedOrders);
+            Assert.AreEqual(order, returnedOrders);
+        }
+
     }
 }

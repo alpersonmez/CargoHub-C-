@@ -239,35 +239,5 @@ namespace Cargohub.Tests
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
-
-        // [TestMethod]
-        // public async Task LinkOrdersToShipment_ReturnsOkResult_WhenOrdersLinkedSuccessfully()
-        // {
-        //     // Arrange
-        //     var dto = new LinkOrdersToShipmentDto { OrderIds = new List<int> { 1, 2, 3 } };
-        //     _mockOrderShipmentService.Setup(service => service.LinkOrdersToShipment(1, dto.OrderIds)).ReturnsAsync(true);
-
-        //     // Act
-        //     var result = await _controller.LinkOrdersToShipment(1, dto);
-
-        //     // Assert
-        //     Assert.IsInstanceOfType(result, typeof(OkObjectResult));
-        //     var okResult = result as OkObjectResult;
-        //     Assert.IsNotNull(okResult);
-        // }
-
-        // [TestMethod]
-        // public async Task LinkOrdersToShipment_ReturnsBadRequest_WhenLinkingFails()
-        // {
-        //     // Arrange
-        //     var dto = new LinkOrdersToShipmentDto { OrderIds = new List<int> { 1, 2, 3 } };
-        //     _mockOrderShipmentService.Setup(service => service.LinkOrdersToShipment(1, dto.OrderIds)).ReturnsAsync(false);
-
-        //     // Act
-        //     var result = await _controller.LinkOrdersToShipment(1, dto);
-
-        //     // Assert
-        //     Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-        // }
     }
 }

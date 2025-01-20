@@ -14,7 +14,8 @@ namespace Cargohub.Models
     }
 
     public class OrderStock : Stock
-    {
+    {   
+        [JsonIgnore]
         public Order? Order { get; set; }
         public int OrderId { get; set; }
 

@@ -12,22 +12,58 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Order>> GetAllOrders(int amount)
+        public async Task<List<OrderDto>> GetAllOrders(int amount)
         {
-            return await _context.Orders
-                .Include(o => o.OrderShipments)
-                .ThenInclude(os => os.Shipment)
+            var orders = await _context.Orders
+                .Include(o => o.Items) // Include related stocks
                 .Take(amount)
                 .ToListAsync();
+
+            // Map entities to DTOs
+            return orders.Select(o => new OrderDto
+            {
+                Id = o.id,
+                SourceId = o.source_id,
+                OrderDate = o.order_date,
+                RequestDate = o.request_date,
+                Reference = o.reference,
+                OrderStatus = o.order_status,
+                TotalAmount = o.total_amount,
+                Items = o.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            }).ToList();
         }
 
-        public async Task<Order> GetOrderById(int id)
+
+        public async Task<OrderDto?> GetOrderById(int id)
         {
-            return await _context.Orders
-                .Include(o => o.OrderShipments)
-                .ThenInclude(os => os.Shipment)
+            var order = await _context.Orders
+                .Include(o => o.Items)
                 .FirstOrDefaultAsync(o => o.id == id);
+
+            if (order == null)
+                return null;
+
+            return new OrderDto
+            {
+                Id = order.id,
+                SourceId = order.source_id,
+                OrderDate = order.order_date,
+                RequestDate = order.request_date,
+                Reference = order.reference,
+                OrderStatus = order.order_status,
+                TotalAmount = order.total_amount,
+                Items = order.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            };
         }
+
 
         public async Task<Order> AddOrder(Order newOrder)
         {

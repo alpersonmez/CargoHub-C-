@@ -742,7 +742,7 @@ namespace Cargohub.Migrations
             modelBuilder.Entity("Cargohub.Models.OrderStock", b =>
                 {
                     b.HasOne("Cargohub.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -774,6 +774,8 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
+                    b.Navigation("Items");
+
                     b.Navigation("OrderShipments");
                 });
 

@@ -27,15 +27,15 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            Order order = await _orderService.GetOrderById(id);
+            var order = await _orderService.GetOrderById(id);
             if (order == null)
-            {
                 return NotFound();
-            }
+
             return Ok(order);
         }
+
 
         [AdminFilter]
         [HttpPost]
@@ -45,7 +45,7 @@ namespace Cargohub.Controllers
                 return BadRequest(ModelState);
 
             Order createdOrder = await _orderService.AddOrder(newOrder);
-            return CreatedAtAction(nameof(Get), new { id = createdOrder.id }, createdOrder);
+            return CreatedAtAction(nameof(GetById), new { id = createdOrder.id }, createdOrder);
         }
 
         [AdminFilter]

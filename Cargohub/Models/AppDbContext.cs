@@ -1,4 +1,4 @@
-using Cargohub.Services;
+using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Models
@@ -22,20 +22,9 @@ namespace Cargohub.Models
         public DbSet<ImportStatus> ImportStatuses { get; set; }
         public DbSet<OrderShipment> OrderShipments { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderShipment>()
-                    .HasOne(os => os.Order)
-                    .WithMany(o => o.OrderShipments)
-                    .HasForeignKey(os => os.order_id);
-
-                modelBuilder.Entity<OrderShipment>()
-                    .HasOne(os => os.Shipment)
-                    .WithMany(s => s.OrderShipments)
-                    .HasForeignKey(os => os.shipment_id);
-
-            // Configure Stock hierarchy with discriminator
+            // Configure the Warehouse and its owned Contact class
             modelBuilder.Entity<Warehouse>()
                 .OwnsOne(w => w.contact, contact =>
                 {
@@ -44,7 +33,17 @@ namespace Cargohub.Models
                     contact.Property(c => c.email).HasColumnName("contact_email");
                 });
 
-            // Configure Stock hierarchy with discriminator
+            // Configure other entities (unchanged)
+            modelBuilder.Entity<OrderShipment>()
+                .HasOne(os => os.Order)
+                .WithMany(o => o.OrderShipments)
+                .HasForeignKey(os => os.order_id);
+
+            modelBuilder.Entity<OrderShipment>()
+                .HasOne(os => os.Shipment)
+                .WithMany(s => s.OrderShipments)
+                .HasForeignKey(os => os.shipment_id);
+
             modelBuilder.Entity<Stock>()
                 .ToTable("Stocks")
                 .HasDiscriminator<string>("StockType")
@@ -52,44 +51,21 @@ namespace Cargohub.Models
                 .HasValue<ShipmentStock>("Shipment")
                 .HasValue<TransferStock>("Transfer");
 
+            // Apply soft-delete query filters
+            modelBuilder.Entity<Client>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Inventory>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Item>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemGroup>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemLines>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemType>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Location>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Order>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Shipment>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Transfer>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Warehouse>().HasQueryFilter(e => !e.isdeleted);
+
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Client>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Inventory>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Item>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemGroup>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemLines>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemType>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Location>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Order>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Shipment>()
-                .HasQueryFilter(e => !e.isdeleted);
-
-            modelBuilder.Entity<Supplier>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Transfer>()
-                .HasQueryFilter(e => !e.isdeleted);
-
-            modelBuilder.Entity<Warehouse>()
-                .HasQueryFilter(e => !e.isdeleted);
         }
-
     }
 }

@@ -32,6 +32,15 @@ namespace Cargohub.Controllers
             return Ok(client);
         }
 
+        [HttpGet("{id}/orders")]
+        public async Task<IActionResult> GetClientOrders(int id)
+        {
+            var orders = await _clientService.GetClientOrders(id);
+            if (orders == null)
+                return NotFound($"Client with ID {id} has no orders.");
+            return Ok(orders);
+        }
+
         [AdminFilter]
         [HttpPost]
         public async Task<IActionResult> CreateClient([FromBody] Client client)
@@ -54,9 +63,9 @@ namespace Cargohub.Controllers
             {
                 return BadRequest($"Client Id {id} does not match");
             }
-            
+
             var updatedClient = await _clientService.UpdateClient(client);
-            
+
             if (!updatedClient)
             {
                 return NotFound();

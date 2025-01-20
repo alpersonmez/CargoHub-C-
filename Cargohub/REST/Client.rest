@@ -2,7 +2,7 @@
 GET http://localhost:5000/api/client/amount/2
 ########
 
-GET http://localhost:5000/api/client/1
+GET http://localhost:5000/api/client/5314
 ########
 
 POST http://localhost:5000/api/client
@@ -52,16 +52,16 @@ Content-Type: application/json
     "name": "Mcknight-Smith Updated",
     "address": "Updated Address",
     "city": "Updated City",
-    "zipCode": "12345",
+    "zip_code": "123",
     "province": "New Province",
     "country": "Updated Country",
-    "contactName": "Updated Contact Name",
-    "contactPhone": "+1-000-000-0000",
-    "contactEmail": "updated_email@example.com",
-    "createdAt": "1970-09-26T19:12:30Z",
-    "updatedAt": "2024-12-09T15:30:00Z"
+    "contact_name": "Updated Contact Name",
+    "contact_phone": "+1-000-000-0000",
+    "contact_email": "updated_email@example.com"
 }
 ########
 
-DELETE http://localhost:5000/api/client/1
+DELETE http://localhost:5000/api/client/9820
+API_key: a1b2c3d4
 ########
+

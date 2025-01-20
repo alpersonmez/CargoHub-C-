@@ -106,5 +106,23 @@ namespace Cargohub.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+
+        // public async Task<int> GetTotalWeight()
+        // {
+        //     var shipments = await _context.Shipments.ToListAsync();
+        //     foreach (Shipment shipment in shipments)
+        //     {
+        //         foreach (OrderShipment orderShipment in shipment.OrderShipments){
+        //             orderShipment.Order.
+        //         }
+        //     }
+        //     return 1;
+        // }
+
+
     }
 }
+
+

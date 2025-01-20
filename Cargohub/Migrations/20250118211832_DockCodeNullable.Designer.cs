@@ -3,6 +3,7 @@ using System;
 using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250118211832_DockCodeNullable")]
+    partial class DockCodeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -794,7 +797,7 @@ namespace Cargohub.Migrations
             modelBuilder.Entity("Cargohub.Models.OrderStock", b =>
                 {
                     b.HasOne("Cargohub.Models.Order", "Order")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -826,8 +829,6 @@ namespace Cargohub.Migrations
 
             modelBuilder.Entity("Cargohub.Models.Order", b =>
                 {
-                    b.Navigation("Items");
-
                     b.Navigation("OrderShipments");
                 });
 

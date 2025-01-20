@@ -81,5 +81,15 @@ namespace Cargohub.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<Order>> GetClientOrders(int id)
+        {
+            var client = await _context.Clients.FindAsync(id);
+            if (client?.isdeleted == true || client == null)
+            {
+                return null;
+            }
+            return _context.Orders.Where(x => x.ship_to == client.id.ToString() || x.bill_to == client.id.ToString()).ToList();
+        }
     }
 }

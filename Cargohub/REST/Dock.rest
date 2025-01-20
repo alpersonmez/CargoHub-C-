@@ -1,0 +1,50 @@
+### Get All Docks (with limit)
+GET http://localhost:5000/api/Dock/amount/10
+Content-Type: application/json
+
+###
+
+### Get Dock by ID
+GET http://localhost:5000/api/Dock/1
+Content-Type: application/json
+
+###
+
+### Get Docks by Warehouse ID
+GET http://localhost:5000/api/Dock/warehouse/1
+Content-Type: application/json
+
+###
+
+### Create a New Dock
+POST http://localhost:5000/api/Dock
+API_key: a1b2c3d4
+Content-Type: application/json
+
+{
+  "warehouse_id": 1,
+  "status": "free",
+  "description": "Dock near the entrance"
+}
+
+###
+
+### Update an Existing Dock
+PUT http://localhost:5000/api/Dock/1
+API_key: a1b2c3d4
+Content-Type: application/json
+
+{
+  "id": 1,
+  "warehouse_id": 2,
+  "status": "occupied",
+  "description": "Dock is currently in use"
+}
+
+
+###
+
+### Delete a Dock (Soft Delete)
+DELETE http://localhost:5000/api/Dock/3
+API_key: a1b2c3d4
+Content-Type: application/json

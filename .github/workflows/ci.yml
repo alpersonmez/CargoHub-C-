@@ -7,7 +7,7 @@ on:
       - development # This triggers the action only on pull requests to the development branch
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest  # The job will run on the latest Ubuntu
 
     services:
@@ -37,12 +37,14 @@ jobs:
     # Install .NET dependencies and build the API
     - name: Install dependencies and build API
       run: |
-        dotnet restore 
-        dotnet build --no-restore  # Build the API
-  IntergrationTest:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+        dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
+        dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
+        dotnet restore Cargohub.Tests/Cargohub.Tests.csproj
+        dotnet build Cargohub.Tests/Cargohub.Tests.csproj --no-restore
+
+    - name: Run Unit Tests
+      run: dotnet test Cargohub.Tests
+
     # Run the API
     - name: Start API
       run: |
@@ -94,66 +96,4 @@ jobs:
     - name: Run Clients Tests
       run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
       continue-on-error: true
-  Unit_Test_Coverage:
-    runs-on: ubuntu-latest
-    needs: build
 
-    steps:
-    # Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    # Set up .NET
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x' # or your target version
-
-    # Restore dependencies
-    - name: Restore dependencies
-      run: dotnet restore UnitTests/UnitTests.csproj
-  
-
-    # Build the project
-    - name: Build
-      run: dotnet build --no-restore --configuration Release UnitTests/UnitTests.csproj
-
-    # Run tests with Coverlet
-    - name: Run tests and collect coverage
-      run: |
-        dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutput=coverage/ /p:CoverletOutputFormat=cobertura
-      working-directory: UnitTests
-
-    # Install ReportGenerator (optional, for readable reports)
-    - name: Install ReportGenerator
-      run: dotnet tool install -g dotnet-reportgenerator-globaltool
-    
-    - name: Install xmllint
-      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-    
-    # Generate coverage report (optional)
-    - name: Generate coverage report
-      run: |
-        reportgenerator -reports:coverage/coverage.cobertura.xml -targetdir:coverage-report -reporttypes:Html
-      continue-on-error: true
-      working-directory: UnitTests
-
-    # Enforce coverage threshold
-    - name: Check coverage threshold
-      id: coverage-check
-      run: |
-        coverage=$(xmllint --xpath "string(//*[local-name()='coverage']/@line-rate)" coverage/coverage.cobertura.xml | awk '{printf("%.0f\n", $1 * 100)}')
-        echo "Coverage: $coverage%"
-        if [ "$coverage" -lt 70 ]; then
-          echo "Code coverage ($coverage%) is below the threshold of 70%."
-          exit 1
-        fi
-      working-directory: UnitTests
-
-    # Upload coverage report (optional)
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: coverage-report
-      

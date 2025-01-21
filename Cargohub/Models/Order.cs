@@ -72,7 +72,11 @@ namespace Cargohub.Models
         public bool isdeleted { get; set; } = false;
 
         // Navigation property for many-to-many relationship
-        [JsonIgnore] // To avoid circular references during JSON serialization
+        [JsonIgnore]
         public List<OrderShipment> OrderShipments { get; set; } = new List<OrderShipment>();
+
+        // Include related stocks in JSON
+        [JsonProperty("items")]
+        public List<OrderStock> Items { get; set; } = new List<OrderStock>();
     }
 }

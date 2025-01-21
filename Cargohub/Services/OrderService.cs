@@ -12,28 +12,89 @@ namespace Cargohub.Services
             _context = context;
         }
 
-        public async Task<List<Order>> GetAllOrders(int amount)
+        public async Task<List<OrderDto>> GetAllOrders(int amount)
         {
-            return await _context.Orders
-                .Include(o => o.OrderShipments)
-                .ThenInclude(os => os.Shipment)
+            var orders = await _context.Orders
+                .Include(o => o.Items) // Include related stocks
                 .Take(amount)
                 .ToListAsync();
-        }
 
-        public async Task<Order> GetOrderById(int id)
-        {
-            return await _context.Orders
-                .Include(o => o.OrderShipments)
-                .ThenInclude(os => os.Shipment)
-                .FirstOrDefaultAsync(o => o.id == id);
-        }
-
-        public async Task<Order> AddOrder(Order newOrder)
-        {
-            Order order = new Order
+            // Map entities to DTOs
+            return orders.Select(o => new OrderDto
             {
-                id = newOrder.id,
+                id = o.id,
+                source_id = o.source_id,
+                order_date = o.order_date,
+                request_date = o.request_date,
+                reference = o.reference,
+                reference_extra = o.reference_extra,
+                order_status = o.order_status,
+                notes = o.notes,
+                shipping_notes = o.shipping_notes,
+                picking_notes = o.picking_notes,
+                warehouse_id = o.warehouse_id,
+                ship_to = o.ship_to,
+                bill_to = o.bill_to,
+                total_amount = o.total_amount,
+                total_discount = o.total_discount,
+                total_tax = o.total_tax,
+                total_surcharge = o.total_surcharge,
+                created_at = o.created_at,
+                updated_at = o.updated_at,
+                isdeleted = o.isdeleted,
+                items = o.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<OrderDto?> GetOrderById(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Items) // Include related stocks
+                .FirstOrDefaultAsync(o => o.id == id);
+
+            if (order == null)
+                return null;
+
+            // Map entity to DTO
+            return new OrderDto
+            {
+                id = order.id,
+                source_id = order.source_id,
+                order_date = order.order_date,
+                request_date = order.request_date,
+                reference = order.reference,
+                reference_extra = order.reference_extra,
+                order_status = order.order_status,
+                notes = order.notes,
+                shipping_notes = order.shipping_notes,
+                picking_notes = order.picking_notes,
+                warehouse_id = order.warehouse_id,
+                ship_to = order.ship_to,
+                bill_to = order.bill_to,
+                total_amount = order.total_amount,
+                total_discount = order.total_discount,
+                total_tax = order.total_tax,
+                total_surcharge = order.total_surcharge,
+                created_at = order.created_at,
+                updated_at = order.updated_at,
+                isdeleted = order.isdeleted,
+                items = order.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            };
+        }
+
+        public async Task<OrderDto> AddOrder(OrderDto newOrder)
+        {
+            // Map DTO to entity
+            var order = new Order
+            {
                 source_id = newOrder.source_id,
                 order_date = newOrder.order_date,
                 request_date = newOrder.request_date,
@@ -51,13 +112,48 @@ namespace Cargohub.Services
                 total_tax = newOrder.total_tax,
                 total_surcharge = newOrder.total_surcharge,
                 created_at = DateTime.UtcNow,
-                updated_at = DateTime.UtcNow
+                updated_at = DateTime.UtcNow,
+                isdeleted = newOrder.isdeleted,
+                Items = newOrder.items.Select(i => new OrderStock
+                {
+                    ItemId = i.ItemId,
+                    amount = i.Amount
+                }).ToList()
             };
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return order;
+
+            // Map the created entity back to DTO to return
+            return new OrderDto
+            {
+                source_id = order.source_id,
+                order_date = order.order_date,
+                request_date = order.request_date,
+                reference = order.reference,
+                reference_extra = order.reference_extra,
+                order_status = order.order_status,
+                notes = order.notes,
+                shipping_notes = order.shipping_notes,
+                picking_notes = order.picking_notes,
+                warehouse_id = order.warehouse_id,
+                ship_to = order.ship_to,
+                bill_to = order.bill_to,
+                total_amount = order.total_amount,
+                total_discount = order.total_discount,
+                total_tax = order.total_tax,
+                total_surcharge = order.total_surcharge,
+                created_at = order.created_at,
+                updated_at = order.updated_at,
+                isdeleted = order.isdeleted,
+                items = order.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            };
         }
+
 
         public async Task<bool> UpdateOrder(Order order)
         {

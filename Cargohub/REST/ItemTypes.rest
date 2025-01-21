@@ -1,5 +1,5 @@
 ### Get All Item Types
-GET http://localhost:5000/api/itemtypes
+GET http://localhost:5000/api/itemtypes/amount/4
 Content-Type: application/json
 
 ###
@@ -10,22 +10,13 @@ Content-Type: application/json
 
 ###
 
-### Create a New Item Type
-POST http://localhost:5000/api/itemtypes
-Content-Type: application/json
-
-{
-    "name": "Electronics",
-    "description": "All electronic-related items"
-}
-
-###
-
 ### Update an Existing Item Type
-PUT http://localhost:5000/api/itemtypes/1
+PUT http://localhost:5000/api/itemtypes/3
 Content-Type: application/json
+API_key: a1b2c3d4
 
 {
+    "id": 3,
     "name": "Updated Electronics",
     "description": "Updated description for electronics"
 }

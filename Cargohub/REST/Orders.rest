@@ -1,11 +1,11 @@
 GET http://localhost:5000
 ########
 
-GET http://localhost:5000/api/order
+GET http://localhost:5000/api/order/amount/3
 ########
 
 
-GET http://localhost:5000/api/order/1
+GET http://localhost:5000/api/order/500
 ########
 
 
@@ -14,7 +14,6 @@ API_key: a1b2c3d4
 Content-Type: application/json
 
 {
-  "id": 2,
         "source_id": 34,
         "order_date": "2019-04-03T11:33:15Z",
         "request_date": "2019-04-07T11:33:15Z",
@@ -43,7 +42,7 @@ API_key: a1b2c3d4
 Content-Type: application/json
 
 {
-  "id": 2,
+  "id": 1,
         "source_id": 33,
         "order_date": "2019-04-03T11:33:15Z",
         "request_date": "2019-04-07T11:33:15Z",
@@ -61,8 +60,6 @@ Content-Type: application/json
         "total_discount": 150.77,
         "total_tax": 372.72,
         "total_surcharge": 77.6,
-        "created_at": "2019-04-03T11:33:15Z",
-        "updated_at": "2019-04-05T07:33:15Z"
 }
 ########
 

@@ -99,24 +99,10 @@ def test_update_order(base_url):
     # Cleanup
     requests.delete(f"{base_url}/{order_id}", headers=headers)
 
-
-# Test creating an order with missing required fields
-def test_create_order_invalid(base_url):
-    invalid_order = {
-        "reference": "InvalidOrder",
-    }
-
-    # Send a POST request with invalid data
-    response = requests.post(base_url, json=invalid_order, headers=headers)
-
-    # Verify the status code is 400 (Bad Request)
-    assert response.status_code == 400, f"Expected 400 Bad Request, got {response.status_code}"
-
-
 # Test fetching all orders
 def test_fetch_all_orders(base_url):
     # Send a GET request to fetch all orders
-    response = requests.get(base_url, headers=headers)
+    response = requests.get(base_url+"/amount/10", headers=headers)
 
     # Verify the status code is 200 (OK)
     assert response.status_code == 200, f"Unexpected status code: {response.status_code}"

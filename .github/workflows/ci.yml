@@ -39,9 +39,12 @@ jobs:
       run: |
         dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
         dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
+
+    #run unit tests
     - name: Run Unit Tests
-      run: |
-        	dotnet test Cargohub.sln --no-build --configuration Release --logger
+      run: dotnet test Cargohub.sln --no-build --configuration Release --logger
+
+
     # Run the API
     - name: Start API
       run: |

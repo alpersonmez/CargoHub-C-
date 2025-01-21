@@ -3,97 +3,89 @@ name: Python Tests for C# API / CI
 on:
   pull_request:
     branches:
-      - main # This triggers the action only on pull requests to the main branch
-      - development # This triggers the action only on pull requests to the development branch
+      - main
+      - development
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest  # The job will run on the latest Ubuntu
+    runs-on: ubuntu-latest
 
     services:
       api:
         image: mcr.microsoft.com/dotnet/aspnet:8.0
         ports:
-          - 5000:5000  # Expose port 3000 for your API
+          - 5000:5000
         env:
           ASPNETCORE_ENVIRONMENT: Development
 
     steps:
-    # Checkout code
-    - name: Checkout code
-      uses: actions/checkout@v2  # Checkout the code from the repository
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Set up .NET environment
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0'  # Adjust based on your .NET version
+      # Set up .NET environment
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
 
-    # Install EF Core tools globally (if needed)
-    - name: Install EF Core tools globally
-      run: |
-        dotnet tool install --global dotnet-ef --version 8.0
+      # Cache .NET dependencies
+      - name: Cache .NET dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
 
-    # Install .NET dependencies and build the API
-    - name: Install dependencies and build API
-      run: |
-        dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
-        dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
-        dotnet restore Cargohub.Tests/Cargohub.Tests.csproj
-        dotnet build Cargohub.Tests/Cargohub.Tests.csproj --no-restore
+      # Install dependencies and build API
+      - name: Install dependencies and build API
+        run: |
+          dotnet restore Cargohub/Cargohub.csproj
+          dotnet build Cargohub/Cargohub.csproj --no-restore
+          dotnet restore Cargohub.Tests/Cargohub.Tests.csproj
+          dotnet build Cargohub.Tests/Cargohub.Tests.csproj --no-restore
 
-    - name: Run Unit Tests
-      run: dotnet test Cargohub.Tests
+      # Run Unit Tests
+      - name: Run Unit Tests
+        run: dotnet test Cargohub.Tests
 
-    # Run the API
-    - name: Start API
-      run: |
-        cd Cargohub  # Navigate to the project folder (if not in root)
-        dotnet run &  # Start the API in the background
-        sleep 15  # Wait for the API to start
+      # Start API
+      - name: Start API
+        run: |
+          cd Cargohub
+          dotnet run --urls http://localhost:5000 &
+          for i in {1..10}; do
+            if curl --silent --fail http://localhost:5000/health; then break; fi
+            sleep 5
+          done
 
-    # Set up Python environment (version 3.12.6)
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.12
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-    # Install Python dependencies
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r Cargohub.Tests/requirements.txt  # Install dependencies listed in requirements.txt
+      # Cache Python dependencies
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('Cargohub.Tests/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    # Run Python tests
-    - name: Run Item Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemTests/test_items.py
-      continue-on-error: true
+      # Install Python dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r Cargohub.Tests/requirements.txt
 
-    - name: Run Item Lines Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemLinesTests/test_item_lines.py
-      continue-on-error: true
+      # Run Python tests
+      - name: Run Python Tests
+        run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/
 
-    - name: Run Supplier Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/SupplierTests/test_suppliers.py
-      continue-on-error: true
-
-    - name: Run Inventories Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/InventoriesTests/test_inventories.py
-      continue-on-error: true
-
-    - name: Run Orders Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/OrdersTests/test_orders.py
-      continue-on-error: true
-
-    - name: Run Shipments Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ShipmentsTests/test_shipments.py
-      continue-on-error: true
-
-    - name: Run Item Groups Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ITs/ItemGroupsTests/test_item_groups.py
-      continue-on-error: true
-
-    - name: Run Clients Tests
-      run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
-      continue-on-error: true
-
+      # Optional: Aggregate results
+      - name: Summarize Results
+        if: always()
+        run: |
+          echo "Unit Tests: ${{ steps.run-unit-tests.outcome }}"
+          echo "Integration Tests: ${{ steps.run-python-tests.outcome }}"

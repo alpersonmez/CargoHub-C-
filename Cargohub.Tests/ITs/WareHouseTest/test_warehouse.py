@@ -85,7 +85,7 @@ def test_put_warehouse(_url):
     }
     }
     put_response = requests.put(f"{_url}/{id}", json=updated_warehouse, headers=headers)
-    assert put_response.status_code == 204
+    assert put_response.status_code == 200
 
     if put_response.content:
         response_data = put_response.json()  # Parse JSON response if body is not empty

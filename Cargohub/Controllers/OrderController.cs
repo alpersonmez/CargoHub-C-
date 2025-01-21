@@ -54,7 +54,7 @@ namespace Cargohub.Controllers
 
         [AdminFilter]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] OrderDto order)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

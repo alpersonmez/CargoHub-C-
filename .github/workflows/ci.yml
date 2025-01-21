@@ -39,6 +39,12 @@ jobs:
       run: |
         dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
         dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
+        dotnet restore Cargohub.Tests/Cargohub.Tests.csproj
+        dotnet build Cargohub.Tests/Cargohub.Tests.csproj --no-restore
+
+    - name: Run Unit Tests
+      run: dotnet test Cargohub.Tests
+      continue-on-error: true
 
     # Run the API
     - name: Start API
@@ -91,4 +97,3 @@ jobs:
     - name: Run Clients Tests
       run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
       continue-on-error: true
-

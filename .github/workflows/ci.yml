@@ -92,3 +92,8 @@ jobs:
       run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
       continue-on-error: true
 
+#  Run unit tests
+    - name: Run unit tests
+      run: dotnet test --no-build --verbosity normal --configuration Release
+      continue-on-error: true
+

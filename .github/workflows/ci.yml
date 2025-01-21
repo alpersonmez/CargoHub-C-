@@ -94,6 +94,6 @@ jobs:
 
 #  Run unit tests
     - name: Run unit tests
-      run: dotnet test --no-build --verbosity normal --configuration Release
+      run: dotnet test --no-build --verbosity normal --configuration Release Cargohub.Tests
       continue-on-error: true
 

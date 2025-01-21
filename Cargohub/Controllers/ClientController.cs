@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Cargohub.Models;
 using Cargohub.Services;
 using Cargohub.Filters;
+using System;
 
 namespace Cargohub.Controllers
 {
@@ -46,11 +47,36 @@ namespace Cargohub.Controllers
         public async Task<IActionResult> CreateClient([FromBody] Client client)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                var errors = ModelState
+                    .Where(m => m.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
 
-            Client createdClient = await _clientService.AddClient(client);
-            return CreatedAtAction(nameof(GetClientById), new { id = createdClient.id }, createdClient);
+                return BadRequest(new
+                {
+                    message = "Validation failed for the client request.",
+                    errors
+                });
+            }
+
+            try
+            {
+                Client createdClient = await _clientService.AddClient(client);
+                return CreatedAtAction(nameof(GetClientById), new { id = createdClient.id }, createdClient);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
         }
+
 
         [AdminFilter]
         [HttpPut("{id}")]
@@ -64,14 +90,25 @@ namespace Cargohub.Controllers
                 return BadRequest($"Client Id {id} does not match");
             }
 
-            var updatedClient = await _clientService.UpdateClient(client);
-
-            if (!updatedClient)
+            try
             {
-                return NotFound();
-            }
+                var updatedClient = await _clientService.UpdateClient(client);
 
-            return Ok(updatedClient);
+                if (!updatedClient)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updatedClient);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
         }
 
         [AdminFilter]

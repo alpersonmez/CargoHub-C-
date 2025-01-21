@@ -1,15 +1,19 @@
+using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Cargohub.DataConverters;
+
 namespace Cargohub.Models
 {
     public class Client
     {
         [JsonProperty("id")]
         public int id { get; set; }
-        
+
+        [Required]
         [JsonProperty("name")]
         public string? name { get; set; }
 
+        [Required]
         [JsonProperty("address")]
         public string? address { get; set; }
 
@@ -25,12 +29,15 @@ namespace Cargohub.Models
         [JsonProperty("country")]
         public string? country { get; set; }
 
+        [Required]
         [JsonProperty("contact_name")]
         public string? contact_name { get; set; }
 
+        [Required]
         [JsonProperty("contact_phone")]
         public string? contact_phone { get; set; }
 
+        [Required]
         [JsonProperty("contact_email")]
         public string? contact_email { get; set; }
 

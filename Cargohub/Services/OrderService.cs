@@ -22,14 +22,27 @@ namespace Cargohub.Services
             // Map entities to DTOs
             return orders.Select(o => new OrderDto
             {
-                Id = o.id,
-                SourceId = o.source_id,
-                OrderDate = o.order_date,
-                RequestDate = o.request_date,
-                Reference = o.reference,
-                OrderStatus = o.order_status,
-                TotalAmount = o.total_amount,
-                Items = o.Items.Select(i => new OrderStockDto
+                id = o.id,
+                source_id = o.source_id,
+                order_date = o.order_date,
+                request_date = o.request_date,
+                reference = o.reference,
+                reference_extra = o.reference_extra,
+                order_status = o.order_status,
+                notes = o.notes,
+                shipping_notes = o.shipping_notes,
+                picking_notes = o.picking_notes,
+                warehouse_id = o.warehouse_id,
+                ship_to = o.ship_to,
+                bill_to = o.bill_to,
+                total_amount = o.total_amount,
+                total_discount = o.total_discount,
+                total_tax = o.total_tax,
+                total_surcharge = o.total_surcharge,
+                created_at = o.created_at,
+                updated_at = o.updated_at,
+                isdeleted = o.isdeleted,
+                items = o.Items.Select(i => new OrderStockDto
                 {
                     ItemId = i.ItemId,
                     Amount = i.amount
@@ -37,26 +50,39 @@ namespace Cargohub.Services
             }).ToList();
         }
 
-
         public async Task<OrderDto?> GetOrderById(int id)
         {
             var order = await _context.Orders
-                .Include(o => o.Items)
+                .Include(o => o.Items) // Include related stocks
                 .FirstOrDefaultAsync(o => o.id == id);
 
             if (order == null)
                 return null;
 
+            // Map entity to DTO
             return new OrderDto
             {
-                Id = order.id,
-                SourceId = order.source_id,
-                OrderDate = order.order_date,
-                RequestDate = order.request_date,
-                Reference = order.reference,
-                OrderStatus = order.order_status,
-                TotalAmount = order.total_amount,
-                Items = order.Items.Select(i => new OrderStockDto
+                id = order.id,
+                source_id = order.source_id,
+                order_date = order.order_date,
+                request_date = order.request_date,
+                reference = order.reference,
+                reference_extra = order.reference_extra,
+                order_status = order.order_status,
+                notes = order.notes,
+                shipping_notes = order.shipping_notes,
+                picking_notes = order.picking_notes,
+                warehouse_id = order.warehouse_id,
+                ship_to = order.ship_to,
+                bill_to = order.bill_to,
+                total_amount = order.total_amount,
+                total_discount = order.total_discount,
+                total_tax = order.total_tax,
+                total_surcharge = order.total_surcharge,
+                created_at = order.created_at,
+                updated_at = order.updated_at,
+                isdeleted = order.isdeleted,
+                items = order.Items.Select(i => new OrderStockDto
                 {
                     ItemId = i.ItemId,
                     Amount = i.amount
@@ -64,12 +90,11 @@ namespace Cargohub.Services
             };
         }
 
-
-        public async Task<Order> AddOrder(Order newOrder)
+        public async Task<OrderDto> AddOrder(OrderDto newOrder)
         {
-            Order order = new Order
+            // Map DTO to entity
+            var order = new Order
             {
-                id = newOrder.id,
                 source_id = newOrder.source_id,
                 order_date = newOrder.order_date,
                 request_date = newOrder.request_date,
@@ -87,13 +112,48 @@ namespace Cargohub.Services
                 total_tax = newOrder.total_tax,
                 total_surcharge = newOrder.total_surcharge,
                 created_at = DateTime.UtcNow,
-                updated_at = DateTime.UtcNow
+                updated_at = DateTime.UtcNow,
+                isdeleted = newOrder.isdeleted,
+                Items = newOrder.items.Select(i => new OrderStock
+                {
+                    ItemId = i.ItemId,
+                    amount = i.Amount
+                }).ToList()
             };
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return order;
+
+            // Map the created entity back to DTO to return
+            return new OrderDto
+            {
+                source_id = order.source_id,
+                order_date = order.order_date,
+                request_date = order.request_date,
+                reference = order.reference,
+                reference_extra = order.reference_extra,
+                order_status = order.order_status,
+                notes = order.notes,
+                shipping_notes = order.shipping_notes,
+                picking_notes = order.picking_notes,
+                warehouse_id = order.warehouse_id,
+                ship_to = order.ship_to,
+                bill_to = order.bill_to,
+                total_amount = order.total_amount,
+                total_discount = order.total_discount,
+                total_tax = order.total_tax,
+                total_surcharge = order.total_surcharge,
+                created_at = order.created_at,
+                updated_at = order.updated_at,
+                isdeleted = order.isdeleted,
+                items = order.Items.Select(i => new OrderStockDto
+                {
+                    ItemId = i.ItemId,
+                    Amount = i.amount
+                }).ToList()
+            };
         }
+
 
         public async Task<bool> UpdateOrder(Order order)
         {

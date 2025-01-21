@@ -11,6 +11,7 @@ namespace Cargohub.Models
         public DbSet<Item> Items { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<Dock> Docks { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<ItemLines> Item_lines { get; set; }
         public DbSet<ItemGroup> ItemGroups { get; set; }
@@ -24,7 +25,17 @@ namespace Cargohub.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure the Warehouse and its owned Contact class
+            modelBuilder.Entity<OrderShipment>()
+                    .HasOne(os => os.Order)
+                    .WithMany(o => o.OrderShipments)
+                    .HasForeignKey(os => os.order_id);
+
+                modelBuilder.Entity<OrderShipment>()
+                    .HasOne(os => os.Shipment)
+                    .WithMany(s => s.OrderShipments)
+                    .HasForeignKey(os => os.shipment_id);
+
+            // Configure Stock hierarchy with discriminator
             modelBuilder.Entity<Warehouse>()
                 .OwnsOne(w => w.contact, contact =>
                 {
@@ -33,23 +44,22 @@ namespace Cargohub.Models
                     contact.Property(c => c.email).HasColumnName("contact_email");
                 });
 
-            // Configure other entities (unchanged)
-            modelBuilder.Entity<OrderShipment>()
-                .HasOne(os => os.Order)
-                .WithMany(o => o.OrderShipments)
-                .HasForeignKey(os => os.order_id);
-
-            modelBuilder.Entity<OrderShipment>()
-                .HasOne(os => os.Shipment)
-                .WithMany(s => s.OrderShipments)
-                .HasForeignKey(os => os.shipment_id);
-
+            // Configure Stock hierarchy with discriminator
             modelBuilder.Entity<Stock>()
                 .ToTable("Stocks")
                 .HasDiscriminator<string>("StockType")
                 .HasValue<OrderStock>("Order")
                 .HasValue<ShipmentStock>("Shipment")
                 .HasValue<TransferStock>("Transfer");
+
+            modelBuilder.Entity<Dock>()
+                .HasOne(d => d.warehouse)
+                .WithMany(w => w.docks)
+                .HasForeignKey(d => d.warehouse_id);
+
+            modelBuilder.Entity<Dock>()
+                .HasIndex(d => d.code)
+                .IsUnique();
 
             // Apply soft-delete query filters
             modelBuilder.Entity<Client>().HasQueryFilter(e => !e.isdeleted);

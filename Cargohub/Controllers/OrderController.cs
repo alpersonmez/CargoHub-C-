@@ -39,14 +39,18 @@ namespace Cargohub.Controllers
 
         [AdminFilter]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Order newOrder)
+        public async Task<IActionResult> Create([FromBody] OrderDto newOrder)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Order createdOrder = await _orderService.AddOrder(newOrder);
+            // Use the service to add the new order
+            OrderDto createdOrder = await _orderService.AddOrder(newOrder);
+
+            // Return a 201 Created response with the newly created order
             return CreatedAtAction(nameof(GetById), new { id = createdOrder.id }, createdOrder);
         }
+
 
         [AdminFilter]
         [HttpPut("{id}")]

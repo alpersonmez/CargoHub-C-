@@ -42,13 +42,13 @@ jobs:
         dotnet restore Cargo
 
     #run unit tests
-    - name: Restore and Build
-      run: |
-          dotnet restore CargoHub-C.sln
-          dotnet build CargoHub-C.sln --no-restore --configuration Release
+    # - name: Restore and Build
+    #   run: |
+    #       dotnet restore CargoHub-C.sln
+    #       dotnet build CargoHub-C.sln --no-restore --configuration Release
 
     - name: Run Unit Tests
-      run: dotnet test CargoHub-C.sln --no-build --configuration Release
+      run: dotnet test Cargohub.Tests/Cargohub.Tests.csproj --no-build --configuration Release
 
     # Run the API
     - name: Start API

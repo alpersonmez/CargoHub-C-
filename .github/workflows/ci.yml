@@ -94,6 +94,7 @@ jobs:
 
 #  Run unit tests
     - name: Run unit tests
-      run: dotnet test  --disable-warnings Cargohub.Tests
+      run: dotnet test CargoHub-C-/Cargohub.Tests/Cargohub.Tests.csproj --no-build --configuration Release --verbosity normal
       continue-on-error: true
+
 

@@ -145,9 +145,15 @@ namespace Cargohub.Tests
             // Arrange
             var nonExistingClient = new Client
             {
-                id = 99,
-                name = "Nonexistent Client",
-                city = "Nonexistent City"
+                name = "Client 3",
+                address = "789 Oak St",
+                city = "City C",
+                zip_code = "54321",
+                province = "Province C",
+                country = "Country C",
+                contact_name = "Alice Johnson",
+                contact_phone = "555-9876",
+                contact_email = "alice.johnson@example.com"
             };
 
             // Act

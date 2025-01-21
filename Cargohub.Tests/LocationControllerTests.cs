@@ -56,7 +56,7 @@ namespace Cargohub.Tests
             _mockLocationService.Setup(service => service.GetAllLocations(It.IsAny<int>())).ReturnsAsync(locations);
 
             // Act
-            var result = await _controller.GetAll(100);
+            var result = await _controller.GetAll(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

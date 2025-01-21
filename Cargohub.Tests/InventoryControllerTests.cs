@@ -65,7 +65,7 @@ namespace Cargohub.Tests
             _mockInventoryService.Setup(service => service.GetAllInventories(It.IsAny<int>())).ReturnsAsync(inventories);
 
             // Act
-            var result = await _controller.GetAll(100);
+            var result = await _controller.GetAll(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

@@ -55,7 +55,7 @@ namespace Cargohub.Tests
             _mockTransferService.Setup(service => service.GetTransfers(It.IsAny<int>())).ReturnsAsync(transfers);
 
             // Act
-            var result = await _controller.GetTransfers(100);
+            var result = await _controller.GetTransfers(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

@@ -6,8 +6,8 @@ using Cargohub.Models;
 using Cargohub.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cargohub.Tests
 {
@@ -25,7 +25,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestGetAllDocks()
+        public async Task GetAll_ShouldReturnDocks()
         {
             // Arrange
             var docks = new List<Dock>
@@ -49,7 +49,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestGetDockById()
+        public async Task Get_ShouldReturnDock_WhenDockExists()
         {
             // Arrange
             var dock = new Dock { id = 1, code = "DCK000001", status = "free", description = "Dock 1" };
@@ -68,7 +68,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestGetDockByIdNotFound()
+        public async Task Get_ShouldReturnNotFound_WhenDockDoesNotExist()
         {
             // Arrange
             _mockDockService.Setup(service => service.GetDockById(It.IsAny<int>())).ReturnsAsync((Dock)null);
@@ -81,7 +81,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestCreateDock()
+        public async Task Create_ShouldReturnCreatedDock()
         {
             // Arrange
             var dock = new Dock { warehouse_id = 1, description = "New Dock" };
@@ -98,7 +98,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestCreateDockInvalidModel()
+        public async Task Create_ShouldReturnBadRequest_WhenModelIsInvalid()
         {
             // Arrange
             _controller.ModelState.AddModelError("warehouse_id", "Warehouse ID is required");
@@ -111,10 +111,11 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestUpdateDock()
+        public async Task Update_ShouldReturnOk_WhenDockIsUpdated()
         {
             // Arrange
             var dock = new Dock { id = 1, code = "DCK000001", status = "occupied", description = "Updated Dock" };
+            _mockDockService.Setup(service => service.GetDockById(1)).ReturnsAsync(dock);
             _mockDockService.Setup(service => service.UpdateDockAsync(1, dock)).ReturnsAsync(true);
 
             // Act
@@ -125,10 +126,11 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestUpdateDockNotFound()
+        public async Task Update_ShouldReturnNotFound_WhenDockDoesNotExist()
         {
             // Arrange
             var dock = new Dock { id = 1, code = "DCK000001", status = "occupied", description = "Updated Dock" };
+            _mockDockService.Setup(service => service.GetDockById(1)).ReturnsAsync((Dock)null);
             _mockDockService.Setup(service => service.UpdateDockAsync(1, dock)).ReturnsAsync(false);
 
             // Act
@@ -139,7 +141,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestDeleteDock()
+        public async Task Delete_ShouldReturnNoContent_WhenDockIsDeleted()
         {
             // Arrange
             _mockDockService.Setup(service => service.RemoveDockAsync(1)).ReturnsAsync(true);
@@ -152,7 +154,7 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task TestDeleteDockNotFound()
+        public async Task Delete_ShouldReturnNotFound_WhenDockDoesNotExist()
         {
             // Arrange
             _mockDockService.Setup(service => service.RemoveDockAsync(1)).ReturnsAsync(false);

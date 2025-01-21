@@ -75,10 +75,10 @@ namespace Cargohub.Tests
                     isdeleted = false
                 }
             };
-            _mockShipmentService.Setup(service => service.GetAllShipments(100)).ReturnsAsync(shipments);
+            _mockShipmentService.Setup(service => service.GetAllShipments(2)).ReturnsAsync(shipments);
 
             // Act
-            var result = await _controller.GetAll(100);
+            var result = await _controller.GetAll(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

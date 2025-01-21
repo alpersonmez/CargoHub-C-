@@ -66,7 +66,7 @@ namespace Cargohub.Tests
             _mockClientService.Setup(service => service.GetAllClients(It.IsAny<int>())).ReturnsAsync(clients);
 
             // Act
-            var result = await _controller.GetAllClients(100);
+            var result = await _controller.GetAllClients(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

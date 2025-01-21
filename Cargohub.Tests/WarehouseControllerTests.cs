@@ -73,7 +73,7 @@ namespace Cargohub.Tests
             _mockWarehouseService.Setup(service => service.GetAllWarehouses(It.IsAny<int>())).ReturnsAsync(warehouses);
 
             // Act
-            var result = await _controller.GetAll(100);
+            var result = await _controller.GetAll(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

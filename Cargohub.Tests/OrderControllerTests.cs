@@ -80,7 +80,7 @@ namespace Cargohub.Tests
             _mockOrderService.Setup(service => service.GetAllOrders(It.IsAny<int>())).ReturnsAsync(orders);
 
             // Act
-            var result = await _controller.GetAll(100);
+            var result = await _controller.GetAll(2);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));

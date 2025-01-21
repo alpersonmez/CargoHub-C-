@@ -122,11 +122,12 @@ namespace Cargohub.Services
             };
 
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // This generates the ID in the database.
 
-            // Map the created entity back to DTO to return
+            // Map the created entity back to DTO to return, including the ID
             return new OrderDto
             {
+                id = order.id, 
                 source_id = order.source_id,
                 order_date = order.order_date,
                 request_date = order.request_date,

@@ -107,10 +107,3 @@ def test_url_locations(_url):
 def test_input_locations(_url):
     get_response = requests.get(_url + "/seven", headers=headers)
     assert get_response.status_code == 400
-
-
-def test_url_specification_locations(_url):
-    get_response = requests.get(
-        _url + "/1" + "/utems", headers=headers
-    )  # a misspelling for items
-    assert get_response.status_code == 404

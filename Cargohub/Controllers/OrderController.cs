@@ -27,30 +27,34 @@ namespace Cargohub.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            Order order = await _orderService.GetOrderById(id);
+            var order = await _orderService.GetOrderById(id);
             if (order == null)
-            {
                 return NotFound();
-            }
+
             return Ok(order);
         }
 
+
         [AdminFilter]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Order newOrder)
+        public async Task<IActionResult> Create([FromBody] OrderDto newOrder)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Order createdOrder = await _orderService.AddOrder(newOrder);
-            return CreatedAtAction(nameof(Get), new { id = createdOrder.id }, createdOrder);
+            // Use the service to add the new order
+            OrderDto createdOrder = await _orderService.AddOrder(newOrder);
+
+            // Return a 201 Created response with the newly created order
+            return CreatedAtAction(nameof(GetById), new { id = createdOrder.id }, createdOrder);
         }
+
 
         [AdminFilter]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] OrderDto order)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

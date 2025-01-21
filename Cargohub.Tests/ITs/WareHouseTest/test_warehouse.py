@@ -50,50 +50,50 @@ def test_add_remove_warehouse(_url):
     )
     assert del_response.status_code == 204
 
-# nog geen put gemaakt dus deze test wordt later gemaakt
-# def test_put_warehouse(_url):
-#     new_warehouse = {
-#         "code": "WHS001",
-#         "name": "Main Warehouse",
-#         "address": "123 Warehouse Ave",
-#         "zip": "12345",
-#         "city": "Warehouse City",
-#         "province": "Province",
-#         "country": "US",
-#         "contact": {
-#         "name": "John Doe",
-#         "phone": "+123456789",
-#         "email": "johndoe@warehouse.com"
-#         }
-#     }
-#     post_response = requests.post(_url, json=new_warehouse, headers=headers)
-#     id = post_response.json()["id"]
 
-#     updated_warehouse = {
-#         "id": id,
-#         "code": "WHS001",
-#         "name": "PUT Warehouse",
-#         "address": "123 Warehouse Ave",
-#         "zip": "12345",
-#         "city": "Warehouse City",
-#         "province": "Province",
-#         "country": "US",
-#         "contact": {
-#         "name": "John Doe",
-#         "phone": "+123456789",
-#         "email": "johndoe@warehouse.com"
-#     }
-#     }
-#     put_response = requests.put(f"{_url}/{id}", json=updated_warehouse, headers=headers)
-#     assert put_response.status_code == 204
+def test_put_warehouse(_url):
+    new_warehouse = {
+        "code": "WHS001",
+        "name": "Main Warehouse",
+        "address": "123 Warehouse Ave",
+        "zip": "12345",
+        "city": "Warehouse City",
+        "province": "Province",
+        "country": "US",
+        "contact": {
+        "name": "John Doe",
+        "phone": "+123456789",
+        "email": "johndoe@warehouse.com"
+        }
+    }
+    post_response = requests.post(_url, json=new_warehouse, headers=headers)
+    id = post_response.json()["id"]
 
-#     if put_response.content:
-#         response_data = put_response.json()  # Parse JSON response if body is not empty
-#         assert response_data["name"] == "PUT Warehouse"
-#     else:
-#         print("PUT request returned 200 but no response body.")
+    updated_warehouse = {
+        "id": id,
+        "code": "WHS001",
+        "name": "PUT Warehouse",
+        "address": "123 Warehouse Ave",
+        "zip": "12345",
+        "city": "Warehouse City",
+        "province": "Province",
+        "country": "US",
+        "contact": {
+        "name": "John Doe",
+        "phone": "+123456789",
+        "email": "johndoe@warehouse.com"
+    }
+    }
+    put_response = requests.put(f"{_url}/{id}", json=updated_warehouse, headers=headers)
+    assert put_response.status_code == 200
 
-#     requests.delete(f"{_url}/{id}", headers=headers)
+    if put_response.content:
+        response_data = put_response.json()  # Parse JSON response if body is not empty
+        assert response_data["name"] == "PUT Warehouse"
+    else:
+        print("PUT request returned 200 but no response body.")
+
+    requests.delete(f"{_url}/{id}", headers=headers)
 
 
 def test_url_warehouse(_url):

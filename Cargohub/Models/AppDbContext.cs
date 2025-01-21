@@ -1,4 +1,4 @@
-using Cargohub.Services;
+using Cargohub.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cargohub.Models
@@ -22,7 +22,6 @@ namespace Cargohub.Models
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<ImportStatus> ImportStatuses { get; set; }
         public DbSet<OrderShipment> OrderShipments { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,46 +61,21 @@ namespace Cargohub.Models
                 .HasIndex(d => d.code)
                 .IsUnique();
 
-            base.OnModelCreating(modelBuilder);
+            // Apply soft-delete query filters
+            modelBuilder.Entity<Client>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Inventory>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Item>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemGroup>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemLines>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<ItemType>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Location>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Order>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Shipment>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Transfer>().HasQueryFilter(e => !e.isdeleted);
+            modelBuilder.Entity<Warehouse>().HasQueryFilter(e => !e.isdeleted);
 
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Client>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Inventory>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Item>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemGroup>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemLines>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<ItemType>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Location>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Order>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Shipment>()
-                .HasQueryFilter(e => !e.isdeleted);
-
-            modelBuilder.Entity<Supplier>()
-                .HasQueryFilter(e => !e.isdeleted);
-            
-            modelBuilder.Entity<Transfer>()
-                .HasQueryFilter(e => !e.isdeleted);
-
-            modelBuilder.Entity<Warehouse>()
-                .HasQueryFilter(e => !e.isdeleted);
         }
-
     }
 }

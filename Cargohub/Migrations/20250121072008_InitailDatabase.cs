@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cargohub.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitailDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -159,7 +159,6 @@ namespace Cargohub.Migrations
                     warehouse_id = table.Column<int>(type: "INTEGER", nullable: true),
                     ship_to = table.Column<string>(type: "TEXT", nullable: true),
                     bill_to = table.Column<string>(type: "TEXT", nullable: true),
-                    shipment_id = table.Column<int>(type: "INTEGER", nullable: true),
                     total_amount = table.Column<double>(type: "REAL", nullable: true),
                     total_discount = table.Column<double>(type: "REAL", nullable: true),
                     total_tax = table.Column<double>(type: "REAL", nullable: true),
@@ -179,7 +178,6 @@ namespace Cargohub.Migrations
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    order_id = table.Column<int>(type: "INTEGER", nullable: true),
                     source_id = table.Column<int>(type: "INTEGER", nullable: true),
                     order_date = table.Column<DateTime>(type: "TEXT", nullable: true),
                     request_date = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -266,11 +264,39 @@ namespace Cargohub.Migrations
                     contact_email = table.Column<string>(type: "TEXT", nullable: true),
                     created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
                     updated_at = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    isdeleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                    isdeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    gevarenclassificatie = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Warehouses", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderShipments",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    order_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    shipment_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    quantity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderShipments", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_OrderShipments_Orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "Orders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderShipments_Shipments_shipment_id",
+                        column: x => x.shipment_id,
+                        principalTable: "Shipments",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -364,6 +390,42 @@ namespace Cargohub.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Docks",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    warehouse_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    code = table.Column<string>(type: "TEXT", nullable: true),
+                    status = table.Column<string>(type: "TEXT", nullable: false),
+                    description = table.Column<string>(type: "TEXT", nullable: true),
+                    created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    is_deleted = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Docks", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Docks_Warehouses_warehouse_id",
+                        column: x => x.warehouse_id,
+                        principalTable: "Warehouses",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Docks_code",
+                table: "Docks",
+                column: "code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Docks_warehouse_id",
+                table: "Docks",
+                column: "warehouse_id");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Items_ItemGroupid",
                 table: "Items",
@@ -383,6 +445,16 @@ namespace Cargohub.Migrations
                 name: "IX_Items_supplierid",
                 table: "Items",
                 column: "supplierid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderShipments_order_id",
+                table: "OrderShipments",
+                column: "order_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderShipments_shipment_id",
+                table: "OrderShipments",
+                column: "shipment_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stocks_OrderId",
@@ -407,6 +479,9 @@ namespace Cargohub.Migrations
                 name: "Clients");
 
             migrationBuilder.DropTable(
+                name: "Docks");
+
+            migrationBuilder.DropTable(
                 name: "ImportStatuses");
 
             migrationBuilder.DropTable(
@@ -417,6 +492,9 @@ namespace Cargohub.Migrations
 
             migrationBuilder.DropTable(
                 name: "Locations");
+
+            migrationBuilder.DropTable(
+                name: "OrderShipments");
 
             migrationBuilder.DropTable(
                 name: "Stocks");

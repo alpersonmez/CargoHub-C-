@@ -28,17 +28,15 @@ API_key: a1b2c3d4
 Content-Type: application/json
 
 {
-    "name": "Mcknight-Smith",
-    "address": "92169 Thomas Mission",
-    "city": "Barronchester",
-    "zipCode": "33165",
-    "province": "Michigan",
-    "country": "United States",
-    "contactName": "Teresa Davidson",
-    "contactPhone": "+1-693-347-4889",
-    "contactEmail": "nsullivan@example.com",
-    "createdAt": "1970-09-26T19:12:30Z",
-    "updatedAt": "1983-02-04T22:53:37Z"
+    "name": "Mcknight-Smith Updated",
+    "address": "Updated Address",
+    "city": "Updated City",
+    "zip_code": "123",
+    "province": "New Province",
+    "country": "Updated Country",
+    "contact_name": "Updated Contact Name",
+    "contact_phone": "+1-000-000-0000",
+    "contact_email": "updated_email@example.com"
 }
 ########
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Cargohub.Models;
+using System.Text.RegularExpressions;
 
 namespace Cargohub.Services
 {
@@ -24,6 +25,12 @@ namespace Cargohub.Services
 
         public async Task<Client> AddClient(Client newClient)
         {
+            var validationErrors = ValidateClient(newClient);
+            if (validationErrors.Any())
+            {
+                throw new ArgumentException($"Validation errors: {string.Join(" ", validationErrors)}");
+            }
+
             Client client = new Client
             {
                 name = newClient.name,
@@ -46,6 +53,12 @@ namespace Cargohub.Services
 
         public async Task<bool> UpdateClient(Client client)
         {
+            var validationErrors = ValidateClient(client);
+            if (validationErrors.Any())
+            {
+                throw new ArgumentException($"Validation errors: {string.Join(" ", validationErrors)}");
+            }
+
             Client existingClient = await _context.Clients.FindAsync(client.id);
 
             if (existingClient == null)
@@ -90,6 +103,40 @@ namespace Cargohub.Services
                 return null;
             }
             return _context.Orders.Where(x => x.ship_to == client.id.ToString() || x.bill_to == client.id.ToString()).ToList();
+        }
+
+        private List<string> ValidateClient(Client client)
+        {
+            var errors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(client.name))
+            {
+                errors.Add("The name field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(client.address))
+            {
+                errors.Add("The address field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(client.contact_name))
+            {
+                errors.Add("The contact_name field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(client.contact_phone))
+            {
+                errors.Add("The contact_phone field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(client.contact_email) || !IsValidEmail(client.contact_email))
+            {
+                errors.Add("The contact_email field is required and must be a valid email.");
+            }
+
+            return errors;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, emailPattern);
         }
     }
 }

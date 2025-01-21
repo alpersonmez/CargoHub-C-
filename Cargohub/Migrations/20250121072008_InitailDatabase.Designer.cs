@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargohub.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250115185821_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20250121072008_InitailDatabase")]
+    partial class InitailDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,44 @@ namespace Cargohub.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Dock", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("code")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("is_deleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("warehouse_id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("code")
+                        .IsUnique();
+
+                    b.HasIndex("warehouse_id");
+
+                    b.ToTable("Docks");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Inventory", b =>
@@ -348,9 +386,6 @@ namespace Cargohub.Migrations
                     b.Property<string>("ship_to")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("shipment_id")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("shipping_notes")
                         .HasColumnType("TEXT");
 
@@ -380,6 +415,30 @@ namespace Cargohub.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.OrderShipment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("order_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("shipment_id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("order_id");
+
+                    b.HasIndex("shipment_id");
+
+                    b.ToTable("OrderShipments");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Shipment", b =>
                 {
                     b.Property<int>("id")
@@ -403,9 +462,6 @@ namespace Cargohub.Migrations
 
                     b.Property<DateTime?>("order_date")
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("order_id")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("payment_type")
                         .HasColumnType("TEXT");
@@ -577,6 +633,9 @@ namespace Cargohub.Migrations
                     b.Property<DateTime>("created_at")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("gevarenclassificatie")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("isdeleted")
                         .HasColumnType("INTEGER");
 
@@ -647,6 +706,17 @@ namespace Cargohub.Migrations
                     b.HasDiscriminator().HasValue("Transfer");
                 });
 
+            modelBuilder.Entity("Cargohub.Models.Dock", b =>
+                {
+                    b.HasOne("Cargohub.Models.Warehouse", "warehouse")
+                        .WithMany("docks")
+                        .HasForeignKey("warehouse_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("warehouse");
+                });
+
             modelBuilder.Entity("Cargohub.Models.Item", b =>
                 {
                     b.HasOne("Cargohub.Models.ItemGroup", "ItemGroup")
@@ -672,6 +742,25 @@ namespace Cargohub.Migrations
                     b.Navigation("ItemType");
 
                     b.Navigation("supplier");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.OrderShipment", b =>
+                {
+                    b.HasOne("Cargohub.Models.Order", "Order")
+                        .WithMany("OrderShipments")
+                        .HasForeignKey("order_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cargohub.Models.Shipment", "Shipment")
+                        .WithMany("OrderShipments")
+                        .HasForeignKey("shipment_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Shipment");
                 });
 
             modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
@@ -708,7 +797,7 @@ namespace Cargohub.Migrations
             modelBuilder.Entity("Cargohub.Models.OrderStock", b =>
                 {
                     b.HasOne("Cargohub.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -736,6 +825,23 @@ namespace Cargohub.Migrations
                         .IsRequired();
 
                     b.Navigation("Transfer");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Order", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("OrderShipments");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Shipment", b =>
+                {
+                    b.Navigation("OrderShipments");
+                });
+
+            modelBuilder.Entity("Cargohub.Models.Warehouse", b =>
+                {
+                    b.Navigation("docks");
                 });
 #pragma warning restore 612, 618
         }

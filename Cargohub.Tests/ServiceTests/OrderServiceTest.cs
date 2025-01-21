@@ -82,31 +82,31 @@ namespace Cargohub.Tests
         }
 
         [TestMethod]
-        public async Task GetOrderById_ReturnsCorrectOrder()
+        public async Task GetOrderById_ReturnsCorrectOrderDto()
         {
             // Act
-            var order = await _orderService.GetOrderById(1);
+            var orderDto = await _orderService.GetOrderById(1);
 
             // Assert
-            Assert.IsNotNull(order);
-            Assert.AreEqual("REF100", order.reference);
+            Assert.IsNotNull(orderDto);
+            Assert.AreEqual("REF100", orderDto.reference);
         }
 
         [TestMethod]
         public async Task GetOrderById_ReturnsNull_WhenOrderDoesNotExist()
         {
             // Act
-            var order = await _orderService.GetOrderById(99);
+            var orderDto = await _orderService.GetOrderById(99);
 
             // Assert
-            Assert.IsNull(order);
+            Assert.IsNull(orderDto);
         }
 
         [TestMethod]
         public async Task AddOrder_AddsOrderSuccessfully()
         {
             // Arrange
-            var newOrder = new Order
+            var newOrderDto = new OrderDto
             {
                 source_id = 102,
                 order_date = DateTime.UtcNow,
@@ -120,11 +120,11 @@ namespace Cargohub.Tests
             };
 
             // Act
-            var addedOrder = await _orderService.AddOrder(newOrder);
+            var addedOrderDto = await _orderService.AddOrder(newOrderDto);
 
             // Assert
-            Assert.IsNotNull(addedOrder);
-            Assert.AreEqual("REF102", addedOrder.reference);
+            Assert.IsNotNull(addedOrderDto);
+            Assert.AreEqual("REF102", addedOrderDto.reference);
             Assert.AreEqual(3, _context.Orders.Count());
         }
 
@@ -132,30 +132,30 @@ namespace Cargohub.Tests
         public async Task UpdateOrder_UpdatesExistingOrderSuccessfully()
         {
             // Arrange
-            var existingOrder = await _orderService.GetOrderById(1);
-            existingOrder.order_status = "Shipped";
+            var existingOrderDto = await _orderService.GetOrderById(1);
+            existingOrderDto.order_status = "Shipped";
 
             // Act
-            var updated = await _orderService.UpdateOrder(existingOrder);
+            var updated = await _orderService.UpdateOrder(existingOrderDto);
 
             // Assert
             Assert.IsTrue(updated);
-            var updatedOrder = await _orderService.GetOrderById(1);
-            Assert.AreEqual("Shipped", updatedOrder.order_status);
+            var updatedOrderDto = await _orderService.GetOrderById(1);
+            Assert.AreEqual("Shipped", updatedOrderDto.order_status);
         }
 
         [TestMethod]
         public async Task UpdateOrder_ReturnsFalse_WhenOrderDoesNotExist()
         {
             // Arrange
-            var nonExistingOrder = new Order
+            var nonExistingOrderDto = new OrderDto
             {
                 id = 99,
                 order_status = "Shipped"
             };
 
             // Act
-            var updated = await _orderService.UpdateOrder(nonExistingOrder);
+            var updated = await _orderService.UpdateOrder(nonExistingOrderDto);
 
             // Assert
             Assert.IsFalse(updated);
@@ -179,54 +179,6 @@ namespace Cargohub.Tests
 
             // Assert
             Assert.IsFalse(deleted);
-        }
-
-        [TestMethod]
-        public async Task DisconnectShipmentsFromOrder_RemovesCorrectLinks()
-        {
-            // Arrange
-            var order = new Order
-            {
-                id = 3,
-                reference = "REF103"
-            };
-
-            var shipment = new Shipment { id = 1, shipment_date = DateTime.UtcNow };
-
-            var orderShipment = new OrderShipment { order_id = order.id, shipment_id = shipment.id };
-
-            _context.Orders.Add(order);
-            _context.Shipments.Add(shipment);
-            _context.OrderShipments.Add(orderShipment);
-            await _context.SaveChangesAsync();
-
-            // Act
-            var result = await _orderService.DisconnectShipmentsFromOrder(3, new List<int> { 1 });
-
-            // Assert
-            Assert.IsTrue(result);
-            Assert.AreEqual(0, _context.OrderShipments.Count());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception), "Order not found.")]
-        public async Task DisconnectShipmentsFromOrder_ThrowsException_WhenOrderNotFound()
-        {
-            // Act
-            await _orderService.DisconnectShipmentsFromOrder(99, new List<int> { 1 });
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(Exception), "No matching shipments found for the order.")]
-        public async Task DisconnectShipmentsFromOrder_ThrowsException_WhenNoMatchingShipments()
-        {
-            // Arrange
-            var order = new Order { id = 3, reference = "REF103" };
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // Act
-            await _orderService.DisconnectShipmentsFromOrder(3, new List<int> { 1 });
         }
     }
 }

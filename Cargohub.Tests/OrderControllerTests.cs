@@ -29,9 +29,9 @@ namespace Cargohub.Tests
         public async Task GetAllOrders_ReturnsOkResult_WithListOfOrders()
         {
             // Arrange
-            var orders = new List<Order>
+            var orders = new List<OrderDto>
             {
-                new Order
+                new OrderDto
                 {
                     id = 1,
                     source_id = 33,
@@ -53,7 +53,7 @@ namespace Cargohub.Tests
                     created_at = DateTime.UtcNow.AddDays(-10),
                     updated_at = DateTime.UtcNow
                 },
-                new Order
+                new OrderDto
                 {
                     id = 2,
                     source_id = 44,
@@ -77,7 +77,6 @@ namespace Cargohub.Tests
                 }
             };
 
-            // Updated mock setup to use It.IsAny<int>() for the optional parameter
             _mockOrderService.Setup(service => service.GetAllOrders(It.IsAny<int>())).ReturnsAsync(orders);
 
             // Act
@@ -88,17 +87,16 @@ namespace Cargohub.Tests
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
 
-            var returnedOrders = okResult.Value as List<Order>;
+            var returnedOrders = okResult.Value as List<OrderDto>;
             Assert.IsNotNull(returnedOrders);
             Assert.AreEqual(2, returnedOrders.Count);
         }
-
 
         [TestMethod]
         public async Task GetOrderById_ReturnsOkResult_WithOrder()
         {
             // Arrange
-            var order = new Order
+            var order = new OrderDto
             {
                 id = 1,
                 source_id = 33,
@@ -120,10 +118,11 @@ namespace Cargohub.Tests
                 created_at = DateTime.UtcNow.AddDays(-10),
                 updated_at = DateTime.UtcNow
             };
+
             _mockOrderService.Setup(service => service.GetOrderById(1)).ReturnsAsync(order);
 
             // Act
-            var result = await _controller.Get(1);
+            var result = await _controller.GetById(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
@@ -136,10 +135,10 @@ namespace Cargohub.Tests
         public async Task GetOrderById_ReturnsNotFound_WhenOrderDoesNotExist()
         {
             // Arrange
-            _mockOrderService.Setup(service => service.GetOrderById(It.IsAny<int>())).ReturnsAsync((Order)null);
+            _mockOrderService.Setup(service => service.GetOrderById(It.IsAny<int>())).ReturnsAsync((OrderDto)null);
 
             // Act
-            var result = await _controller.Get(1);
+            var result = await _controller.GetById(1);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
@@ -149,76 +148,77 @@ namespace Cargohub.Tests
         public async Task CreateOrder_ReturnsCreatedAtActionResult_WithCreatedOrder()
         {
             // Arrange
-            var order = new Order
+            var newOrder = new OrderDto
+            {
+                source_id = 33,
+                order_date = DateTime.UtcNow.AddDays(-5),
+                request_date = DateTime.UtcNow.AddDays(1),
+                reference = "ORD00001",
+                order_status = "Delivered"
+            };
+
+            var createdOrder = new OrderDto
             {
                 id = 1,
                 source_id = 33,
                 order_date = DateTime.UtcNow.AddDays(-5),
                 request_date = DateTime.UtcNow.AddDays(1),
                 reference = "ORD00001",
-                reference_extra = "Extra reference",
-                order_status = "Delivered",
-                notes = "Test notes",
-                shipping_notes = "Shipping test notes",
-                picking_notes = "Picking test notes",
-                warehouse_id = 18,
-                ship_to = "Germany",
-                bill_to = "Netherlands",
-                total_amount = 1500.50,
-                total_discount = 50.00,
-                total_tax = 300.00,
-                total_surcharge = 20.00,
-                created_at = DateTime.UtcNow.AddDays(-10),
-                updated_at = DateTime.UtcNow
+                order_status = "Delivered"
             };
-            _mockOrderService.Setup(service => service.AddOrder(order)).ReturnsAsync(order);
+
+            _mockOrderService.Setup(service => service.AddOrder(newOrder)).ReturnsAsync(createdOrder);
 
             // Act
-            var result = await _controller.Create(order);
+            var result = await _controller.Create(newOrder);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
             var createdResult = result as CreatedAtActionResult;
             Assert.IsNotNull(createdResult);
-            Assert.AreEqual(order, createdResult.Value);
+            Assert.AreEqual(createdOrder, createdResult.Value);
         }
 
         [TestMethod]
         public async Task UpdateOrder_ReturnsOkResult_WithUpdatedOrder()
         {
             // Arrange
-            var order = new Order
+            var updatedOrder = new OrderDto
             {
                 id = 1,
-                notes = "Updated order notes",
-                updated_at = DateTime.UtcNow
+                source_id = 33,
+                reference = "ORD00001",
+                order_status = "Shipped"
             };
-            _mockOrderService.Setup(service => service.UpdateOrder(order)).ReturnsAsync(true);
+
+            _mockOrderService.Setup(service => service.UpdateOrder(updatedOrder)).ReturnsAsync(true);
 
             // Act
-            var result = await _controller.Update(1, order);
+            var result = await _controller.Update(1, updatedOrder);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            Assert.AreEqual(order, okResult.Value);
+            Assert.AreEqual(updatedOrder, okResult.Value);
         }
 
         [TestMethod]
         public async Task UpdateOrder_ReturnsNotFound_WhenOrderDoesNotExist()
         {
             // Arrange
-            var order = new Order
+            var updatedOrder = new OrderDto
             {
                 id = 1,
-                notes = "Updated order notes",
-                updated_at = DateTime.UtcNow
+                source_id = 33,
+                reference = "ORD00001",
+                order_status = "Shipped"
             };
-            _mockOrderService.Setup(service => service.UpdateOrder(order)).ReturnsAsync(false);
+
+            _mockOrderService.Setup(service => service.UpdateOrder(updatedOrder)).ReturnsAsync(false);
 
             // Act
-            var result = await _controller.Update(1, order);
+            var result = await _controller.Update(1, updatedOrder);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));

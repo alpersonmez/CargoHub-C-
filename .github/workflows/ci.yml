@@ -42,7 +42,7 @@ jobs:
 
     #run unit tests
     - name: Run Unit Tests
-      run: dotnet test Cargohub.sln --no-build --configuration Release --logger
+      run: dotnet test Cargohub.sln --no-build --configuration Release
 
 
     # Run the API

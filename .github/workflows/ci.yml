@@ -93,8 +93,9 @@ jobs:
       continue-on-error: true
 
 #  Run unit tests
-    - name: Run unit tests
-      run: dotnet test CargoHub-C-/Cargohub.Tests/Cargohub.Tests.csproj --no-build --configuration Release --verbosity normal
-      continue-on-error: true
+    - name: Run tests and collect coverage
+      run: |
+        dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutput=coverage/ /p:CoverletOutputFormat=cobertura
+      working-directory: Cargohub.Tests
 
 

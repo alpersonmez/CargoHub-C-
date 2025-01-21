@@ -94,8 +94,8 @@ jobs:
 
 #  Run unit tests
     - name: Run tests and collect coverage
-      run: |
-        dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutput=coverage/ /p:CoverletOutputFormat=cobertura
-      working-directory: Cargohub.Tests
+      run: dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=cobertura
+      working-directory: CargoHub-C-/Cargohub.Tests
+
 
 

@@ -39,7 +39,9 @@ jobs:
       run: |
         dotnet restore Cargohub/Cargohub.csproj  # Restore project dependencies
         dotnet build Cargohub/Cargohub.csproj --no-restore  # Build the API
-
+    - name: Run Unit Tests
+      run: |
+        	dotnet test Cargohub.sln --no-build --configuration Release --logger
     # Run the API
     - name: Start API
       run: |
@@ -92,10 +94,6 @@ jobs:
       run: pytest --maxfail=0 --disable-warnings Cargohub.Tests/ClientsTests/test_clients.py
       continue-on-error: true
 
-#  Run unit tests
-    - name: Run tests and collect coverage
-      run: dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutput=./coverage/ /p:CoverletOutputFormat=cobertura
-      working-directory: Cargohub.Tests
 
 
 
